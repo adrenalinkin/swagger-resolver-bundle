@@ -1,0 +1,36 @@
+{
+    "name":        "adrenalinkin/swagger-resolver-bundle",
+    "description": "Provides possibility for resolving objects by Swagger documentation",
+    "type":        "symfony-bundle",
+    "keywords":    ["symfony-bundle", "api", "open-api-2", "swagger", "swagger-php", "resolver"],
+    "license":     "MIT",
+
+    "authors": [
+        {
+            "email": "adrenalinkin@gmail.com",
+            "name":  "Viktor Linkin",
+            "role":  "Developer"
+        }
+    ],
+
+    "require": {
+        "php":                          "~7.1",
+        "exsyst/swagger":               "~0.4",
+        "symfony/config":               "~2.8||~3.0||~4.0",
+        "symfony/dependency-injection": "~2.8||~3.0||~4.0",
+        "symfony/http-kernel":          "~2.8||~3.0||~4.0",
+        "symfony/options-resolver":     "~2.8||~3.0||~4.0"
+    },
+
+    "suggest": {
+        "nelmio/api-doc-bundle":    "Generates documentation for your REST API from annotations",
+        "symfony/symfony":          "Allows more advanced functionality with full Symfony package",
+        "zircote/swagger-php":      "Allows to generate Swagger configuration by php annotations"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "Linkin\\Bundle\\SwaggerResolverBundle\\": ""
+        }
+    }
+}
