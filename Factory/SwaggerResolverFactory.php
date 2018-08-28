@@ -128,6 +128,9 @@ class SwaggerResolverFactory
 
         if ('array' === $propertySchema->getType()) {
             $allowedTypes[] = null === $propertySchema->getCollectionFormat() ? 'array' : 'string';
+        } elseif ('number' === $propertySchema->getType()) {
+            $allowedTypes[] = 'double';
+            $allowedTypes[] = 'float';
         } else {
             $allowedTypes[] = $propertySchema->getType();
         }
