@@ -145,7 +145,7 @@ linkin_swagger_resolver:
     configuration_loader_service: acme_app.custom_configuration_loader
 ```
 
-### Шаг 2: Models validation
+### Step 2: Models validation
 
 ```php
 <?php

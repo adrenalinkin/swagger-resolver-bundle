@@ -1,0 +1,74 @@
+### Composer template
+auth.json
+composer.phar
+/vendor/
+
+### IDE settings
+/.settings/
+/.buildpath/
+/.project/
+/.idea/
+/nbproject/
+
+### symfony project
+# cache, session files and logs (Symfony3)
+/var/*
+!/var/cache
+/var/cache/*
+!var/cache/.gitkeep
+!/var/logs
+/var/logs/*
+!var/logs/.gitkeep
+!/var/sessions
+/var/sessions/*
+!var/sessions/.gitkeep
+!var/SymfonyRequirements.php
+
+### CI
+/build/
+deploy.retry
+
+### composer generated
+/var/bootstrap.php.cache
+/bin/*
+!bin/console
+!bin/symfony_requirements
+/components/
+
+### local instance parameters
+/app/config/parameters.yml
+/app/config/parameters_test.yml
+
+### PHPUnit settings
+/phpunit.xml
+
+### Assets and user uploads
+/web/*
+!/web/.htaccess
+!/web/app.php
+!/web/app_dev.php
+!/web/apple-touch-*\.png
+!/web/browserconfig.xml
+!/web/config.php
+!/web/favicon.ico
+!/web/ms-icon-*\.png
+!/web/robots.txt
+
+### Docker
+/.env
+/docker/logs
+/docker/.data
+
+### servers system
+/cgi-bin
+/SSL
+/webstat
+/.web-server-pid
+*.swp
+*.swo
+*.DS_Store
+/*.ini
+*~
+
+### TMP
+/app/config/private.key
