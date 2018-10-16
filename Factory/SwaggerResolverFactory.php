@@ -16,6 +16,7 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Factory;
 use EXSyst\Component\Swagger\Schema;
 use EXSyst\Component\Swagger\Swagger;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\DefinitionNotFoundException;
+use Linkin\Bundle\SwaggerResolverBundle\Exception\UndefinedPropertyTypeException;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerConfigurationLoaderInterface;
 use Linkin\Bundle\SwaggerResolverBundle\Resolver\SwaggerResolver;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\SwaggerValidatorInterface;
@@ -76,7 +77,13 @@ class SwaggerResolverFactory
         foreach ($definition->getProperties() as $name => $propertySchema) {
             $swaggerResolver->setDefined($name);
 
-            $this->setAllowedType($swaggerResolver, $propertySchema, $name);
+            $allowedTypes = $this->getAllowedTypes($definitionName, $propertySchema, $name);
+
+            if (!$swaggerResolver->isRequired($name)) {
+                $allowedTypes[] = 'null';
+            }
+
+            $swaggerResolver->setAllowedTypes($name, $allowedTypes);
 
             if (null !== $propertySchema->getDefault()) {
                 $swaggerResolver->setDefault($name, $propertySchema->getDefault());
@@ -118,27 +125,65 @@ class SwaggerResolverFactory
     }
 
     /**
-     * @param SwaggerResolver $swaggerResolver
-     * @param Schema          $propertySchema
-     * @param string          $name
+     * @param string $definition
+     * @param Schema $propertySchema
+     * @param string $name
+     *
+     * @return array
      */
-    private function setAllowedType(SwaggerResolver $swaggerResolver, Schema $propertySchema, string $name): void
+    private function getAllowedTypes(string $definition, Schema $propertySchema, string $name): array
     {
+        $propertyType = $propertySchema->getType();
         $allowedTypes = [];
 
-        if ('array' === $propertySchema->getType()) {
-            $allowedTypes[] = null === $propertySchema->getCollectionFormat() ? 'array' : 'string';
-        } elseif ('number' === $propertySchema->getType()) {
+        if ('string' === $propertyType) {
+            $allowedTypes[] = 'string';
+
+            return $allowedTypes;
+        }
+
+        if ('integer' === $propertyType) {
+            $allowedTypes[] = 'integer';
+            $allowedTypes[] = 'int';
+
+            return $allowedTypes;
+        }
+
+        if ('boolean' === $propertyType) {
+            $allowedTypes[] = 'boolean';
+            $allowedTypes[] = 'bool';
+
+            return $allowedTypes;
+        }
+
+        if ('number' === $propertyType) {
             $allowedTypes[] = 'double';
             $allowedTypes[] = 'float';
-        } else {
-            $allowedTypes[] = $propertySchema->getType();
+
+            return $allowedTypes;
         }
 
-        if (!$swaggerResolver->isRequired($name)) {
-            $allowedTypes[] = 'null';
+        if ('array' === $propertyType) {
+            $allowedTypes[] = null === $propertySchema->getCollectionFormat() ? 'array' : 'string';
+
+            return $allowedTypes;
         }
 
-        $swaggerResolver->setAllowedTypes($name, $allowedTypes);
+        if ('object' === $propertyType) {
+            $allowedTypes[] = 'object';
+
+            return $allowedTypes;
+        }
+
+        if (null === $propertyType && $propertySchema->getRef()) {
+            $ref = $propertySchema->getRef();
+
+            $allowedTypes[] = 'object';
+            $allowedTypes[] = $ref;
+
+            return $allowedTypes;
+        }
+
+        throw new UndefinedPropertyTypeException($definition, $name, (string) $propertyType);
     }
 }
