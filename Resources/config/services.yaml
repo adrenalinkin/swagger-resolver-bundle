@@ -1,4 +1,10 @@
 services:
+    Linkin\Bundle\SwaggerResolverBundle\Builder\SwaggerResolverBuilder:
+        arguments:
+            - []
+    linkin_swagger_resolver.builder:
+        alias: Linkin\Bundle\SwaggerResolverBundle\Builder\SwaggerResolverBuilder
+
     linkin_swagger_resolver.loader.configuration:
         class:      Linkin\Bundle\SwaggerResolverBundle\Loader\NelmioApiDocConfigurationLoader
         public:     false

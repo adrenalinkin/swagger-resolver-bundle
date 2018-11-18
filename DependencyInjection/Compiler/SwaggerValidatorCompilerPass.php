@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\DependencyInjection\Compiler;
 
+use Linkin\Bundle\SwaggerResolverBundle\Builder\SwaggerResolverBuilder;
 use Linkin\Bundle\SwaggerResolverBundle\Factory\SwaggerResolverFactory;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -41,25 +42,42 @@ class SwaggerValidatorCompilerPass implements CompilerPassInterface
 
         $validators = iterator_to_array($validatorQueue);
 
-        $this->registerSwaggerResolverFactory($container, $validators);
+        $this->registerSwaggerResolverBuilder($container, $validators);
+        $this->registerSwaggerResolverFactory($container);
     }
 
     /**
      * @param ContainerBuilder $container
-     * @param array            $validators
+     * @param array $validators
      */
-    private function registerSwaggerResolverFactory(ContainerBuilder $container, array $validators): void
+    private function registerSwaggerResolverBuilder(ContainerBuilder $container, array $validators): void
+    {
+        if (!$container->hasDefinition(SwaggerResolverBuilder::class)) {
+            return;
+        }
+
+        $container
+            ->getDefinition(SwaggerResolverBuilder::class)
+            ->replaceArgument(0, $validators)
+        ;
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     */
+    private function registerSwaggerResolverFactory(ContainerBuilder $container): void
     {
         $configurationLoaderId = $container->getParameter('linkin_swagger_resolver.configuration_loader');
         $container->getParameterBag()->remove('linkin_swagger_resolver.configuration_loader');
 
         $swaggerFactoryDefinition = new Definition(SwaggerResolverFactory::class);
         $swaggerFactoryDefinition
-            ->addArgument($validators)
-            ->addArgument($container->getDefinition($configurationLoaderId))
+            ->addArgument($container->findDefinition(SwaggerResolverBuilder::class))
+            ->addArgument($container->findDefinition($configurationLoaderId))
+            ->addArgument($container->findDefinition('router'))
         ;
 
-        $container->setDefinition(SwaggerResolverFactory::class, $swaggerFactoryDefinition);
-        $container->setAlias('linkin_swagger_resolver.factory', SwaggerResolverFactory::class);
+        $container->setDefinition('linkin_swagger_resolver.factory', $swaggerFactoryDefinition);
+        $container->setAlias(SwaggerResolverFactory::class, 'linkin_swagger_resolver.factory');
     }
 }

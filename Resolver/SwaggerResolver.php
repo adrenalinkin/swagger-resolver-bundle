@@ -51,7 +51,7 @@ class SwaggerResolver extends OptionsResolver
     {
          parent::clear();
 
-        $this->validators = [];
+         $this->validators = [];
 
          return $this;
     }
@@ -82,7 +82,7 @@ class SwaggerResolver extends OptionsResolver
      */
     public function addValidator(SwaggerValidatorInterface $validator): self
     {
-        $className = get_class($validator);
+        $className = \get_class($validator);
 
         $this->validators[$className] = $validator;
 
