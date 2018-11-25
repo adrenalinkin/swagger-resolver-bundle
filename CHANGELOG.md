@@ -1,8 +1,8 @@
 ## [Unreleased]
 ### Added
 - Added possibility for creating `SwaggerResolver` object for all defined swagger request parameters.
+- Added `SwaggerConfigurationLoaderInterface` into container as alias for the actual configuration loader service.
 ### Changed
-- Moved `SwaggerResolver` building process into separate service `SwaggerResolverBuilder`.
 - Renamed `services.yml` into `services.yaml`.
 
 ## [0.1.2] - 2018-10-17

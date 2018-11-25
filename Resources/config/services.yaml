@@ -5,11 +5,14 @@ services:
     linkin_swagger_resolver.builder:
         alias: Linkin\Bundle\SwaggerResolverBundle\Builder\SwaggerResolverBuilder
 
-    linkin_swagger_resolver.loader.configuration:
-        class:      Linkin\Bundle\SwaggerResolverBundle\Loader\NelmioApiDocConfigurationLoader
-        public:     false
+    Linkin\Bundle\SwaggerResolverBundle\Factory\SwaggerResolverFactory:
+        public: true
         arguments:
-            - '@nelmio_api_doc.generator'
+            - '@linkin_swagger_resolver.builder'
+            - '@Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerConfigurationLoaderInterface'
+            - '@router'
+    linkin_swagger_resolver.factory:
+        alias: Linkin\Bundle\SwaggerResolverBundle\Factory\SwaggerResolverFactory
 
     linkin_swagger_resolver.validator.array.max_items:
         class:      Linkin\Bundle\SwaggerResolverBundle\Validator\ArrayMaxItemsValidator

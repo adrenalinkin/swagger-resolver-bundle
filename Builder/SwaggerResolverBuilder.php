@@ -18,6 +18,9 @@ use Linkin\Bundle\SwaggerResolverBundle\Exception\UndefinedPropertyTypeException
 use Linkin\Bundle\SwaggerResolverBundle\Resolver\SwaggerResolver;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\SwaggerValidatorInterface;
 
+/**
+ * @author Viktor Linkin <adrenalinkin@gmail.com>
+ */
 class SwaggerResolverBuilder
 {
     /**
