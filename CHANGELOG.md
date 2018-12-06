@@ -1,3 +1,7 @@
+## [0.1.3] - 2018-12-06
+### Fixed
+- Fixed problem with object type mapping from the documentation to allowed types in PHP.
+
 ## [0.1.2] - 2018-10-17
 ### Added
 - Added correct processing of the objects references.

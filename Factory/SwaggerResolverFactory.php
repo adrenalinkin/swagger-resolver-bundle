@@ -171,6 +171,7 @@ class SwaggerResolverFactory
 
         if ('object' === $propertyType) {
             $allowedTypes[] = 'object';
+            $allowedTypes[] = 'array';
 
             return $allowedTypes;
         }
