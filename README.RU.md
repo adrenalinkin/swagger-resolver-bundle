@@ -74,6 +74,8 @@ class AppKernel extends Kernel
 ```yaml
 # app/config.yml
 linkin_swagger_resolver:
+    # стратегия по умолчанию для слияния параметров запроса
+    path_merge_strategy:            Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\StrictMergeStrategy
     configuration_loader_service:   ~   # имя сервиса загрузки конфигурации
     configuration_file:             ~   # полный путь к файлу конфигурации
     swagger_php:                        # настройки для swagger-php
@@ -144,7 +146,9 @@ linkin_swagger_resolver:
     configuration_loader_service: acme_app.custom_configuration_loader
 ```
 
-### Шаг 2: Валидация моделей
+### Шаг 2: Валидация данных
+
+#### Валидация модели
 
 ```php
 <?php
@@ -157,6 +161,20 @@ $swaggerResolver = $factory->createForDefinition(AcmeApiModel::class);
 $swaggerResolver = $factory->createForDefinition('AcmeApiModel');
 
 /** @var \Symfony\Component\HttpFoundation\Request $request */
+$data = $swaggerResolver->resolve(json_decode($request->getContent(), true));
+```
+
+#### Валидация всего запроса
+
+```php
+<?php
+
+/** @var \Linkin\Bundle\SwaggerResolverBundle\Factory\SwaggerResolverFactory $factory */
+$factory = $container->get('linkin_swagger_resolver.factory');
+$request = $container->get('request_stack')->getCurrentRequest();
+// загрузка всех параметров вызванного метода запроса
+$swaggerResolver = $factory->createForRequest($request);
+
 $data = $swaggerResolver->resolve(json_decode($request->getContent(), true));
 ```
 
