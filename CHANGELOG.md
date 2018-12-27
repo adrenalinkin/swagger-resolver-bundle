@@ -1,9 +1,14 @@
-## [Unreleased]
+## [Unreleased] [BC]
 ### Added
 - Added possibility for creating `SwaggerResolver` object for all defined swagger request parameters.
 - Added `SwaggerConfigurationLoaderInterface` into container as alias for the actual configuration loader service.
+- Added possibility for use different strategies when performing resolving for the full request.
+- Added new parameter `path_merge_strategy`.
+- Added auto-configuration for the `SwaggerValidatorInterface`.
 ### Changed
 - Renamed `services.yml` into `services.yaml`.
+### Removed
+- Removed compatibility with Symfony lower than 3.4.
 
 ## [0.1.2] - 2018-10-17
 ### Added

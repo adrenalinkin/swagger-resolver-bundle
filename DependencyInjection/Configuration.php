@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\DependencyInjection;
 
+use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\StrictMergeStrategy;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -31,6 +32,10 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->scalarNode('path_merge_strategy')
+                    ->cannotBeEmpty()
+                    ->defaultValue(StrictMergeStrategy::class)
+                ->end()
                 ->scalarNode('configuration_loader_service')->defaultNull()->end()
                 ->scalarNode('configuration_file')->defaultNull()->end()
                 ->arrayNode('swagger_php')

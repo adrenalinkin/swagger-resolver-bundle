@@ -13,13 +13,14 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Factory;
 
-use EXSyst\Component\Swagger\Parameter;
 use EXSyst\Component\Swagger\Schema;
 use EXSyst\Component\Swagger\Swagger;
 use Linkin\Bundle\SwaggerResolverBundle\Builder\SwaggerResolverBuilder;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\DefinitionNotFoundException;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\PathNotFoundException;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerConfigurationLoaderInterface;
+use Linkin\Bundle\SwaggerResolverBundle\Merger\MergeStrategyInterface;
+use Linkin\Bundle\SwaggerResolverBundle\Merger\PathParameterMerger;
 use Linkin\Bundle\SwaggerResolverBundle\Resolver\SwaggerResolver;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
@@ -40,6 +41,11 @@ class SwaggerResolverFactory
     private $configurationLoader;
 
     /**
+     * @var PathParameterMerger
+     */
+    private $pathParameterMerger;
+
+    /**
      * @var RouterInterface
      */
     private $router;
@@ -52,32 +58,35 @@ class SwaggerResolverFactory
     /**
      * @param SwaggerResolverBuilder $builder
      * @param SwaggerConfigurationLoaderInterface $loader
+     * @param PathParameterMerger $pathParameterMerger
      * @param RouterInterface $router
      */
     public function __construct(
         SwaggerResolverBuilder $builder,
         SwaggerConfigurationLoaderInterface $loader,
+        PathParameterMerger $pathParameterMerger,
         RouterInterface $router
     ) {
         $this->builder = $builder;
         $this->configurationLoader = $loader;
+        $this->pathParameterMerger = $pathParameterMerger;
         $this->router = $router;
     }
 
     /**
-     * @TODO: Refactor this method and add strategies for merging request parameters
-     *
      * @param Request $request
+     * @param MergeStrategyInterface|null $mergeStrategy
      *
      * @return SwaggerResolver
      */
-    public function createForRequest(Request $request): SwaggerResolver
+    public function createForRequest(Request $request, ?MergeStrategyInterface $mergeStrategy = null): SwaggerResolver
     {
         $pathInfo = $this->router->match($request->getPathInfo());
         $route = $this->router->getRouteCollection()->get($pathInfo['_route']);
         $routePath = $route->getPath();
 
         $paths = $this->getSwaggerConfiguration()->getPaths();
+        $definitions = $this->getSwaggerConfiguration()->getDefinitions();
 
         if (!$paths->has($routePath)) {
             throw new PathNotFoundException($routePath);
@@ -86,69 +95,8 @@ class SwaggerResolverFactory
         $requestMethod = strtolower($request->getMethod());
 
         $swaggerPath = $paths->get($routePath);
-        $swaggerOperation = $swaggerPath->getOperation($requestMethod);
-        $parameters = $swaggerOperation->getParameters();
 
-        $mergedProperties = [];
-        $requiredList = [];
-
-        /** @var Parameter $parameter */
-        foreach ($parameters as $parameter) {
-            if ($parameter->getIn() === 'body') {
-                $parameterSchema = $parameter->getSchema();
-
-                $ref = $parameterSchema->getRef();
-
-                if ($ref) {
-                    $explodedName = explode('/', $ref);
-                    $definitionName = end($explodedName);
-
-                    $refDefinition = $this->getDefinition($definitionName);
-                    $requiredList += $refDefinition->getRequired() ?? [];
-
-                    foreach ($refDefinition->getProperties() as $defName => $defItem) {
-                        $mergedProperties[$defName] = $defItem->toArray();
-                    }
-
-                    continue;
-                }
-
-                // body as object
-                if ($parameterSchema->getType() === 'object') {
-                    $requiredList += $parameterSchema->getRequired() ?? [];
-
-                    foreach ($parameterSchema->getProperties() as $bodyItemName => $currentBodyItem) {
-                        $mergedProperties[$bodyItemName] = $currentBodyItem->toArray();
-                    }
-
-                    continue;
-                }
-
-                // as scalar
-                $asArray = $parameterSchema->toArray();
-                $asArray['in'] = $parameter->getIn();
-                $asArray['name'] = $parameter->getName();
-                $asArray['required'] = $parameter->getRequired();
-
-                $mergedProperties[$parameter->getName()] = $asArray;
-
-                continue;
-            }
-
-            if ($parameter->getRequired() === true) {
-                $requiredList[] = $parameter->getName();
-            }
-
-            $mergedProperties[$parameter->getName()] = $parameter->toArray();
-        }
-
-        $mergedSchema = new Schema();
-        $mergedSchema->merge([
-            'type' => 'object',
-            'description' => '__SwaggerResolver_merged_query_properties__',
-            'properties' => $mergedProperties,
-            'required' => $requiredList,
-        ]);
+        $mergedSchema = $this->pathParameterMerger->merge($swaggerPath, $requestMethod, $definitions, $mergeStrategy);
 
         return $this->builder->build($mergedSchema, $routePath);
     }

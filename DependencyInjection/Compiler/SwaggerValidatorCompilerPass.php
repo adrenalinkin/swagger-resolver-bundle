@@ -23,6 +23,8 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class SwaggerValidatorCompilerPass implements CompilerPassInterface
 {
+    public const TAG = 'linkin_swagger_resolver.validator';
+
     /**
      * {@inheritdoc}
      */
@@ -34,7 +36,7 @@ class SwaggerValidatorCompilerPass implements CompilerPassInterface
 
         $validatorQueue = new \SplPriorityQueue();
 
-        foreach ($container->findTaggedServiceIds('linkin_swagger_resolver.validator') as $id => $attributes) {
+        foreach ($container->findTaggedServiceIds(self::TAG) as $id => $attributes) {
             $validatorReference = new Reference($id);
 
             $priority = isset($attributes['priority']) ? $attributes['priority'] : 0;
