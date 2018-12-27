@@ -75,6 +75,8 @@ All parameters has values by default:
 ```yaml
 # app/config.yml
 linkin_swagger_resolver:
+    # default strategy for merge all request parameters.
+    path_merge_strategy:            Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\StrictMergeStrategy
     configuration_loader_service:   ~   # the name of the configuration loader service
     configuration_file:             ~   # full path to the configuration file
     swagger_php:                        # settings for the swagger-php
@@ -145,7 +147,9 @@ linkin_swagger_resolver:
     configuration_loader_service: acme_app.custom_configuration_loader
 ```
 
-### Step 2: Models validation
+### Step 2: Data validation
+
+#### Validation for model
 
 ```php
 <?php
@@ -158,6 +162,20 @@ $swaggerResolver = $factory->createForDefinition(AcmeApiModel::class);
 $swaggerResolver = $factory->createForDefinition('AcmeApiModel');
 
 /** @var \Symfony\Component\HttpFoundation\Request $request */
+$data = $swaggerResolver->resolve(json_decode($request->getContent(), true));
+```
+
+#### Validation for request
+
+```php
+<?php
+
+/** @var \Linkin\Bundle\SwaggerResolverBundle\Factory\SwaggerResolverFactory $factory */
+$factory = $container->get('linkin_swagger_resolver.factory');
+$request = $container->get('request_stack')->getCurrentRequest();
+// Loading by request
+$swaggerResolver = $factory->createForRequest($request);
+
 $data = $swaggerResolver->resolve(json_decode($request->getContent(), true));
 ```
 

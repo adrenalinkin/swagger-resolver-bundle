@@ -1,0 +1,99 @@
+services:
+    Linkin\Bundle\SwaggerResolverBundle\Builder\SwaggerResolverBuilder:
+        public:     false
+        arguments:
+            - []
+    linkin_swagger_resolver.builder:
+        alias:      Linkin\Bundle\SwaggerResolverBundle\Builder\SwaggerResolverBuilder
+
+    Linkin\Bundle\SwaggerResolverBundle\Factory\SwaggerResolverFactory:
+        public:     true
+        arguments:
+            - '@Linkin\Bundle\SwaggerResolverBundle\Builder\SwaggerResolverBuilder'
+            - '@Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerConfigurationLoaderInterface'
+            - '@Linkin\Bundle\SwaggerResolverBundle\Merger\PathParameterMerger'
+            - '@router'
+    linkin_swagger_resolver.factory:
+        alias:      Linkin\Bundle\SwaggerResolverBundle\Factory\SwaggerResolverFactory
+
+    Linkin\Bundle\SwaggerResolverBundle\Merger\PathParameterMerger:
+        public:     false
+        arguments:
+            - '@Linkin\Bundle\SwaggerResolverBundle\Merger\MergeStrategyInterface'
+
+    Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\CombineNameMergeStrategy:
+        public: false
+
+    Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceFirstWinMergeStrategy:
+        public: false
+
+    Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrategy:
+        public: false
+
+    Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\StrictMergeStrategy:
+        public: false
+
+    Linkin\Bundle\SwaggerResolverBundle\Validator\ArrayMaxItemsValidator:
+        public:     false
+        tags:
+            - { name: linkin_swagger_resolver.validator }
+
+    Linkin\Bundle\SwaggerResolverBundle\Validator\ArrayMinItemsValidator:
+        public: false
+        tags:
+            - { name: linkin_swagger_resolver.validator }
+
+    Linkin\Bundle\SwaggerResolverBundle\Validator\ArrayUniqueItemsValidator:
+        public:     false
+        tags:
+            - { name: linkin_swagger_resolver.validator }
+
+    Linkin\Bundle\SwaggerResolverBundle\Validator\FormatDateValidator:
+        public:     false
+        tags:
+            - { name: linkin_swagger_resolver.validator }
+
+    Linkin\Bundle\SwaggerResolverBundle\Validator\FormatDateTimeValidator:
+        public:     false
+        tags:
+            - { name: linkin_swagger_resolver.validator }
+
+    Linkin\Bundle\SwaggerResolverBundle\Validator\FormatTimestampValidator:
+        public:     false
+        tags:
+            - { name: linkin_swagger_resolver.validator }
+
+    Linkin\Bundle\SwaggerResolverBundle\Validator\FormatTimeValidator:
+        public:     false
+        tags:
+            - { name: linkin_swagger_resolver.validator }
+
+    Linkin\Bundle\SwaggerResolverBundle\Validator\NumberMaximumValidator:
+        public:     false
+        tags:
+            - { name: linkin_swagger_resolver.validator }
+
+    Linkin\Bundle\SwaggerResolverBundle\Validator\NumberMinimumValidator:
+        public:     false
+        tags:
+            - { name: linkin_swagger_resolver.validator }
+
+    Linkin\Bundle\SwaggerResolverBundle\Validator\NumberMultipleOfValidator:
+        public:     false
+        tags:
+            - { name: linkin_swagger_resolver.validator }
+
+    Linkin\Bundle\SwaggerResolverBundle\Validator\StringMaxLengthValidator:
+        public:     false
+        tags:
+            - { name: linkin_swagger_resolver.validator }
+
+    Linkin\Bundle\SwaggerResolverBundle\Validator\StringMinLengthValidator:
+        public:     false
+        tags:
+            - { name: linkin_swagger_resolver.validator }
+
+    Linkin\Bundle\SwaggerResolverBundle\Validator\StringPatternValidator:
+        public:     false
+        tags:
+            - { name: linkin_swagger_resolver.validator }

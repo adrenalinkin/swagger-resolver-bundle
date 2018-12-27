@@ -13,14 +13,21 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\DependencyInjection;
 
+use Linkin\Bundle\SwaggerResolverBundle\DependencyInjection\Compiler\SwaggerValidatorCompilerPass;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\JsonConfigurationLoader;
+use Linkin\Bundle\SwaggerResolverBundle\Loader\NelmioApiDocConfigurationLoader;
+use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerConfigurationLoaderInterface;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerPhpConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\YamlConfigurationLoader;
+use Linkin\Bundle\SwaggerResolverBundle\Merger\MergeStrategyInterface;
+use Linkin\Bundle\SwaggerResolverBundle\Validator\SwaggerValidatorInterface;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -37,9 +44,15 @@ class LinkinSwaggerResolverExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.yml');
+        $loader->load('services.yaml');
 
+        $this->registerPathMergerStrategy($container, $config);
         $this->registerConfigurationLoader($container, $config);
+
+        $container
+            ->registerForAutoconfiguration(SwaggerValidatorInterface::class)
+            ->addTag(SwaggerValidatorCompilerPass::TAG)
+        ;
     }
 
     /**
@@ -49,23 +62,16 @@ class LinkinSwaggerResolverExtension extends Extension
     private function registerConfigurationLoader(ContainerBuilder $container, array $config): void
     {
         if (!empty($config['configuration_loader_service'])) {
-            $container->setParameter(
-                'linkin_swagger_resolver.configuration_loader',
-                $config['configuration_loader_service']
-            );
+            $container->setAlias(SwaggerConfigurationLoaderInterface::class, $config['configuration_loader_service']);
 
             return;
         }
 
+        $loaderDefinition = $this->getConfigurationLoaderDefinition($container, $config);
         $configurationLoaderDefinitionId = 'linkin_swagger_resolver.loader.configuration';
-        $container->setParameter('linkin_swagger_resolver.configuration_loader', $configurationLoaderDefinitionId);
 
-        $bundles = $container->getParameter('kernel.bundles');
-
-        if (empty($bundles['NelmioApiDocBundle'])) {
-            $loaderDefinition = $this->getConfigurationLoaderDefinition($container, $config);
-            $container->setDefinition($configurationLoaderDefinitionId, $loaderDefinition);
-        }
+        $container->setDefinition($configurationLoaderDefinitionId, $loaderDefinition);
+        $container->setAlias(SwaggerConfigurationLoaderInterface::class, $configurationLoaderDefinitionId);
     }
 
     /**
@@ -76,6 +82,17 @@ class LinkinSwaggerResolverExtension extends Extension
      */
     private function getConfigurationLoaderDefinition(ContainerBuilder $container, array $config): Definition
     {
+        $loaderDefinition = new Definition();
+
+        $bundles = $container->getParameter('kernel.bundles');
+
+        if (isset($bundles['NelmioApiDocBundle'])) {
+            return $loaderDefinition
+                ->setClass(NelmioApiDocConfigurationLoader::class)
+                ->addArgument(new Reference('nelmio_api_doc.generator'))
+            ;
+        }
+
         if (class_exists('\Swagger\Annotations\Swagger')) {
             $scanDir = $config['swagger_php']['scan'];
             $excludeDir = $config['swagger_php']['exclude'] ?? [];
@@ -84,13 +101,11 @@ class LinkinSwaggerResolverExtension extends Extension
                 $scanDir = [sprintf('%s/src', $container->getParameter('kernel.project_dir'))];
             }
 
-            $loaderDefinition = new Definition(SwaggerPhpConfigurationLoader::class);
-            $loaderDefinition
+            return $loaderDefinition
+                ->setClass(SwaggerPhpConfigurationLoader::class)
                 ->addArgument($scanDir)
                 ->addArgument($excludeDir)
             ;
-
-            return $loaderDefinition;
         }
 
         $pathToConfig = $config['configuration_file'];
@@ -99,20 +114,41 @@ class LinkinSwaggerResolverExtension extends Extension
             $pathToConfig = sprintf('%s/web/swagger.json', $container->getParameter('kernel.project_dir'));
         }
 
+        $loaderDefinition->addArgument($pathToConfig);
+
         $explodedPath = explode('.', $pathToConfig);
         $extension = end($explodedPath);
 
         if ('json' === $extension) {
-            $configurationLoaderDefinitionId = JsonConfigurationLoader::class;
-        } elseif ('yaml' === $extension || 'yml' === $extension) {
-            $configurationLoaderDefinitionId = YamlConfigurationLoader::class;
-        } else {
-            throw new InvalidTypeException('Received unsupported file');
+            return $loaderDefinition->setClass(JsonConfigurationLoader::class);
         }
 
-        $loaderDefinition = new Definition($configurationLoaderDefinitionId);
-        $loaderDefinition->addArgument($pathToConfig);
+        if ('yaml' === $extension || 'yml' === $extension) {
+            return $loaderDefinition->setClass(YamlConfigurationLoader::class);
+        }
 
-        return $loaderDefinition;
+        throw new InvalidTypeException('Received unsupported file');
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param array $config
+     */
+    private function registerPathMergerStrategy(ContainerBuilder $container, array $config): void
+    {
+        $class = $container->findDefinition($config['path_merge_strategy'])->getClass();
+
+        if (!$class) {
+            $class = $config['path_merge_strategy'];
+        }
+
+        if (!is_subclass_of($class, MergeStrategyInterface::class)) {
+            throw new InvalidConfigurationException(sprintf(
+                'Parameter "path_merge_strategy" should contain class which implements "%s"',
+                MergeStrategyInterface::class
+            ));
+        }
+
+        $container->setAlias(MergeStrategyInterface::class, $config['path_merge_strategy']);
     }
 }

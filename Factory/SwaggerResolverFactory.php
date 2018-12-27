@@ -15,11 +15,15 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Factory;
 
 use EXSyst\Component\Swagger\Schema;
 use EXSyst\Component\Swagger\Swagger;
+use Linkin\Bundle\SwaggerResolverBundle\Builder\SwaggerResolverBuilder;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\DefinitionNotFoundException;
-use Linkin\Bundle\SwaggerResolverBundle\Exception\UndefinedPropertyTypeException;
+use Linkin\Bundle\SwaggerResolverBundle\Exception\PathNotFoundException;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerConfigurationLoaderInterface;
+use Linkin\Bundle\SwaggerResolverBundle\Merger\MergeStrategyInterface;
+use Linkin\Bundle\SwaggerResolverBundle\Merger\PathParameterMerger;
 use Linkin\Bundle\SwaggerResolverBundle\Resolver\SwaggerResolver;
-use Linkin\Bundle\SwaggerResolverBundle\Validator\SwaggerValidatorInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -27,9 +31,9 @@ use Linkin\Bundle\SwaggerResolverBundle\Validator\SwaggerValidatorInterface;
 class SwaggerResolverFactory
 {
     /**
-     * @var Swagger
+     * @var SwaggerResolverBuilder
      */
-    private $configuration;
+    private $builder;
 
     /**
      * @var SwaggerConfigurationLoaderInterface
@@ -37,18 +41,64 @@ class SwaggerResolverFactory
     private $configurationLoader;
 
     /**
-     * @var SwaggerValidatorInterface[]
+     * @var PathParameterMerger
      */
-    private $swaggerValidators;
+    private $pathParameterMerger;
 
     /**
-     * @param SwaggerValidatorInterface[]         $swaggerValidators
-     * @param SwaggerConfigurationLoaderInterface $loader
+     * @var RouterInterface
      */
-    public function __construct(array $swaggerValidators, SwaggerConfigurationLoaderInterface $loader)
-    {
+    private $router;
+
+    /**
+     * @var Swagger
+     */
+    private $swaggerConfiguration;
+
+    /**
+     * @param SwaggerResolverBuilder $builder
+     * @param SwaggerConfigurationLoaderInterface $loader
+     * @param PathParameterMerger $pathParameterMerger
+     * @param RouterInterface $router
+     */
+    public function __construct(
+        SwaggerResolverBuilder $builder,
+        SwaggerConfigurationLoaderInterface $loader,
+        PathParameterMerger $pathParameterMerger,
+        RouterInterface $router
+    ) {
+        $this->builder = $builder;
         $this->configurationLoader = $loader;
-        $this->swaggerValidators = $swaggerValidators;
+        $this->pathParameterMerger = $pathParameterMerger;
+        $this->router = $router;
+    }
+
+    /**
+     * @param Request $request
+     * @param MergeStrategyInterface|null $mergeStrategy
+     *
+     * @return SwaggerResolver
+     */
+    public function createForRequest(Request $request, ?MergeStrategyInterface $mergeStrategy = null): SwaggerResolver
+    {
+        $pathInfo = $this->router->match($request->getPathInfo());
+        $route = $this->router->getRouteCollection()->get($pathInfo['_route']);
+        $routePath = $route->getPath();
+
+        $paths = $this->getSwaggerConfiguration()->getPaths();
+        $definitions = $this->getSwaggerConfiguration()->getDefinitions();
+
+        if (!$paths->has($routePath)) {
+            throw new PathNotFoundException($routePath);
+        }
+
+        $requestMethod = strtolower($request->getMethod());
+
+        $swaggerPath = $paths->get($routePath);
+
+        $mergedSchema = $this->pathParameterMerger->merge($swaggerPath, $requestMethod, $definitions, $mergeStrategy);
+
+        return $this->builder->build($mergedSchema, $routePath);
     }
 
     /**
@@ -59,46 +109,20 @@ class SwaggerResolverFactory
     public function createForDefinition(string $definitionName): SwaggerResolver
     {
         $definition = $this->getDefinition($definitionName);
-        $swaggerResolver = new SwaggerResolver($definition);
 
-        $requiredProperties = $definition->getRequired();
+        return $this->builder->build($definition, $definitionName);
+    }
 
-        if (is_array($requiredProperties)) {
-            $swaggerResolver->setRequired($requiredProperties);
+    /**
+     * @return Swagger
+     */
+    private function getSwaggerConfiguration(): Swagger
+    {
+        if (null === $this->swaggerConfiguration) {
+            $this->swaggerConfiguration = $this->configurationLoader->loadConfiguration();
         }
 
-        $propertiesCount = $definition->getProperties()->getIterator()->count();
-
-        if (0 === $propertiesCount) {
-            return $swaggerResolver;
-        }
-
-        /** @var Schema $propertySchema */
-        foreach ($definition->getProperties() as $name => $propertySchema) {
-            $swaggerResolver->setDefined($name);
-
-            $allowedTypes = $this->getAllowedTypes($definitionName, $propertySchema, $name);
-
-            if (!$swaggerResolver->isRequired($name)) {
-                $allowedTypes[] = 'null';
-            }
-
-            $swaggerResolver->setAllowedTypes($name, $allowedTypes);
-
-            if (null !== $propertySchema->getDefault()) {
-                $swaggerResolver->setDefault($name, $propertySchema->getDefault());
-            }
-
-            if (!empty($propertySchema->getEnum())) {
-                $swaggerResolver->setAllowedValues($name, (array) $propertySchema->getEnum());
-            }
-        }
-
-        foreach ($this->swaggerValidators as $validator) {
-            $swaggerResolver->addValidator($validator);
-        }
-
-        return $swaggerResolver;
+        return $this->swaggerConfiguration;
     }
 
     /**
@@ -108,11 +132,7 @@ class SwaggerResolverFactory
      */
     private function getDefinition(string $definitionName): Schema
     {
-        if (null === $this->configuration) {
-            $this->configuration = $this->configurationLoader->loadConfiguration();
-        }
-
-        $definitions = $this->configuration->getDefinitions();
+        $definitions = $this->getSwaggerConfiguration()->getDefinitions();
 
         $explodedName = explode('\\', $definitionName);
         $definitionName = end($explodedName);
@@ -122,69 +142,5 @@ class SwaggerResolverFactory
         }
 
         throw new DefinitionNotFoundException($definitionName);
-    }
-
-    /**
-     * @param string $definition
-     * @param Schema $propertySchema
-     * @param string $name
-     *
-     * @return array
-     */
-    private function getAllowedTypes(string $definition, Schema $propertySchema, string $name): array
-    {
-        $propertyType = $propertySchema->getType();
-        $allowedTypes = [];
-
-        if ('string' === $propertyType) {
-            $allowedTypes[] = 'string';
-
-            return $allowedTypes;
-        }
-
-        if ('integer' === $propertyType) {
-            $allowedTypes[] = 'integer';
-            $allowedTypes[] = 'int';
-
-            return $allowedTypes;
-        }
-
-        if ('boolean' === $propertyType) {
-            $allowedTypes[] = 'boolean';
-            $allowedTypes[] = 'bool';
-
-            return $allowedTypes;
-        }
-
-        if ('number' === $propertyType) {
-            $allowedTypes[] = 'double';
-            $allowedTypes[] = 'float';
-
-            return $allowedTypes;
-        }
-
-        if ('array' === $propertyType) {
-            $allowedTypes[] = null === $propertySchema->getCollectionFormat() ? 'array' : 'string';
-
-            return $allowedTypes;
-        }
-
-        if ('object' === $propertyType) {
-            $allowedTypes[] = 'object';
-            $allowedTypes[] = 'array';
-
-            return $allowedTypes;
-        }
-
-        if (null === $propertyType && $propertySchema->getRef()) {
-            $ref = $propertySchema->getRef();
-
-            $allowedTypes[] = 'object';
-            $allowedTypes[] = $ref;
-
-            return $allowedTypes;
-        }
-
-        throw new UndefinedPropertyTypeException($definition, $name, (string) $propertyType);
     }
 }
