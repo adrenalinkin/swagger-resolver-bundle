@@ -4,6 +4,8 @@ Swagger Resolver Bundle [![In English](https://img.shields.io/badge/Switch_To-En
 [![Latest Stable Version](https://poser.pugx.org/adrenalinkin/swagger-resolver-bundle/v/stable)](https://packagist.org/packages/adrenalinkin/swagger-resolver-bundle)
 [![Total Downloads](https://poser.pugx.org/adrenalinkin/swagger-resolver-bundle/downloads)](https://packagist.org/packages/adrenalinkin/swagger-resolver-bundle)
 
+[![knpbundles.com](http://knpbundles.com/adrenalinkin/swagger-resolver-bundle/badge-short)](http://knpbundles.com/adrenalinkin/swagger-resolver-bundle)
+
 Введение
 --------
 
