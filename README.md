@@ -1,6 +1,9 @@
 Swagger Resolver Bundle [![На Русском](https://img.shields.io/badge/Перейти_на-Русский-green.svg?style=flat-square)](./README.RU.md)
 =======================
 
+[![Latest Stable Version](https://poser.pugx.org/adrenalinkin/swagger-resolver-bundle/v/stable)](https://packagist.org/packages/adrenalinkin/swagger-resolver-bundle)
+[![Total Downloads](https://poser.pugx.org/adrenalinkin/swagger-resolver-bundle/downloads)](https://packagist.org/packages/adrenalinkin/swagger-resolver-bundle)
+
 Introduction
 ------------
 
