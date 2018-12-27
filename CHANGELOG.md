@@ -1,4 +1,4 @@
-## [Unreleased] [BC]
+## [0.2.0] - 2018-12-27
 ### Added
 - Added possibility for creating `SwaggerResolver` object for all defined swagger request parameters.
 - Added `SwaggerConfigurationLoaderInterface` into container as alias for the actual configuration loader service.
