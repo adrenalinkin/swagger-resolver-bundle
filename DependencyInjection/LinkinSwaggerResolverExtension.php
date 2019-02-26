@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\DependencyInjection;
 
+use Linkin\Bundle\SwaggerResolverBundle\DependencyInjection\Compiler\SwaggerNormalizerCompilerPass;
 use Linkin\Bundle\SwaggerResolverBundle\DependencyInjection\Compiler\SwaggerValidatorCompilerPass;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\JsonConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\NelmioApiDocConfigurationLoader;
@@ -20,8 +21,8 @@ use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerConfigurationLoaderInterfa
 use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerPhpConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\YamlConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\MergeStrategyInterface;
+use Linkin\Bundle\SwaggerResolverBundle\Normalizer\SwaggerNormalizerInterface;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\SwaggerValidatorInterface;
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -29,6 +30,10 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use function class_exists;
+use function end;
+use function explode;
+use function sprintf;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -46,18 +51,26 @@ class LinkinSwaggerResolverExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yaml');
 
-        $this->registerPathMergerStrategy($container, $config);
+        $container->setParameter('linkin_swagger_resolver.enable_normalization', $config['enable_normalization']);
+
+        $container->setAlias(MergeStrategyInterface::class, $config['path_merge_strategy']);
+
         $this->registerConfigurationLoader($container, $config);
 
         $container
             ->registerForAutoconfiguration(SwaggerValidatorInterface::class)
             ->addTag(SwaggerValidatorCompilerPass::TAG)
         ;
+
+        $container
+            ->registerForAutoconfiguration(SwaggerNormalizerInterface::class)
+            ->addTag(SwaggerNormalizerCompilerPass::TAG)
+        ;
     }
 
     /**
      * @param ContainerBuilder $container
-     * @param array            $config
+     * @param array $config
      */
     private function registerConfigurationLoader(ContainerBuilder $container, array $config): void
     {
@@ -76,7 +89,7 @@ class LinkinSwaggerResolverExtension extends Extension
 
     /**
      * @param ContainerBuilder $container
-     * @param array            $config
+     * @param array $config
      *
      * @return Definition
      */
@@ -128,27 +141,5 @@ class LinkinSwaggerResolverExtension extends Extension
         }
 
         throw new InvalidTypeException('Received unsupported file');
-    }
-
-    /**
-     * @param ContainerBuilder $container
-     * @param array $config
-     */
-    private function registerPathMergerStrategy(ContainerBuilder $container, array $config): void
-    {
-        $class = $container->findDefinition($config['path_merge_strategy'])->getClass();
-
-        if (!$class) {
-            $class = $config['path_merge_strategy'];
-        }
-
-        if (!is_subclass_of($class, MergeStrategyInterface::class)) {
-            throw new InvalidConfigurationException(sprintf(
-                'Parameter "path_merge_strategy" should contain class which implements "%s"',
-                MergeStrategyInterface::class
-            ));
-        }
-
-        $container->setAlias(MergeStrategyInterface::class, $config['path_merge_strategy']);
     }
 }

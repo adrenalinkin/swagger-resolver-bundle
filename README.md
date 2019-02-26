@@ -49,7 +49,7 @@ the latest stable version of this bundle:
 Then, enable the bundle by updating your `app/AppKernel.php` file to enable the bundle:
 
 ```php
-<?php
+<?php declare(strict_types=1);
 // app/AppKernel.php
 
 class AppKernel extends Kernel
@@ -80,6 +80,11 @@ All parameters has values by default:
 ```yaml
 # app/config.yml
 linkin_swagger_resolver:
+    # default parameter locations which can apply normalization
+    enable_normalization:
+        - 'query'
+        - 'path'
+        - 'header'
     # default strategy for merge all request parameters.
     path_merge_strategy:            Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\StrictMergeStrategy
     configuration_loader_service:   ~   # the name of the configuration loader service
@@ -157,7 +162,7 @@ linkin_swagger_resolver:
 #### Validation for model
 
 ```php
-<?php
+<?php declare(strict_types=1);
 
 /** @var \Linkin\Bundle\SwaggerResolverBundle\Factory\SwaggerResolverFactory $factory */
 $factory = $container->get('linkin_swagger_resolver.factory');
@@ -173,7 +178,7 @@ $data = $swaggerResolver->resolve(json_decode($request->getContent(), true));
 #### Validation for request
 
 ```php
-<?php
+<?php declare(strict_types=1);
 
 /** @var \Linkin\Bundle\SwaggerResolverBundle\Factory\SwaggerResolverFactory $factory */
 $factory = $container->get('linkin_swagger_resolver.factory');
@@ -194,6 +199,14 @@ List of all validators, you can find out by going to the [Validator](./Validator
 All validators registered as tagging services. To create your own validator it is enough to create class,
 which implements [SwaggerValidatorInterface](./Validator/SwaggerValidatorInterface.php) and then
 register it under the tag `linkin_swagger_resolver.validator`.
+
+### Custom normalizer
+
+Bundle validates the data through the normalizer system.
+List of all normalizers, you can find out by going to the [Normalizer](./Normalizer) folder.
+All normalizers registered as tagging services. To create your own normalizer it is enough to create class,
+which implements [SwaggerNormalizerInterface](./Normalizer/SwaggerNormalizerInterface.php) and then
+register it under the tag `linkin_swagger_resolver.normalizer`.
 
 License
 -------

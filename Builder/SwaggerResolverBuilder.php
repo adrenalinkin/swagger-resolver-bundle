@@ -15,8 +15,11 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Builder;
 
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\UndefinedPropertyTypeException;
+use Linkin\Bundle\SwaggerResolverBundle\Normalizer\SwaggerNormalizerInterface;
 use Linkin\Bundle\SwaggerResolverBundle\Resolver\SwaggerResolver;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\SwaggerValidatorInterface;
+use function in_array;
+use function is_array;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -24,15 +27,29 @@ use Linkin\Bundle\SwaggerResolverBundle\Validator\SwaggerValidatorInterface;
 class SwaggerResolverBuilder
 {
     /**
+     * @var array
+     */
+    private $normalizationLocations;
+
+    /**
+     * @var SwaggerNormalizerInterface[]
+     */
+    private $swaggerNormalizers;
+
+    /**
      * @var SwaggerValidatorInterface[]
      */
     private $swaggerValidators;
 
     /**
      * @param SwaggerValidatorInterface[] $swaggerValidators
+     * @param SwaggerNormalizerInterface[] $swaggerNormalizers
+     * @param array $normalizationLocations
      */
-    public function __construct(array $swaggerValidators)
+    public function __construct(array $swaggerValidators, array $swaggerNormalizers, array $normalizationLocations)
     {
+        $this->normalizationLocations = $normalizationLocations;
+        $this->swaggerNormalizers = $swaggerNormalizers;
         $this->swaggerValidators = $swaggerValidators;
     }
 
@@ -50,7 +67,7 @@ class SwaggerResolverBuilder
 
         $requiredProperties = $definition->getRequired();
 
-        if (\is_array($requiredProperties)) {
+        if (is_array($requiredProperties)) {
             $swaggerResolver->setRequired($requiredProperties);
         }
 
@@ -77,6 +94,7 @@ class SwaggerResolverBuilder
             }
 
             $swaggerResolver->setAllowedTypes($name, $allowedTypes);
+            $swaggerResolver = $this->addNormalization($swaggerResolver, $name, $propertySchema);
 
             if (null !== $propertySchema->getDefault()) {
                 $swaggerResolver->setDefault($name, $propertySchema->getDefault());
@@ -92,6 +110,45 @@ class SwaggerResolverBuilder
         }
 
         return $swaggerResolver;
+    }
+
+    /**
+     * @param SwaggerResolver $resolver
+     * @param string $name
+     * @param Schema $propertySchema
+     *
+     * @return SwaggerResolver
+     */
+    /**
+     * @param SwaggerResolver $resolver
+     * @param string $name
+     * @param Schema $propertySchema
+     *
+     * @return SwaggerResolver
+     */
+    private function addNormalization(SwaggerResolver $resolver, string $name, Schema $propertySchema): SwaggerResolver
+    {
+        /** @see \Linkin\Bundle\SwaggerResolverBundle\Merger\PathParameterMerger parameter location in title */
+        if (!in_array($propertySchema->getTitle(), $this->normalizationLocations, true)) {
+            return $resolver;
+        }
+
+        $isRequired = $resolver->isRequired($name);
+
+        foreach ($this->swaggerNormalizers as $normalizer) {
+            if (!$normalizer->supports($propertySchema, $name, $isRequired)) {
+                continue;
+            }
+
+            $closure = $normalizer->getNormalizer($propertySchema, $name, $isRequired);
+
+            return $resolver
+                ->setNormalizer($name, $closure)
+                ->addAllowedTypes($name, 'string')
+            ;
+        }
+
+        return $resolver;
     }
 
     /**

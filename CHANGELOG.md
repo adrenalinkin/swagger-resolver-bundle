@@ -1,9 +1,17 @@
+## [Unreleased]
+### Added
+- Added normalizers usage and provides possibility for enable this for concrete parameter locations.
+- Added new configuration parameter `enable_normalization`.
+- Added `SwaggerNormalizerInterface` and implementation for `integer`, `number` and `boolean`.
+### Removed
+- Removed `linkin_swagger_resolver.builder` alias.
+
 ## [0.2.0] - 2018-12-27
 ### Added
 - Added possibility for creating `SwaggerResolver` object for all defined swagger request parameters.
 - Added `SwaggerConfigurationLoaderInterface` into container as alias for the actual configuration loader service.
 - Added possibility for use different strategies when performing resolving for the full request.
-- Added new parameter `path_merge_strategy`.
+- Added new configuration parameter `path_merge_strategy`.
 - Added auto-configuration for the `SwaggerValidatorInterface`.
 ### Changed
 - Renamed `services.yml` into `services.yaml`.

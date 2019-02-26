@@ -17,6 +17,9 @@ use EXSyst\Component\Swagger\Collections\Definitions;
 use EXSyst\Component\Swagger\Parameter;
 use EXSyst\Component\Swagger\Path;
 use EXSyst\Component\Swagger\Schema;
+use function array_flip;
+use function end;
+use function explode;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -62,7 +65,7 @@ class PathParameterMerger
                 $mergeStrategy->addParameter(
                     $parameter->getIn(),
                     $parameter->getName(),
-                    $parameter->toArray(),
+                    $parameter->toArray() + ['title' => $parameter->getIn()],
                     $parameter->getRequired() === true
                 );
 
@@ -86,7 +89,7 @@ class PathParameterMerger
                     $mergeStrategy->addParameter(
                         $parameter->getIn(),
                         $defName,
-                        $defItem->toArray(),
+                        $defItem->toArray() + ['title' => $parameter->getIn()],
                         isset($required[$defName])
                     );
                 }
@@ -103,7 +106,7 @@ class PathParameterMerger
                     $mergeStrategy->addParameter(
                         $parameter->getIn(),
                         $bodyItemName,
-                        $currentBodyItem->toArray(),
+                        $currentBodyItem->toArray() + ['title' => $parameter->getIn()],
                         isset($required[$bodyItemName])
                     );
                 }
@@ -115,7 +118,7 @@ class PathParameterMerger
             $mergeStrategy->addParameter(
                 $parameter->getIn(),
                 $parameter->getName(),
-                $parameterSchema->toArray(),
+                $parameterSchema->toArray() + ['title' => $parameter->getIn()],
                 $parameter->getRequired() === true
             );
         }

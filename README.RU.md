@@ -48,7 +48,7 @@ Swagger Resolver Bundle [![In English](https://img.shields.io/badge/Switch_To-En
 После включите бандл добавив его в список зарегистрированных бандлов в `app/AppKernel.php` файл вашего проекта:
 
 ```php
-<?php
+<?php declare(strict_types=1);
 // app/AppKernel.php
 
 class AppKernel extends Kernel
@@ -79,6 +79,11 @@ class AppKernel extends Kernel
 ```yaml
 # app/config.yml
 linkin_swagger_resolver:
+    # список локаций параметров по умолчания, для которых включена нормализация
+    enable_normalization:
+        - 'query'
+        - 'path'
+        - 'header'
     # стратегия по умолчанию для слияния параметров запроса
     path_merge_strategy:            Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\StrictMergeStrategy
     configuration_loader_service:   ~   # имя сервиса загрузки конфигурации
@@ -156,7 +161,7 @@ linkin_swagger_resolver:
 #### Валидация модели
 
 ```php
-<?php
+<?php declare(strict_types=1);
 
 /** @var \Linkin\Bundle\SwaggerResolverBundle\Factory\SwaggerResolverFactory $factory */
 $factory = $container->get('linkin_swagger_resolver.factory');
@@ -172,7 +177,7 @@ $data = $swaggerResolver->resolve(json_decode($request->getContent(), true));
 #### Валидация всего запроса
 
 ```php
-<?php
+<?php declare(strict_types=1);
 
 /** @var \Linkin\Bundle\SwaggerResolverBundle\Factory\SwaggerResolverFactory $factory */
 $factory = $container->get('linkin_swagger_resolver.factory');
@@ -193,6 +198,14 @@ $data = $swaggerResolver->resolve(json_decode($request->getContent(), true));
 Валидаторы являются тегированными сервисами. Чтобы создать свой собственный валидатор достаточно создать
 класс, реализующий интерфейс [SwaggerValidatorInterface](./Validator/SwaggerValidatorInterface.php) и
 зарегистрировать его с тегом `linkin_swagger_resolver.validator`.
+
+### Собственный нормализатор
+
+Бандл производит нормализацию данных посредством системы нормализаторов.
+Со списком всех нормализаторов вы можете ознакомиться перейдя в папку [Normalizer](./Normalizer).
+Нормализаторы являются тегированными сервисами. Чтобы создать свой собственный нормализатор достаточно создать
+класс, реализующий интерфейс [SwaggerNormalizerInterface](./Normalizer/SwaggerNormalizerInterface.php) и
+зарегистрировать его с тегом `linkin_swagger_resolver.normalizer`.
 
 Лицензия
 --------
