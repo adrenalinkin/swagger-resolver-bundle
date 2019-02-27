@@ -23,9 +23,9 @@ use function iterator_to_array;
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-class SwaggerValidatorCompilerPass implements CompilerPassInterface
+class SwaggerNormalizerCompilerPass implements CompilerPassInterface
 {
-    public const TAG = 'linkin_swagger_resolver.validator';
+    public const TAG = 'linkin_swagger_resolver.normalizer';
 
     /**
      * {@inheritdoc}
@@ -36,21 +36,21 @@ class SwaggerValidatorCompilerPass implements CompilerPassInterface
             return;
         }
 
-        $validatorQueue = new SplPriorityQueue();
+        $normalizerQueue = new SplPriorityQueue();
 
         foreach ($container->findTaggedServiceIds(self::TAG) as $id => $attributes) {
             $validatorReference = new Reference($id);
 
             $priority = isset($attributes['priority']) ? $attributes['priority'] : 0;
 
-            $validatorQueue->insert($validatorReference, $priority);
+            $normalizerQueue->insert($validatorReference, $priority);
         }
 
-        $validators = iterator_to_array($validatorQueue);
+        $normalizers = iterator_to_array($normalizerQueue);
 
         $container
             ->getDefinition(SwaggerResolverBuilder::class)
-            ->replaceArgument(0, $validators)
+            ->replaceArgument(1, $normalizers)
         ;
     }
 }
