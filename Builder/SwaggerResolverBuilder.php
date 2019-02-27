@@ -119,13 +119,6 @@ class SwaggerResolverBuilder
      *
      * @return SwaggerResolver
      */
-    /**
-     * @param SwaggerResolver $resolver
-     * @param string $name
-     * @param Schema $propertySchema
-     *
-     * @return SwaggerResolver
-     */
     private function addNormalization(SwaggerResolver $resolver, string $name, Schema $propertySchema): SwaggerResolver
     {
         /** @see \Linkin\Bundle\SwaggerResolverBundle\Merger\PathParameterMerger parameter location in title */
