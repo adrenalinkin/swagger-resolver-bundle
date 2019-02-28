@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Linkin\Bundle\SwaggerResolverBundle\Builder;
 
 use EXSyst\Component\Swagger\Schema;
+use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterTypeEnum;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\UndefinedPropertyTypeException;
 use Linkin\Bundle\SwaggerResolverBundle\Normalizer\SwaggerNormalizerInterface;
 use Linkin\Bundle\SwaggerResolverBundle\Resolver\SwaggerResolver;
@@ -154,34 +155,34 @@ class SwaggerResolverBuilder
         $propertyType = $propertySchema->getType();
         $allowedTypes = [];
 
-        if ('string' === $propertyType) {
+        if (ParameterTypeEnum::STRING === $propertyType) {
             $allowedTypes[] = 'string';
 
             return $allowedTypes;
         }
 
-        if ('integer' === $propertyType) {
+        if (ParameterTypeEnum::INTEGER === $propertyType) {
             $allowedTypes[] = 'integer';
             $allowedTypes[] = 'int';
 
             return $allowedTypes;
         }
 
-        if ('boolean' === $propertyType) {
+        if (ParameterTypeEnum::BOOLEAN === $propertyType) {
             $allowedTypes[] = 'boolean';
             $allowedTypes[] = 'bool';
 
             return $allowedTypes;
         }
 
-        if ('number' === $propertyType) {
+        if (ParameterTypeEnum::NUMBER === $propertyType) {
             $allowedTypes[] = 'double';
             $allowedTypes[] = 'float';
 
             return $allowedTypes;
         }
 
-        if ('array' === $propertyType) {
+        if (ParameterTypeEnum::ARRAY === $propertyType) {
             $allowedTypes[] = null === $propertySchema->getCollectionFormat() ? 'array' : 'string';
 
             return $allowedTypes;

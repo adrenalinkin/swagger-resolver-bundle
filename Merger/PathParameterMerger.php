@@ -17,6 +17,7 @@ use EXSyst\Component\Swagger\Collections\Definitions;
 use EXSyst\Component\Swagger\Parameter;
 use EXSyst\Component\Swagger\Path;
 use EXSyst\Component\Swagger\Schema;
+use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterLocationEnum;
 use function array_flip;
 use function end;
 use function explode;
@@ -61,7 +62,7 @@ class PathParameterMerger
 
         /** @var Parameter $parameter */
         foreach ($swaggerOperation->getParameters() as $parameter) {
-            if ($parameter->getIn() !== 'body') {
+            if ($parameter->getIn() !== ParameterLocationEnum::IN_BODY) {
                 $mergeStrategy->addParameter(
                     $parameter->getIn(),
                     $parameter->getName(),

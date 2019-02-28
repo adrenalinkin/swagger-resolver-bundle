@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Linkin\Bundle\SwaggerResolverBundle\Validator;
 
 use EXSyst\Component\Swagger\Schema;
+use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterCollectionFormatEnum;
+use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterTypeEnum;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use function explode;
 use function is_array;
@@ -29,7 +31,7 @@ abstract class AbstractArrayValidator implements SwaggerValidatorInterface
      */
     public function supports(Schema $property, array $context = []): bool
     {
-        return 'array' === $property->getType();
+        return ParameterTypeEnum::ARRAY === $property->getType();
     }
 
     /**
@@ -66,10 +68,10 @@ abstract class AbstractArrayValidator implements SwaggerValidatorInterface
             ));
         }
 
-        $delimiter = $this->getDelimiter($collectionFormat);
+        $delimiter = ParameterCollectionFormatEnum::getDelimiter($collectionFormat);
         $arrayValue = explode($delimiter, $value);
 
-        if ('multi' === $delimiter) {
+        if (ParameterCollectionFormatEnum::MULTI === $delimiter) {
             foreach ($arrayValue as &$item) {
                 $exploded = explode('=', $item);
                 $item = $exploded[1];
@@ -77,28 +79,5 @@ abstract class AbstractArrayValidator implements SwaggerValidatorInterface
         }
 
         return $arrayValue;
-    }
-
-    /**
-     * @param string $collectionFormat
-     *
-     * @return string
-     */
-    private function getDelimiter(string $collectionFormat): string
-    {
-        switch ($collectionFormat) {
-            case 'csv':
-                return ',';
-            case 'ssv':
-                return ' ';
-            case 'tsv':
-                return "\t";
-            case 'pipes':
-                return '|';
-            case 'multi':
-                return '&';
-            default:
-                throw new InvalidOptionsException(sprintf('Unexpected collection format: %s', $collectionFormat));
-        }
     }
 }

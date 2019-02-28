@@ -15,6 +15,7 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Normalizer;
 
 use Closure;
 use EXSyst\Component\Swagger\Schema;
+use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterTypeEnum;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\NormalizationFailedException;
 use Symfony\Component\OptionsResolver\Options;
 use function is_numeric;
@@ -29,7 +30,7 @@ class IntegerNormalizer implements SwaggerNormalizerInterface
      */
     public function supports(Schema $propertySchema, string $propertyName, bool $isRequired, array $context = []): bool
     {
-        return $propertySchema->getType() === 'integer';
+        return $propertySchema->getType() === ParameterTypeEnum::INTEGER;
     }
 
     /**

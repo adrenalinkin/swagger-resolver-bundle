@@ -3,6 +3,8 @@
 - Added normalizers usage and provides possibility for enable this for concrete parameter locations.
 - Added new configuration parameter `enable_normalization`.
 - Added `SwaggerNormalizerInterface` and implementation for `integer`, `number` and `boolean`.
+- Added enums for typical swagger parameter options: 
+    `ParameterCollectionFormatEnum`, `ParameterLocationEnum`, `ParameterTypeEnum`.
 ### Removed
 - Removed `linkin_swagger_resolver.builder` alias.
 

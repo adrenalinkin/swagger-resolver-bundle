@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Linkin\Bundle\SwaggerResolverBundle\Validator;
 
 use EXSyst\Component\Swagger\Schema;
+use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterTypeEnum;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use function in_array;
 use function is_int;
@@ -29,7 +30,9 @@ class NumberMultipleOfValidator implements SwaggerValidatorInterface
      */
     public function supports(Schema $property, array $context = []): bool
     {
-        return in_array($property->getType(), ['number', 'integer'], true) && null !== $property->getMultipleOf();
+        return in_array($property->getType(), [ParameterTypeEnum::NUMBER, ParameterTypeEnum::INTEGER], true)
+            && null !== $property->getMultipleOf()
+        ;
     }
 
     /**

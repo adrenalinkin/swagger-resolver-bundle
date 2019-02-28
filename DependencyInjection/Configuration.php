@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Linkin\Bundle\SwaggerResolverBundle\DependencyInjection;
 
 use Closure;
+use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterLocationEnum;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\MergeStrategyInterface;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\StrictMergeStrategy;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -41,7 +42,11 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->arrayNode('enable_normalization')
                     ->scalarPrototype()
-                        ->defaultValue(['query', 'path', 'header'])
+                        ->defaultValue([
+                            ParameterLocationEnum::IN_QUERY,
+                            ParameterLocationEnum::IN_PATH,
+                            ParameterLocationEnum::IN_HEADER,
+                        ])
                     ->end()
                     ->validate()->always($this->validationForEnableNormalization())->end()
                 ->end()
@@ -90,7 +95,7 @@ class Configuration implements ConfigurationInterface
     private function validationForEnableNormalization(): Closure
     {
         return function ($fromValues) {
-            $allowedValues = ['query', 'path', 'header', 'body', 'formData'];
+            $allowedValues = ParameterLocationEnum::getAll();
 
             $diff = array_diff($fromValues, $allowedValues);
 
