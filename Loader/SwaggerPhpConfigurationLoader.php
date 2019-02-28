@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Linkin\Bundle\SwaggerResolverBundle\Loader;
 
 use EXSyst\Component\Swagger\Swagger;
+use function json_decode;
+use function Swagger\scan;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -45,7 +47,7 @@ class SwaggerPhpConfigurationLoader implements SwaggerConfigurationLoaderInterfa
      */
     public function loadConfiguration(): Swagger
     {
-        $swaggerAnnotation = \Swagger\scan($this->scan, [
+        $swaggerAnnotation = scan($this->scan, [
             'exclude' => $this->exclude,
         ]);
 

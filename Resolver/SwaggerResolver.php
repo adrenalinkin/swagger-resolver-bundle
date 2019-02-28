@@ -16,6 +16,7 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Resolver;
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\SwaggerValidatorInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use function get_class;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -82,7 +83,7 @@ class SwaggerResolver extends OptionsResolver
      */
     public function addValidator(SwaggerValidatorInterface $validator): self
     {
-        $className = \get_class($validator);
+        $className = get_class($validator);
 
         $this->validators[$className] = $validator;
 

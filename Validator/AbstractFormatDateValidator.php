@@ -13,8 +13,12 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Validator;
 
+use DateTime;
+use Exception;
 use EXSyst\Component\Swagger\Schema;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
+use function preg_match;
+use function sprintf;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -44,7 +48,7 @@ abstract class AbstractFormatDateValidator implements SwaggerValidatorInterface
 
         try {
             $this->createDateFromValue($value);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new InvalidOptionsException(sprintf(
                 'Property "%s" contains invalid %s value',
                 $propertyName,
@@ -66,11 +70,13 @@ abstract class AbstractFormatDateValidator implements SwaggerValidatorInterface
     /**
      * @param mixed $value
      *
-     * @return \DateTime
+     * @return DateTime
+     *
+     * @throws Exception
      */
-    protected function createDateFromValue($value): \DateTime
+    protected function createDateFromValue($value): DateTime
     {
-        return new \DateTime($value);
+        return new DateTime($value);
     }
 
     /**

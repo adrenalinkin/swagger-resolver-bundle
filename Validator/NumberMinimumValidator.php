@@ -15,6 +15,8 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Validator;
 
 use EXSyst\Component\Swagger\Schema;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
+use function in_array;
+use function sprintf;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -26,7 +28,7 @@ class NumberMinimumValidator implements SwaggerValidatorInterface
      */
     public function supports(Schema $property, array $context = []): bool
     {
-        return \in_array($property->getType(), ['number', 'integer'], true) && null !== $property->getMinimum();
+        return in_array($property->getType(), ['number', 'integer'], true) && null !== $property->getMinimum();
     }
 
     /**

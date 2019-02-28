@@ -13,16 +13,19 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Exception;
 
+use RuntimeException;
+use function sprintf;
+
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-class PathNotFoundException extends \RuntimeException
+class PathNotFoundException extends RuntimeException
 {
     /**
      * @param string $path
      */
     public function __construct(string $path)
     {
-        $this->message = sprintf('Swagger path "%s" was not found', $path);
+        parent::__construct(sprintf('Swagger path "%s" was not found', $path));
     }
 }

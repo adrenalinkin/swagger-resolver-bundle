@@ -13,10 +13,13 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Exception;
 
+use RuntimeException;
+use function sprintf;
+
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-class UndefinedPropertyTypeException extends \RuntimeException
+class UndefinedPropertyTypeException extends RuntimeException
 {
     /**
      * @param string $definitionName
@@ -25,11 +28,11 @@ class UndefinedPropertyTypeException extends \RuntimeException
      */
     public function __construct(string $definitionName, string $propertyName, string $type)
     {
-        $this->message = sprintf(
+        parent::__construct(sprintf(
             'Property "%s" of the swagger definition "%s" contains undefined type "%s"',
             $propertyName,
             $definitionName,
             $type
-        );
+        ));
     }
 }

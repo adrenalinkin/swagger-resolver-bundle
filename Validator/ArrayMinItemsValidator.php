@@ -15,6 +15,8 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Validator;
 
 use EXSyst\Component\Swagger\Schema;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
+use function count;
+use function sprintf;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -36,7 +38,7 @@ class ArrayMinItemsValidator extends AbstractArrayValidator
     {
         $value = $this->convertValueToArray($propertyName, $value, $property->getCollectionFormat());
 
-        if (\count($value) < $property->getMinItems()) {
+        if (count($value) < $property->getMinItems()) {
             throw new InvalidOptionsException(sprintf(
                 'Property "%s" should have %s items or more',
                 $propertyName,

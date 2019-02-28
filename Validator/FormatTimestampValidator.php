@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Validator;
 
+use DateTime;
+use Exception;
+
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
@@ -21,15 +24,15 @@ class FormatTimestampValidator extends AbstractFormatDateValidator
     /**
      * {@inheritdoc}
      */
-    protected function createDateFromValue($value): \DateTime
+    protected function createDateFromValue($value): DateTime
     {
-        $date = \DateTime::createFromFormat('U', $value);
+        $date = DateTime::createFromFormat('U', $value);
 
-        if ($date instanceof \DateTime) {
+        if ($date instanceof DateTime) {
             return $date;
         }
 
-        throw new \Exception('Invalid timestamp value');
+        throw new Exception('Invalid timestamp value');
     }
 
     /**

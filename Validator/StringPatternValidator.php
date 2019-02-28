@@ -15,6 +15,9 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Validator;
 
 use EXSyst\Component\Swagger\Schema;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
+use function preg_match;
+use function sprintf;
+use function trim;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>

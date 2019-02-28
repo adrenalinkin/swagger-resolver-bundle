@@ -15,6 +15,9 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Validator;
 
 use EXSyst\Component\Swagger\Schema;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
+use function explode;
+use function is_array;
+use function sprintf;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -48,14 +51,14 @@ abstract class AbstractArrayValidator implements SwaggerValidatorInterface
         }
 
         if (null === $collectionFormat) {
-            if (\is_array($value)) {
+            if (is_array($value)) {
                 return $value;
             }
 
             throw new InvalidOptionsException(sprintf('Property "%s" should contain valid json array', $propertyName));
         }
 
-        if (\is_array($value)) {
+        if (is_array($value)) {
             throw new InvalidOptionsException(sprintf(
                 'Property "%s" should contain valid "%s" string',
                 $propertyName,

@@ -13,16 +13,19 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Exception;
 
+use RuntimeException;
+use function sprintf;
+
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-class DefinitionNotFoundException extends \RuntimeException
+class DefinitionNotFoundException extends RuntimeException
 {
     /**
      * @param string $className
      */
     public function __construct(string $className)
     {
-        $this->message = sprintf('Swagger definition "%s" was not found', $className);
+        parent::__construct(sprintf('Swagger definition "%s" was not found', $className));
     }
 }
