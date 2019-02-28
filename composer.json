@@ -15,6 +15,7 @@
 
     "require": {
         "php":                          "~7.1",
+        "ext-json":                     "*",
         "exsyst/swagger":               "~0.4",
         "symfony/config":               "~3.4||~4.0",
         "symfony/dependency-injection": "~3.4||~4.0",
@@ -27,6 +28,7 @@
     "suggest": {
         "nelmio/api-doc-bundle":    "Generates documentation for your REST API from annotations",
         "symfony/symfony":          "Allows more advanced functionality with full Symfony package",
+        "symfony/yaml":             "Allows to define Swagger configuration in yaml file",
         "zircote/swagger-php":      "Allows to generate Swagger configuration by php annotations"
     },
 
