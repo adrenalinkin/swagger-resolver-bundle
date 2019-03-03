@@ -1,4 +1,4 @@
-## [Unreleased]
+## [0.3.0] - 2019-03-03
 ### Added
 - Added normalizers usage and provides possibility for enable this for concrete parameter locations.
 - Added new configuration parameter `enable_normalization`.
