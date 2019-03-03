@@ -15,13 +15,12 @@ namespace Linkin\Bundle\SwaggerResolverBundle\DependencyInjection;
 
 use Closure;
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterLocationEnum;
+use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerConfigurationLoaderInterface;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\MergeStrategyInterface;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\StrictMergeStrategy;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
-use function array_diff;
-use function implode;
 use function is_subclass_of;
 use function sprintf;
 
@@ -41,14 +40,14 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->arrayNode('enable_normalization')
-                    ->scalarPrototype()
-                        ->defaultValue([
-                            ParameterLocationEnum::IN_QUERY,
-                            ParameterLocationEnum::IN_PATH,
-                            ParameterLocationEnum::IN_HEADER,
-                        ])
+                    ->enumPrototype()
+                        ->values(ParameterLocationEnum::getAll())
                     ->end()
-                    ->validate()->always($this->validationForEnableNormalization())->end()
+                    ->defaultValue([
+                        ParameterLocationEnum::IN_QUERY,
+                        ParameterLocationEnum::IN_PATH,
+                        ParameterLocationEnum::IN_HEADER,
+                    ])
                 ->end()
                 ->scalarNode('path_merge_strategy')
                     ->cannotBeEmpty()
@@ -57,7 +56,12 @@ class Configuration implements ConfigurationInterface
                         ->always($this->validationForPathMergeStrategy())
                     ->end()
                 ->end()
-                ->scalarNode('configuration_loader_service')->defaultNull()->end()
+                ->scalarNode('configuration_loader_service')
+                    ->defaultNull()
+                    ->validate()
+                        ->always($this->validationForConfigurationLoader())
+                    ->end()
+                ->end()
                 ->scalarNode('configuration_file')->defaultNull()->end()
                 ->arrayNode('swagger_php')
                     ->addDefaultsIfNotSet()
@@ -75,6 +79,27 @@ class Configuration implements ConfigurationInterface
     /**
      * @return Closure
      */
+    private function validationForConfigurationLoader(): Closure
+    {
+        return function ($className) {
+            if (null === $className) {
+                return $className;
+            }
+
+            if (!is_subclass_of($className, SwaggerConfigurationLoaderInterface::class)) {
+                throw new InvalidConfigurationException(sprintf(
+                    'Parameter "configuration_loader_service" should contain class which implements "%s"',
+                    SwaggerConfigurationLoaderInterface::class
+                ));
+            }
+
+            return $className;
+        };
+    }
+
+    /**
+     * @return Closure
+     */
     private function validationForPathMergeStrategy(): Closure
     {
         return function ($className) {
@@ -86,28 +111,6 @@ class Configuration implements ConfigurationInterface
             }
 
             return $className;
-        };
-    }
-
-    /**
-     * @return Closure
-     */
-    private function validationForEnableNormalization(): Closure
-    {
-        return function ($fromValues) {
-            $allowedValues = ParameterLocationEnum::getAll();
-
-            $diff = array_diff($fromValues, $allowedValues);
-
-            if (empty($diff)) {
-                return $fromValues;
-            }
-
-            throw new InvalidConfigurationException(sprintf(
-                'Parameter "enable_normalization" do not support parameters: "%s". Allowed values: "%s"',
-                implode(', ', $diff),
-                implode(', ', $allowedValues)
-            ));
         };
     }
 }

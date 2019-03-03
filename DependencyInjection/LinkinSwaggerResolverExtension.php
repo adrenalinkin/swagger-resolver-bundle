@@ -132,12 +132,12 @@ class LinkinSwaggerResolverExtension extends Extension
         $explodedPath = explode('.', $pathToConfig);
         $extension = end($explodedPath);
 
-        if ('json' === $extension) {
-            return $loaderDefinition->setClass(JsonConfigurationLoader::class);
+        if (class_exists('\Symfony\Component\Yaml\Yaml') && ('yaml' === $extension || 'yml' === $extension)) {
+            return $loaderDefinition->setClass(YamlConfigurationLoader::class);
         }
 
-        if ('yaml' === $extension || 'yml' === $extension) {
-            return $loaderDefinition->setClass(YamlConfigurationLoader::class);
+        if ('json' === $extension) {
+            return $loaderDefinition->setClass(JsonConfigurationLoader::class);
         }
 
         throw new InvalidTypeException('Received unsupported file');
