@@ -84,7 +84,7 @@ linkin_swagger_resolver:
         - 'query'
         - 'path'
         - 'header'
-    # стратегия по умолчанию для слияния параметров запроса
+    # стратегия для слияния параметров запроса
     path_merge_strategy:            Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\StrictMergeStrategy
     configuration_loader_service:   ~   # имя сервиса загрузки конфигурации
     configuration_file:             ~   # полный путь к файлу конфигурации

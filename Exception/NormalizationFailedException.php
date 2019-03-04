@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Exception;
 
-use RuntimeException;
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use function sprintf;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-class NormalizationFailedException extends RuntimeException
+class NormalizationFailedException extends InvalidOptionsException
 {
     /**
      * @param string $propertyName

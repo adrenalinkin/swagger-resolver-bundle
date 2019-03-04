@@ -13,20 +13,11 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Factory;
 
-use EXSyst\Component\Swagger\Schema;
-use EXSyst\Component\Swagger\Swagger;
 use Linkin\Bundle\SwaggerResolverBundle\Builder\SwaggerResolverBuilder;
-use Linkin\Bundle\SwaggerResolverBundle\Exception\DefinitionNotFoundException;
-use Linkin\Bundle\SwaggerResolverBundle\Exception\PathNotFoundException;
-use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerConfigurationLoaderInterface;
-use Linkin\Bundle\SwaggerResolverBundle\Merger\MergeStrategyInterface;
-use Linkin\Bundle\SwaggerResolverBundle\Merger\PathParameterMerger;
+use Linkin\Bundle\SwaggerResolverBundle\Configuration\SwaggerConfiguration;
 use Linkin\Bundle\SwaggerResolverBundle\Resolver\SwaggerResolver;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
-use function end;
-use function explode;
-use function strtolower;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -39,67 +30,42 @@ class SwaggerResolverFactory
     private $builder;
 
     /**
-     * @var SwaggerConfigurationLoaderInterface
-     */
-    private $configurationLoader;
-
-    /**
-     * @var PathParameterMerger
-     */
-    private $pathParameterMerger;
-
-    /**
      * @var RouterInterface
      */
     private $router;
 
     /**
-     * @var Swagger
+     * @var SwaggerConfiguration
      */
     private $swaggerConfiguration;
 
     /**
      * @param SwaggerResolverBuilder $builder
-     * @param SwaggerConfigurationLoaderInterface $loader
-     * @param PathParameterMerger $pathParameterMerger
+     * @param SwaggerConfiguration $configuration
      * @param RouterInterface $router
      */
     public function __construct(
         SwaggerResolverBuilder $builder,
-        SwaggerConfigurationLoaderInterface $loader,
-        PathParameterMerger $pathParameterMerger,
+        SwaggerConfiguration $configuration,
         RouterInterface $router
     ) {
         $this->builder = $builder;
-        $this->configurationLoader = $loader;
-        $this->pathParameterMerger = $pathParameterMerger;
+        $this->swaggerConfiguration = $configuration;
         $this->router = $router;
     }
 
     /**
      * @param Request $request
-     * @param MergeStrategyInterface|null $mergeStrategy
      *
      * @return SwaggerResolver
      */
-    public function createForRequest(Request $request, ?MergeStrategyInterface $mergeStrategy = null): SwaggerResolver
+    public function createForRequest(Request $request): SwaggerResolver
     {
         $pathInfo = $this->router->match($request->getPathInfo());
         $route = $this->router->getRouteCollection()->get($pathInfo['_route']);
         $routePath = $route->getPath();
 
-        $paths = $this->getSwaggerConfiguration()->getPaths();
-        $definitions = $this->getSwaggerConfiguration()->getDefinitions();
-
-        if (!$paths->has($routePath)) {
-            throw new PathNotFoundException($routePath);
-        }
-
-        $requestMethod = strtolower($request->getMethod());
-
-        $swaggerPath = $paths->get($routePath);
-
-        $mergedSchema = $this->pathParameterMerger->merge($swaggerPath, $requestMethod, $definitions, $mergeStrategy);
+        $mergedSchema = $this->swaggerConfiguration->getPathDefinition($routePath, $request->getMethod());
 
         return $this->builder->build($mergedSchema, $routePath);
     }
@@ -111,39 +77,8 @@ class SwaggerResolverFactory
      */
     public function createForDefinition(string $definitionName): SwaggerResolver
     {
-        $definition = $this->getDefinition($definitionName);
+        $definition = $this->swaggerConfiguration->getDefinition($definitionName);
 
         return $this->builder->build($definition, $definitionName);
-    }
-
-    /**
-     * @return Swagger
-     */
-    private function getSwaggerConfiguration(): Swagger
-    {
-        if (null === $this->swaggerConfiguration) {
-            $this->swaggerConfiguration = $this->configurationLoader->loadConfiguration();
-        }
-
-        return $this->swaggerConfiguration;
-    }
-
-    /**
-     * @param string $definitionName
-     *
-     * @return Schema
-     */
-    private function getDefinition(string $definitionName): Schema
-    {
-        $definitions = $this->getSwaggerConfiguration()->getDefinitions();
-
-        $explodedName = explode('\\', $definitionName);
-        $definitionName = end($explodedName);
-
-        if ($definitions->has($definitionName)) {
-            return $definitions->get($definitionName);
-        }
-
-        throw new DefinitionNotFoundException($definitionName);
     }
 }

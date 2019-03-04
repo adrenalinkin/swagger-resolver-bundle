@@ -1,3 +1,8 @@
+## [Unreleased]
+### Changed
+- Extend `NormalizationFailedException` from `InvalidOptionsException` instead `RuntimeException`.
+- Removed possibility set `MergeStrategyInterface` for single call `SwaggerResolverFactory::createForRequest`.
+
 ## [0.3.0] - 2019-03-03
 ### Added
 - Added normalizers usage and provides possibility for enable this for concrete parameter locations.
