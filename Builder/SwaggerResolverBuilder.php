@@ -122,7 +122,7 @@ class SwaggerResolverBuilder
      */
     private function addNormalization(SwaggerResolver $resolver, string $name, Schema $propertySchema): SwaggerResolver
     {
-        /** @see \Linkin\Bundle\SwaggerResolverBundle\Merger\PathParameterMerger parameter location in title */
+        /** @see \Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger parameter location in title */
         if (!in_array($propertySchema->getTitle(), $this->normalizationLocations, true)) {
             return $resolver;
         }

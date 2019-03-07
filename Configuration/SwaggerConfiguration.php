@@ -16,9 +16,10 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Configuration;
 use EXSyst\Component\Swagger\Schema;
 use EXSyst\Component\Swagger\Swagger;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\DefinitionNotFoundException;
+use Linkin\Bundle\SwaggerResolverBundle\Exception\OperationNotFoundException;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\PathNotFoundException;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerConfigurationLoaderInterface;
-use Linkin\Bundle\SwaggerResolverBundle\Merger\PathParameterMerger;
+use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use function end;
 use function explode;
 use function strtolower;
@@ -39,15 +40,15 @@ class SwaggerConfiguration
     private $configurationLoader;
 
     /**
-     * @var PathParameterMerger
+     * @var OperationParameterMerger
      */
     private $parameterMerger;
 
     /**
-     * @param PathParameterMerger $parameterMerger
+     * @param OperationParameterMerger $parameterMerger
      * @param SwaggerConfigurationLoaderInterface $loader
      */
-    public function __construct(PathParameterMerger $parameterMerger, SwaggerConfigurationLoaderInterface $loader)
+    public function __construct(OperationParameterMerger $parameterMerger, SwaggerConfigurationLoaderInterface $loader)
     {
         $this->configurationLoader = $loader;
         $this->parameterMerger = $parameterMerger;
@@ -80,6 +81,7 @@ class SwaggerConfiguration
      *
      * @return Schema
      *
+     * @throws OperationNotFoundException
      * @throws PathNotFoundException
      */
     public function getPathDefinition(string $routePath, string $method): Schema
@@ -94,7 +96,13 @@ class SwaggerConfiguration
         $swaggerPath = $paths->get($routePath);
         $requestMethod = strtolower($method);
 
-        return $this->parameterMerger->merge($swaggerPath, $requestMethod, $definitions);
+        if (!$swaggerPath->hasOperation($requestMethod)) {
+            throw new OperationNotFoundException($routePath, $method);
+        }
+
+        $swaggerOperation = $swaggerPath->getOperation($requestMethod);
+
+        return $this->parameterMerger->merge($swaggerOperation, $definitions);
     }
 
     /**

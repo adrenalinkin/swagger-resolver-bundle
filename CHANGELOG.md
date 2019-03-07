@@ -2,6 +2,7 @@
 ### Changed
 - Extend `NormalizationFailedException` from `InvalidOptionsException` instead `RuntimeException`.
 - Removed possibility set `MergeStrategyInterface` for single call `SwaggerResolverFactory::createForRequest`.
+- Renamed `PathParameterMerger` into `OperationParameterMerger`.
 
 ## [0.3.0] - 2019-03-03
 ### Added

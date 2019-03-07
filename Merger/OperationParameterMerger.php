@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Linkin\Bundle\SwaggerResolverBundle\Merger;
 
 use EXSyst\Component\Swagger\Collections\Definitions;
+use EXSyst\Component\Swagger\Operation;
 use EXSyst\Component\Swagger\Parameter;
-use EXSyst\Component\Swagger\Path;
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterLocationEnum;
 use function array_flip;
@@ -25,7 +25,7 @@ use function explode;
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-class PathParameterMerger
+class OperationParameterMerger
 {
     /**
      * @var MergeStrategyInterface
@@ -41,16 +41,13 @@ class PathParameterMerger
     }
 
     /**
-     * @param Path $swaggerPath
-     * @param string $requestMethod
+     * @param Operation $swaggerOperation
      * @param Definitions $definitions
      *
      * @return Schema
      */
-    public function merge(Path $swaggerPath, string $requestMethod, Definitions $definitions): Schema
+    public function merge(Operation $swaggerOperation, Definitions $definitions): Schema
     {
-        $swaggerOperation = $swaggerPath->getOperation($requestMethod);
-
         /** @var Parameter $parameter */
         foreach ($swaggerOperation->getParameters() as $parameter) {
             if ($parameter->getIn() !== ParameterLocationEnum::IN_BODY) {

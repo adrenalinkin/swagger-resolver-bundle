@@ -7,7 +7,7 @@ services:
 
     Linkin\Bundle\SwaggerResolverBundle\Configuration\SwaggerConfiguration:
         arguments:
-            - '@Linkin\Bundle\SwaggerResolverBundle\Merger\PathParameterMerger'
+            - '@Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger'
             - '@Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerConfigurationLoaderInterface'
 
     Linkin\Bundle\SwaggerResolverBundle\Factory\SwaggerResolverFactory:
@@ -19,7 +19,7 @@ services:
     linkin_swagger_resolver.factory:
         alias: Linkin\Bundle\SwaggerResolverBundle\Factory\SwaggerResolverFactory
 
-    Linkin\Bundle\SwaggerResolverBundle\Merger\PathParameterMerger:
+    Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger:
         arguments:
             - '@Linkin\Bundle\SwaggerResolverBundle\Merger\MergeStrategyInterface'
 
