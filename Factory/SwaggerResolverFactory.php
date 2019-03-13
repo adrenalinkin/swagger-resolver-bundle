@@ -18,6 +18,9 @@ use Linkin\Bundle\SwaggerResolverBundle\Configuration\SwaggerConfiguration;
 use Linkin\Bundle\SwaggerResolverBundle\Resolver\SwaggerResolver;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
+use function end;
+use function explode;
+use function strtolower;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -64,8 +67,9 @@ class SwaggerResolverFactory
         $pathInfo = $this->router->match($request->getPathInfo());
         $route = $this->router->getRouteCollection()->get($pathInfo['_route']);
         $routePath = $route->getPath();
+        $method = strtolower($request->getMethod());
 
-        $mergedSchema = $this->swaggerConfiguration->getPathDefinition($routePath, $request->getMethod());
+        $mergedSchema = $this->swaggerConfiguration->getPathDefinition($routePath, $method);
 
         return $this->builder->build($mergedSchema, $routePath);
     }
@@ -77,6 +81,9 @@ class SwaggerResolverFactory
      */
     public function createForDefinition(string $definitionName): SwaggerResolver
     {
+        $explodedName = explode('\\', $definitionName);
+        $definitionName = end($explodedName);
+
         $definition = $this->swaggerConfiguration->getDefinition($definitionName);
 
         return $this->builder->build($definition, $definitionName);

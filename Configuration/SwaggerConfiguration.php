@@ -13,27 +13,19 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Configuration;
 
+use EXSyst\Component\Swagger\Path;
 use EXSyst\Component\Swagger\Schema;
-use EXSyst\Component\Swagger\Swagger;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\DefinitionNotFoundException;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\OperationNotFoundException;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\PathNotFoundException;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerConfigurationLoaderInterface;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
-use function end;
-use function explode;
-use function strtolower;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
 class SwaggerConfiguration
 {
-    /**
-     * @var Swagger
-     */
-    private $configuration;
-
     /**
      * @var SwaggerConfigurationLoaderInterface
      */
@@ -43,6 +35,16 @@ class SwaggerConfiguration
      * @var OperationParameterMerger
      */
     private $parameterMerger;
+
+    /**
+     * @var Schema[]
+     */
+    private $schemaDefinitionList;
+
+    /**
+     * @var Schema[]
+     */
+    private $schemaOperationList;
 
     /**
      * @param OperationParameterMerger $parameterMerger
@@ -55,65 +57,78 @@ class SwaggerConfiguration
     }
 
     /**
-     * @param string $definitionName
-     *
-     * @return Schema
-     *
-     * @throws DefinitionNotFoundException
+     * {@inheritdoc}
      */
     public function getDefinition(string $definitionName): Schema
     {
-        $definitions = $this->getConfiguration()->getDefinitions();
+        $schemaDefinitionList = $this->getSchemaDefinitionList();
 
-        $explodedName = explode('\\', $definitionName);
-        $definitionName = end($explodedName);
-
-        if ($definitions->has($definitionName)) {
-            return $definitions->get($definitionName);
+        if (isset($schemaDefinitionList[$definitionName])) {
+            return $schemaDefinitionList[$definitionName];
         }
 
         throw new DefinitionNotFoundException($definitionName);
     }
 
     /**
-     * @param string $routePath
-     * @param string $method
-     *
-     * @return Schema
-     *
-     * @throws OperationNotFoundException
-     * @throws PathNotFoundException
+     * {@inheritdoc}
      */
     public function getPathDefinition(string $routePath, string $method): Schema
     {
-        $paths = $this->getConfiguration()->getPaths();
+        $schemaOperationList = $this->getSchemaOperationList();
 
-        if (!$paths->has($routePath)) {
+        if (empty($schemaOperationList[$routePath])) {
             throw new PathNotFoundException($routePath);
         }
 
-        $definitions = $this->getConfiguration()->getDefinitions();
-        $swaggerPath = $paths->get($routePath);
-        $requestMethod = strtolower($method);
-
-        if (!$swaggerPath->hasOperation($requestMethod)) {
+        if (empty($schemaOperationList[$routePath][$method])) {
             throw new OperationNotFoundException($routePath, $method);
         }
 
-        $swaggerOperation = $swaggerPath->getOperation($requestMethod);
-
-        return $this->parameterMerger->merge($swaggerOperation, $definitions);
+        return $schemaOperationList[$routePath][$method];
     }
 
     /**
-     * @return Swagger
+     * @return Schema[]
      */
-    private function getConfiguration(): Swagger
+    protected function getSchemaDefinitionList(): array
     {
-        if (null === $this->configuration) {
-            $this->configuration = $this->configurationLoader->loadConfiguration();
+        if ($this->schemaDefinitionList === null) {
+            $this->loadConfiguration();
         }
 
-        return $this->configuration;
+        return $this->schemaDefinitionList;
+    }
+
+    /**
+     * @return Schema[]
+     */
+    protected function getSchemaOperationList(): array
+    {
+        if ($this->schemaOperationList === null) {
+            $this->loadConfiguration();
+        }
+
+        return $this->schemaOperationList;
+    }
+
+    /**
+     * Load full configuration
+     */
+    private function loadConfiguration(): void
+    {
+        $configuration = $this->configurationLoader->loadConfiguration();
+        $definitions = $configuration->getDefinitions();
+
+        foreach ($configuration->getDefinitions()->getIterator() as $definitionName => $definition) {
+            $this->schemaDefinitionList[$definitionName] = $definition;
+        }
+
+        /** @var Path $pathObject */
+        foreach ($configuration->getPaths()->getIterator() as $path => $pathObject) {
+            foreach ($pathObject->getOperations() as $method => $operation) {
+                $this->schemaOperationList[$path][$method] = $this->parameterMerger->merge($operation, $definitions);
+            }
+        }
     }
 }
