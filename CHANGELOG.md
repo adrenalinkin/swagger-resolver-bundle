@@ -1,4 +1,6 @@
 ## [Unreleased]
+### Added
+- Added symfony cache warmer for the swagger configuration and enabled by default.
 ### Changed
 - Extend `NormalizationFailedException` from `InvalidOptionsException` instead `RuntimeException`.
 - Removed possibility set `MergeStrategyInterface` for single call `SwaggerResolverFactory::createForRequest`.

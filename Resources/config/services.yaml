@@ -5,16 +5,29 @@ services:
             - [] # normalizers
             - '%linkin_swagger_resolver.enable_normalization%'
 
+    Linkin\Bundle\SwaggerResolverBundle\CacheWarmer\SwaggerConfigurationCacheWarmer:
+        arguments:
+            - '@Linkin\Bundle\SwaggerResolverBundle\Configuration\SwaggerConfigurationInterface'
+        tags:
+            - { name: kernel.cache_warmer }
+
+    Linkin\Bundle\SwaggerResolverBundle\Configuration\SwaggerConfigurationInterface:
+        alias: Linkin\Bundle\SwaggerResolverBundle\Configuration\SwaggerCachedConfiguration
     Linkin\Bundle\SwaggerResolverBundle\Configuration\SwaggerConfiguration:
         arguments:
             - '@Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger'
             - '@Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerConfigurationLoaderInterface'
+    Linkin\Bundle\SwaggerResolverBundle\Configuration\SwaggerCachedConfiguration:
+        parent: Linkin\Bundle\SwaggerResolverBundle\Configuration\SwaggerConfiguration
+        calls:
+            - [setCacheDir, ['%kernel.cache_dir%']]
+            - [setDebugMode, ['%kernel.debug%']]
 
     Linkin\Bundle\SwaggerResolverBundle\Factory\SwaggerResolverFactory:
         public: true
         arguments:
             - '@Linkin\Bundle\SwaggerResolverBundle\Builder\SwaggerResolverBuilder'
-            - '@Linkin\Bundle\SwaggerResolverBundle\Configuration\SwaggerConfiguration'
+            - '@Linkin\Bundle\SwaggerResolverBundle\Configuration\SwaggerConfigurationInterface'
             - '@router'
     linkin_swagger_resolver.factory:
         alias: Linkin\Bundle\SwaggerResolverBundle\Factory\SwaggerResolverFactory

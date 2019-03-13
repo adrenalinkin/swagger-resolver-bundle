@@ -24,7 +24,7 @@ use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-class SwaggerConfiguration
+class SwaggerConfiguration implements SwaggerConfigurationInterface
 {
     /**
      * @var SwaggerConfigurationLoaderInterface
