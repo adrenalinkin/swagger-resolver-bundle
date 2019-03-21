@@ -1,6 +1,8 @@
 ## [Unreleased]
 ### Added
-- Added symfony cache warmer for the swagger configuration and enabled by default.
+- Added symfony cache warmer for the swagger configuration and enable him by default.
+- Added automatic cache warm up in the debug mode, according to source file modification.
+- Added composer requirement: `symfony/yaml`.
 ### Changed
 - Extend `NormalizationFailedException` from `InvalidOptionsException` instead `RuntimeException`.
 - Removed possibility set `MergeStrategyInterface` for single call `SwaggerResolverFactory::createForRequest`.

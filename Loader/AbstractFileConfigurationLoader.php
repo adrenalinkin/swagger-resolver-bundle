@@ -13,34 +13,31 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Loader;
 
-use EXSyst\Component\Swagger\Swagger;
-use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Config\Resource\FileResource;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-class YamlConfigurationLoader extends AbstractFileConfigurationLoader
+abstract class AbstractFileConfigurationLoader implements SwaggerConfigurationLoaderInterface
 {
     /**
-     * @var string
+     * @var FileResource[]
      */
-    private $pathToFile;
+    private $resources;
 
     /**
      * @param string $pathToFile
      */
     public function __construct(string $pathToFile)
     {
-        parent::__construct($pathToFile);
-
-        $this->pathToFile = $pathToFile;
+        $this->resources[] = new FileResource($pathToFile);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function loadConfiguration(): Swagger
+    public function getFileResources(string $definitionName): array
     {
-        return new Swagger(Yaml::parseFile($this->pathToFile));
+        return $this->resources;
     }
 }

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Linkin\Bundle\SwaggerResolverBundle\Loader;
 
 use EXSyst\Component\Swagger\Swagger;
+use Symfony\Component\Config\Resource\FileResource;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -21,7 +22,16 @@ use EXSyst\Component\Swagger\Swagger;
 interface SwaggerConfigurationLoaderInterface
 {
     /**
-     * Loads swagger configuration from the annotations.
+     * Returns list of the file resources where configuration located
+     *
+     * @param string $definitionName
+     *
+     * @return FileResource[]
+     */
+    public function getFileResources(string $definitionName): array;
+
+    /**
+     * Loads swagger configuration
      *
      * @return Swagger
      */

@@ -30,6 +30,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\Routing\RouterInterface;
 use function class_exists;
 use function end;
 use function explode;
@@ -102,6 +103,7 @@ class LinkinSwaggerResolverExtension extends Extension
         if (isset($bundles['NelmioApiDocBundle'])) {
             return $loaderDefinition
                 ->setClass(NelmioApiDocConfigurationLoader::class)
+                ->addArgument(new Reference(RouterInterface::class))
                 ->addArgument(new Reference('nelmio_api_doc.generator'))
             ;
         }
@@ -116,6 +118,7 @@ class LinkinSwaggerResolverExtension extends Extension
 
             return $loaderDefinition
                 ->setClass(SwaggerPhpConfigurationLoader::class)
+                ->addArgument(new Reference(RouterInterface::class))
                 ->addArgument($scanDir)
                 ->addArgument($excludeDir)
             ;
@@ -132,7 +135,7 @@ class LinkinSwaggerResolverExtension extends Extension
         $explodedPath = explode('.', $pathToConfig);
         $extension = end($explodedPath);
 
-        if (class_exists('\Symfony\Component\Yaml\Yaml') && ('yaml' === $extension || 'yml' === $extension)) {
+        if ('yaml' === $extension || 'yml' === $extension) {
             return $loaderDefinition->setClass(YamlConfigurationLoader::class);
         }
 

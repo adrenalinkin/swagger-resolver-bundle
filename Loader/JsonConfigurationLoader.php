@@ -18,7 +18,7 @@ use EXSyst\Component\Swagger\Swagger;
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-class JsonConfigurationLoader implements SwaggerConfigurationLoaderInterface
+class JsonConfigurationLoader extends AbstractFileConfigurationLoader
 {
     /**
      * @var string
@@ -30,6 +30,8 @@ class JsonConfigurationLoader implements SwaggerConfigurationLoaderInterface
      */
     public function __construct(string $pathToFile)
     {
+        parent::__construct($pathToFile);
+
         $this->pathToFile = $pathToFile;
     }
 

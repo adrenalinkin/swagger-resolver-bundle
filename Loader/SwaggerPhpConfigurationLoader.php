@@ -14,13 +14,14 @@ declare(strict_types=1);
 namespace Linkin\Bundle\SwaggerResolverBundle\Loader;
 
 use EXSyst\Component\Swagger\Swagger;
+use Symfony\Component\Routing\RouterInterface;
 use function json_decode;
 use function Swagger\scan;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-class SwaggerPhpConfigurationLoader implements SwaggerConfigurationLoaderInterface
+class SwaggerPhpConfigurationLoader extends AbstractAnnotationConfigurationLoader
 {
     /**
      * @var array
@@ -33,11 +34,14 @@ class SwaggerPhpConfigurationLoader implements SwaggerConfigurationLoaderInterfa
     private $scan;
 
     /**
+     * @param RouterInterface $router
      * @param array $scan
      * @param array $exclude
      */
-    public function __construct(array $scan, array $exclude)
+    public function __construct(RouterInterface $router, array $scan, array $exclude)
     {
+        parent::__construct($router);
+
         $this->scan = $scan;
         $this->exclude = $exclude;
     }
@@ -52,6 +56,8 @@ class SwaggerPhpConfigurationLoader implements SwaggerConfigurationLoaderInterfa
         ]);
 
         $swagger = new Swagger(json_decode((string) $swaggerAnnotation, true));
+
+        $this->registerResources($swagger);
 
         return $swagger;
     }

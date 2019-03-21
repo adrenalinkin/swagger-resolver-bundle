@@ -18,10 +18,11 @@ services:
             - '@Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger'
             - '@Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerConfigurationLoaderInterface'
     Linkin\Bundle\SwaggerResolverBundle\Configuration\SwaggerCachedConfiguration:
-        parent: Linkin\Bundle\SwaggerResolverBundle\Configuration\SwaggerConfiguration
-        calls:
-            - [setCacheDir, ['%kernel.cache_dir%']]
-            - [setDebugMode, ['%kernel.debug%']]
+        arguments:
+            - '@Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger'
+            - '@Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerConfigurationLoaderInterface'
+            - '%kernel.cache_dir%'
+            - '%kernel.debug%'
 
     Linkin\Bundle\SwaggerResolverBundle\Factory\SwaggerResolverFactory:
         public: true

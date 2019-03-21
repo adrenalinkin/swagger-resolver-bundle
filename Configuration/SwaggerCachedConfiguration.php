@@ -15,9 +15,12 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Configuration;
 
 use EXSyst\Component\Swagger\Path;
 use EXSyst\Component\Swagger\Schema;
+use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerConfigurationLoaderInterface;
+use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
+use Symfony\Component\Config\ConfigCacheFactory;
 use Symfony\Component\Config\ConfigCacheFactoryInterface;
 use Symfony\Component\Config\ConfigCacheInterface;
-use Symfony\Component\Config\ResourceCheckerConfigCacheFactory;
+use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
 use function json_decode;
 use function json_encode;
@@ -45,23 +48,27 @@ class SwaggerCachedConfiguration extends SwaggerConfiguration implements Warmabl
     private $debug;
 
     /**
-     * @required
-     *
-     * @param string $cacheDir
+     * @var SwaggerConfigurationLoaderInterface
      */
-    public function setCacheDir(string $cacheDir): void
-    {
-        $this->cacheDir = $cacheDir . '/linkin_swagger_resolver';
-    }
+    private $loader;
 
     /**
-     * @required
-     *
+     * @param OperationParameterMerger $parameterMerger
+     * @param SwaggerConfigurationLoaderInterface $loader
+     * @param string $cacheDir
      * @param bool $debug
      */
-    public function setDebugMode(bool $debug): void
-    {
+    public function __construct(
+        OperationParameterMerger $parameterMerger,
+        SwaggerConfigurationLoaderInterface $loader,
+        string $cacheDir,
+        bool $debug
+    ) {
+        parent::__construct($parameterMerger, $loader);
+
+        $this->cacheDir = $cacheDir . '/linkin_swagger_resolver';
         $this->debug = $debug;
+        $this->loader = $loader;
     }
 
     /**
@@ -99,6 +106,7 @@ class SwaggerCachedConfiguration extends SwaggerConfiguration implements Warmabl
      */
     public function warmUp($cacheDir)
     {
+        // TODO: if console and has definition without resources - show attention message
         foreach ($this->getSchemaDefinitionList() as $definitionName => $definition) {
             $this->getDefinition($definitionName);
         }
@@ -119,7 +127,9 @@ class SwaggerCachedConfiguration extends SwaggerConfiguration implements Warmabl
     {
         $definition = parent::getDefinition($definitionName);
 
-        $this->dumpSchema($definition, $cache);
+        $resources = $this->loader->getFileResources($definitionName);
+
+        $this->dumpSchema($definition, $resources, $cache);
     }
 
     /**
@@ -131,14 +141,17 @@ class SwaggerCachedConfiguration extends SwaggerConfiguration implements Warmabl
     {
         $definition = parent::getPathDefinition($path, $method);
 
-        $this->dumpSchema($definition, $cache);
+        $resources = $this->loader->getFileResources($path);
+
+        $this->dumpSchema($definition, $resources, $cache);
     }
 
     /**
      * @param Schema $schema
+     * @param FileResource[] $resources
      * @param ConfigCacheInterface $cache
      */
-    private function dumpSchema(Schema $schema, ConfigCacheInterface $cache): void
+    private function dumpSchema(Schema $schema, array $resources, ConfigCacheInterface $cache): void
     {
         $template = <<<EOF
 <?php
@@ -155,8 +168,7 @@ EOF;
         $definitionAsArray = json_decode(json_encode($schema->toArray()), true);
         $definitionExport = var_export($definitionAsArray, true);
 
-        // TODO: Add meta for auto-check is cache fresh in debug mode
-        $cache->write(sprintf($template, $definitionExport));
+        $cache->write(sprintf($template, $definitionExport), $resources);
     }
 
     /**
@@ -165,8 +177,7 @@ EOF;
     private function getConfigCacheFactory(): ConfigCacheFactoryInterface
     {
         if (!$this->configCacheFactory) {
-            // TODO: use ConfigCacheFactory when meta info will be implemented
-            $this->configCacheFactory = new ResourceCheckerConfigCacheFactory();
+            $this->configCacheFactory = new ConfigCacheFactory($this->debug);
         }
 
         return $this->configCacheFactory;
