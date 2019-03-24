@@ -2,8 +2,19 @@
     "name":        "adrenalinkin/swagger-resolver-bundle",
     "description": "Provides possibility for validate data according to Swagger documentation",
     "type":        "symfony-bundle",
-    "keywords":    ["symfony-bundle", "api", "open-api-2", "swagger", "swagger-php", "resolver", "validation"],
     "license":     "MIT",
+    "keywords":    [
+        "symfony-bundle",
+        "api",
+        "documentation",
+        "api-documentation",
+        "open-api",
+        "swagger",
+        "swagger-php",
+        "resolver",
+        "validation",
+        "api-validation"
+    ],
 
     "authors": [
         {

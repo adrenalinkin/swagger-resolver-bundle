@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Linkin\Bundle\SwaggerResolverBundle\Loader;
 
 use EXSyst\Component\Swagger\Swagger;
+use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Nelmio\ApiDocBundle\ApiDocGenerator;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -30,25 +31,22 @@ class NelmioApiDocConfigurationLoader extends AbstractAnnotationConfigurationLoa
     private $apiDocGenerator;
 
     /**
+     * @param OperationParameterMerger $merger
      * @param RouterInterface $router
-     * @param ApiDocGenerator $apiDocGenerator
+     * @param ApiDocGenerator $generator
      */
-    public function __construct(RouterInterface $router, ApiDocGenerator $apiDocGenerator)
+    public function __construct(OperationParameterMerger $merger, RouterInterface $router, ApiDocGenerator $generator)
     {
-        parent::__construct($router);
+        parent::__construct($merger, $router);
 
-        $this->apiDocGenerator = $apiDocGenerator;
+        $this->apiDocGenerator = $generator;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function loadConfiguration(): Swagger
+    protected function loadConfiguration(): Swagger
     {
-        $swagger = $this->apiDocGenerator->generate();
-
-        $this->registerResources($swagger);
-
-        return $swagger;
+        return $this->apiDocGenerator->generate();
     }
 }

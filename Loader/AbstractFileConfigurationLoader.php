@@ -13,31 +13,49 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Loader;
 
+use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaDefinitionCollection;
+use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaOperationCollection;
+use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Symfony\Component\Config\Resource\FileResource;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-abstract class AbstractFileConfigurationLoader implements SwaggerConfigurationLoaderInterface
+abstract class AbstractFileConfigurationLoader extends AbstractSwaggerConfigurationLoader
 {
     /**
-     * @var FileResource[]
+     * @var FileResource
      */
-    private $resources;
+    private $fileResource;
 
     /**
+     * @param OperationParameterMerger $parameterMerger
      * @param string $pathToFile
      */
-    public function __construct(string $pathToFile)
+    public function __construct(OperationParameterMerger $parameterMerger, string $pathToFile)
     {
-        $this->resources[] = new FileResource($pathToFile);
+        parent::__construct($parameterMerger);
+
+        $this->fileResource = new FileResource($pathToFile);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getFileResources(string $definitionName): array
+    protected function registerDefinitionResources(SchemaDefinitionCollection $definitionCollection): void
     {
-        return $this->resources;
+        foreach ($definitionCollection->getIterator() as $definitionName => $schema) {
+            $definitionCollection->addSchemaResource($definitionName, $this->fileResource);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function registerOperationResources(SchemaOperationCollection $operationCollection): void
+    {
+        foreach ($operationCollection->getIterator() as $path => $methodList) {
+            $operationCollection->addSchemaResource($path, $this->fileResource);
+        }
     }
 }

@@ -13,39 +13,37 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Loader;
 
-use EXSyst\Component\Swagger\Collections\Definitions;
-use EXSyst\Component\Swagger\Operation;
-use EXSyst\Component\Swagger\Parameter;
-use EXSyst\Component\Swagger\Path;
-use EXSyst\Component\Swagger\Swagger;
+use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaDefinitionCollection;
+use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaOperationCollection;
+use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use ReflectionClass;
 use ReflectionException;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouterInterface;
+use function end;
 use function explode;
+use function get_declared_classes;
 use function reset;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-abstract class AbstractAnnotationConfigurationLoader implements SwaggerConfigurationLoaderInterface
+abstract class AbstractAnnotationConfigurationLoader extends AbstractSwaggerConfigurationLoader
 {
-    /**
-     * @var FileResource[][]
-     */
-    private $resources;
-
     /**
      * @var Route[]
      */
     private $routerCollection;
 
     /**
+     * @param OperationParameterMerger $parameterMerger
      * @param RouterInterface $router
      */
-    public function __construct(RouterInterface $router)
+    public function __construct(OperationParameterMerger $parameterMerger, RouterInterface $router)
     {
+        parent::__construct($parameterMerger);
+
         foreach ($router->getRouteCollection() as $routeName => $route) {
             $this->routerCollection[$route->getPath()] = $route;
         }
@@ -54,25 +52,42 @@ abstract class AbstractAnnotationConfigurationLoader implements SwaggerConfigura
     /**
      * {@inheritdoc}
      */
-    public function getFileResources(string $definitionName): array
+    protected function registerDefinitionResources(SchemaDefinitionCollection $definitionCollection): void
     {
-        return $this->resources[$definitionName] ?? [];
+        $definitionNames = [];
+
+        foreach ($definitionCollection->getIterator() as $definitionName => $definition) {
+            $definitionNames[$definitionName] = $definitionName;
+        }
+
+        foreach (get_declared_classes() as $fullClassName) {
+            $explodedClassName = explode('\\', $fullClassName);
+            $className = end($explodedClassName);
+
+            if (!isset($definitionNames[$className])) {
+                continue;
+            }
+
+            $definitionCollection->addSchemaResource($className, $this->getFileResource($fullClassName));
+        }
     }
 
     /**
-     * @param Swagger $swagger
-     *
-     * @throws ReflectionException
+     * {@inheritdoc}
      */
-    protected function registerResources(Swagger $swagger): void
+    protected function registerOperationResources(SchemaOperationCollection $operationCollection): void
     {
-        $this->registerDefinitionResources($swagger->getDefinitions());
-
-        /** @var Path $pathObject */
-        foreach ($swagger->getPaths()->getIterator() as $path => $pathObject) {
-            foreach ($pathObject->getOperations() as $method => $operation) {
-                $this->registerPathResources($path, $operation);
+        foreach ($operationCollection->getIterator() as $path => $methodList) {
+            if (empty($this->routerCollection[$path])) {
+                continue;
             }
+
+            $route = $this->routerCollection[$path];
+            $defaults = $route->getDefaults();
+            $exploded = explode('::', $defaults['_controller']);
+            $controllerName = reset($exploded);
+
+            $operationCollection->addSchemaResource($path, $this->getFileResource($controllerName));
         }
     }
 
@@ -88,64 +103,5 @@ abstract class AbstractAnnotationConfigurationLoader implements SwaggerConfigura
         $class = new ReflectionClass($className);
 
         return new FileResource($class->getFileName());
-    }
-
-    /**
-     * @param Definitions $definitions
-     *
-     * @throws ReflectionException
-     */
-    private function registerDefinitionResources(Definitions $definitions): void
-    {
-        $definitionNames = [];
-
-        foreach ($definitions->getIterator() as $definitionName => $definition) {
-            $definitionNames[$definitionName] = $definitionName;
-        }
-
-        foreach (get_declared_classes() as $fullClassName) {
-            $explodedClassName = explode('\\', $fullClassName);
-            $className = end($explodedClassName);
-
-            if (!isset($definitionNames[$className])) {
-                continue;
-            }
-
-            $this->resources[$className][] = $this->getFileResource($fullClassName);
-        }
-    }
-
-    /**
-     * @param string $path
-     * @param Operation $operation
-     *
-     * @throws ReflectionException
-     */
-    private function registerPathResources(string $path, Operation $operation): void
-    {
-        $route = $this->routerCollection[$path];
-        $defaults = $route->getDefaults();
-        $exploded = explode('::', $defaults['_controller']);
-        $controllerName = reset($exploded);
-
-        $this->resources[$path][] = $this->getFileResource($controllerName);
-
-        /** @var Parameter $parameter */
-        foreach ($operation->getParameters()->getIterator() as $name => $parameter) {
-            $ref = $parameter->getSchema()->getRef();
-
-            if (!$ref) {
-                continue;
-            }
-
-            $explodedName = explode('/', $ref);
-            $definitionName = end($explodedName);
-
-            $refResources = $this->resources[$definitionName] ?? [];
-
-            foreach ($refResources as $fileResource) {
-                $this->resources[$path][] = $fileResource;
-            }
-        }
     }
 }

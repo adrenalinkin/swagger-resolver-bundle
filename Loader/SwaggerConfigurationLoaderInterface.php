@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Loader;
 
-use EXSyst\Component\Swagger\Swagger;
-use Symfony\Component\Config\Resource\FileResource;
+use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaDefinitionCollection;
+use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaOperationCollection;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -22,18 +22,17 @@ use Symfony\Component\Config\Resource\FileResource;
 interface SwaggerConfigurationLoaderInterface
 {
     /**
-     * Returns list of the file resources where configuration located
+     * Return swagger definition schema collection
      *
-     * @param string $definitionName
-     *
-     * @return FileResource[]
+     * @return SchemaDefinitionCollection
      */
-    public function getFileResources(string $definitionName): array;
+    public function getSchemaDefinitionCollection(): SchemaDefinitionCollection;
 
     /**
-     * Loads swagger configuration
+     * Returns collection of the merged swagger path operation by @see OperationParameterMerger
+     * according to specific @see MergeStrategyInterface
      *
-     * @return Swagger
+     * @return SchemaOperationCollection
      */
-    public function loadConfiguration(): Swagger;
+    public function getSchemaOperationCollection(): SchemaOperationCollection;
 }

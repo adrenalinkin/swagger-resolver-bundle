@@ -21,6 +21,7 @@ use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerConfigurationLoaderInterfa
 use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerPhpConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\YamlConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\MergeStrategyInterface;
+use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Linkin\Bundle\SwaggerResolverBundle\Normalizer\SwaggerNormalizerInterface;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\SwaggerValidatorInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
@@ -97,6 +98,7 @@ class LinkinSwaggerResolverExtension extends Extension
     private function getConfigurationLoaderDefinition(ContainerBuilder $container, array $config): Definition
     {
         $loaderDefinition = new Definition();
+        $loaderDefinition->addArgument(new Reference(OperationParameterMerger::class));
 
         $bundles = $container->getParameter('kernel.bundles');
 

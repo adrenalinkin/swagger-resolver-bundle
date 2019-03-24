@@ -15,11 +15,9 @@ services:
         alias: Linkin\Bundle\SwaggerResolverBundle\Configuration\SwaggerCachedConfiguration
     Linkin\Bundle\SwaggerResolverBundle\Configuration\SwaggerConfiguration:
         arguments:
-            - '@Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger'
             - '@Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerConfigurationLoaderInterface'
     Linkin\Bundle\SwaggerResolverBundle\Configuration\SwaggerCachedConfiguration:
         arguments:
-            - '@Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger'
             - '@Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerConfigurationLoaderInterface'
             - '%kernel.cache_dir%'
             - '%kernel.debug%'

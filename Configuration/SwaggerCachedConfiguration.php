@@ -16,7 +16,6 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Configuration;
 use EXSyst\Component\Swagger\Path;
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerConfigurationLoaderInterface;
-use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Symfony\Component\Config\ConfigCacheFactory;
 use Symfony\Component\Config\ConfigCacheFactoryInterface;
 use Symfony\Component\Config\ConfigCacheInterface;
@@ -26,6 +25,7 @@ use function json_decode;
 use function json_encode;
 use function md5;
 use function sprintf;
+use const PHP_SAPI;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -53,18 +53,13 @@ class SwaggerCachedConfiguration extends SwaggerConfiguration implements Warmabl
     private $loader;
 
     /**
-     * @param OperationParameterMerger $parameterMerger
      * @param SwaggerConfigurationLoaderInterface $loader
      * @param string $cacheDir
      * @param bool $debug
      */
-    public function __construct(
-        OperationParameterMerger $parameterMerger,
-        SwaggerConfigurationLoaderInterface $loader,
-        string $cacheDir,
-        bool $debug
-    ) {
-        parent::__construct($parameterMerger, $loader);
+    public function __construct(SwaggerConfigurationLoaderInterface $loader, string $cacheDir, bool $debug)
+    {
+        parent::__construct($loader);
 
         $this->cacheDir = $cacheDir . '/linkin_swagger_resolver';
         $this->debug = $debug;
@@ -106,17 +101,54 @@ class SwaggerCachedConfiguration extends SwaggerConfiguration implements Warmabl
      */
     public function warmUp($cacheDir)
     {
-        // TODO: if console and has definition without resources - show attention message
-        foreach ($this->getSchemaDefinitionList() as $definitionName => $definition) {
+        $definitionWithoutResources = [];
+        $definitionCollection = $this->loader->getSchemaDefinitionCollection();
+
+        foreach ($definitionCollection->getIterator() as $definitionName => $definition) {
             $this->getDefinition($definitionName);
+
+            if (empty($definitionCollection->getSchemaResources($definitionName))) {
+                $definitionWithoutResources[$definitionName] = $definitionName;
+            }
         }
 
+        $operationCollection = $this->loader->getSchemaOperationCollection();
+
         /** @var Path $pathObject */
-        foreach ($this->getSchemaOperationList() as $path => $methodList) {
+        foreach ($operationCollection as $path => $methodList) {
             foreach ($methodList as $method => $operation) {
                 $this->getPathDefinition($path, $method);
             }
+
+            if (empty($operationCollection->getSchemaResources($path))) {
+                $definitionWithoutResources[$path] = $path;
+            }
         }
+
+        if ($definitionWithoutResources && PHP_SAPI === 'cli') {
+            $this->displayConsoleNote(
+                'LinkinSwaggerResolverBundle can\'t find source files for next definitions to auto-warm up cache:',
+                true
+            );
+
+            foreach ($definitionWithoutResources as $definitionName) {
+                $this->displayConsoleNote($definitionName, false);
+            }
+
+            echo "\n";
+        }
+    }
+
+    /**
+     * @param string $message
+     * @param bool $firstLine
+     */
+    private function displayConsoleNote(string $message, bool $firstLine): void
+    {
+        $message = $firstLine ? sprintf('[NOTE] %s', $message) : sprintf('       %s', $message);
+        $message = sprintf("\e[33m ! %s \e[39m\n", $message);
+
+        echo $firstLine ? "\n" . $message : $message;
     }
 
     /**
@@ -127,7 +159,7 @@ class SwaggerCachedConfiguration extends SwaggerConfiguration implements Warmabl
     {
         $definition = parent::getDefinition($definitionName);
 
-        $resources = $this->loader->getFileResources($definitionName);
+        $resources = $this->loader->getSchemaDefinitionCollection()->getSchemaResources($definitionName);
 
         $this->dumpSchema($definition, $resources, $cache);
     }
@@ -141,7 +173,7 @@ class SwaggerCachedConfiguration extends SwaggerConfiguration implements Warmabl
     {
         $definition = parent::getPathDefinition($path, $method);
 
-        $resources = $this->loader->getFileResources($path);
+        $resources = $this->loader->getSchemaOperationCollection()->getSchemaResources($path);
 
         $this->dumpSchema($definition, $resources, $cache);
     }
