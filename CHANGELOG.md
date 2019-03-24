@@ -1,4 +1,4 @@
-## [Unreleased]
+## [0.4.0] - 2019-03-24
 ### Added
 - Added symfony cache warmer for the swagger configuration and enable him by default.
 - Added console notification when some api definitions have not reference to the source file.
