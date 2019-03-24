@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Linkin\Bundle\SwaggerResolverBundle\Merger;
 
 use EXSyst\Component\Swagger\Collections\Definitions;
+use EXSyst\Component\Swagger\Operation;
 use EXSyst\Component\Swagger\Parameter;
-use EXSyst\Component\Swagger\Path;
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterLocationEnum;
 use function array_flip;
@@ -25,45 +25,33 @@ use function explode;
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-class PathParameterMerger
+class OperationParameterMerger
 {
     /**
      * @var MergeStrategyInterface
      */
-    private $defaultMergeStrategy;
+    private $mergeStrategy;
 
     /**
      * @param MergeStrategyInterface $defaultMergeStrategy
      */
     public function __construct(MergeStrategyInterface $defaultMergeStrategy)
     {
-        $this->defaultMergeStrategy = $defaultMergeStrategy;
+        $this->mergeStrategy = $defaultMergeStrategy;
     }
 
     /**
-     * @param Path $swaggerPath
-     * @param string $requestMethod
+     * @param Operation $swaggerOperation
      * @param Definitions $definitions
-     * @param MergeStrategyInterface|null $mergeStrategy
      *
      * @return Schema
      */
-    public function merge(
-        Path $swaggerPath,
-        string $requestMethod,
-        Definitions $definitions,
-        ?MergeStrategyInterface $mergeStrategy = null
-    ): Schema {
-        if (!$mergeStrategy) {
-            $mergeStrategy = $this->defaultMergeStrategy;
-        }
-
-        $swaggerOperation = $swaggerPath->getOperation($requestMethod);
-
+    public function merge(Operation $swaggerOperation, Definitions $definitions): Schema
+    {
         /** @var Parameter $parameter */
         foreach ($swaggerOperation->getParameters() as $parameter) {
             if ($parameter->getIn() !== ParameterLocationEnum::IN_BODY) {
-                $mergeStrategy->addParameter(
+                $this->mergeStrategy->addParameter(
                     $parameter->getIn(),
                     $parameter->getName(),
                     $parameter->toArray() + ['title' => $parameter->getIn()],
@@ -87,7 +75,7 @@ class PathParameterMerger
                 $required = array_flip($required);
 
                 foreach ($refDefinition->getProperties() as $defName => $defItem) {
-                    $mergeStrategy->addParameter(
+                    $this->mergeStrategy->addParameter(
                         $parameter->getIn(),
                         $defName,
                         $defItem->toArray() + ['title' => $parameter->getIn()],
@@ -104,7 +92,7 @@ class PathParameterMerger
                 $required = array_flip($required);
 
                 foreach ($parameterSchema->getProperties() as $bodyItemName => $currentBodyItem) {
-                    $mergeStrategy->addParameter(
+                    $this->mergeStrategy->addParameter(
                         $parameter->getIn(),
                         $bodyItemName,
                         $currentBodyItem->toArray() + ['title' => $parameter->getIn()],
@@ -116,7 +104,7 @@ class PathParameterMerger
             }
 
             // body as scalar
-            $mergeStrategy->addParameter(
+            $this->mergeStrategy->addParameter(
                 $parameter->getIn(),
                 $parameter->getName(),
                 $parameterSchema->toArray() + ['title' => $parameter->getIn()],
@@ -127,11 +115,11 @@ class PathParameterMerger
         $mergedSchema = new Schema();
         $mergedSchema->merge([
             'type' => 'object',
-            'properties' => $mergeStrategy->getParameters(),
-            'required' => $mergeStrategy->getRequired(),
+            'properties' => $this->mergeStrategy->getParameters(),
+            'required' => $this->mergeStrategy->getRequired(),
         ]);
 
-        $mergeStrategy->clean();
+        $this->mergeStrategy->clean();
 
         return $mergedSchema;
     }

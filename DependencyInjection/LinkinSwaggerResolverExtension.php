@@ -21,6 +21,7 @@ use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerConfigurationLoaderInterfa
 use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerPhpConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\YamlConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\MergeStrategyInterface;
+use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Linkin\Bundle\SwaggerResolverBundle\Normalizer\SwaggerNormalizerInterface;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\SwaggerValidatorInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
@@ -30,6 +31,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\Routing\RouterInterface;
 use function class_exists;
 use function end;
 use function explode;
@@ -96,12 +98,14 @@ class LinkinSwaggerResolverExtension extends Extension
     private function getConfigurationLoaderDefinition(ContainerBuilder $container, array $config): Definition
     {
         $loaderDefinition = new Definition();
+        $loaderDefinition->addArgument(new Reference(OperationParameterMerger::class));
 
         $bundles = $container->getParameter('kernel.bundles');
 
         if (isset($bundles['NelmioApiDocBundle'])) {
             return $loaderDefinition
                 ->setClass(NelmioApiDocConfigurationLoader::class)
+                ->addArgument(new Reference(RouterInterface::class))
                 ->addArgument(new Reference('nelmio_api_doc.generator'))
             ;
         }
@@ -116,6 +120,7 @@ class LinkinSwaggerResolverExtension extends Extension
 
             return $loaderDefinition
                 ->setClass(SwaggerPhpConfigurationLoader::class)
+                ->addArgument(new Reference(RouterInterface::class))
                 ->addArgument($scanDir)
                 ->addArgument($excludeDir)
             ;
@@ -132,7 +137,7 @@ class LinkinSwaggerResolverExtension extends Extension
         $explodedPath = explode('.', $pathToConfig);
         $extension = end($explodedPath);
 
-        if (class_exists('\Symfony\Component\Yaml\Yaml') && ('yaml' === $extension || 'yml' === $extension)) {
+        if ('yaml' === $extension || 'yml' === $extension) {
             return $loaderDefinition->setClass(YamlConfigurationLoader::class);
         }
 

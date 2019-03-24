@@ -13,7 +13,8 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Loader;
 
-use EXSyst\Component\Swagger\Swagger;
+use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaDefinitionCollection;
+use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaOperationCollection;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -21,9 +22,17 @@ use EXSyst\Component\Swagger\Swagger;
 interface SwaggerConfigurationLoaderInterface
 {
     /**
-     * Loads swagger configuration from the annotations.
+     * Return swagger definition schema collection
      *
-     * @return Swagger
+     * @return SchemaDefinitionCollection
      */
-    public function loadConfiguration(): Swagger;
+    public function getSchemaDefinitionCollection(): SchemaDefinitionCollection;
+
+    /**
+     * Returns collection of the merged swagger path operation by @see OperationParameterMerger
+     * according to specific @see MergeStrategyInterface
+     *
+     * @return SchemaOperationCollection
+     */
+    public function getSchemaOperationCollection(): SchemaOperationCollection;
 }

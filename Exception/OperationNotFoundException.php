@@ -13,20 +13,20 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Exception;
 
-use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
+use RuntimeException;
 use function sprintf;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-class NormalizationFailedException extends InvalidOptionsException
+class OperationNotFoundException extends RuntimeException
 {
     /**
-     * @param string $propertyName
-     * @param string $value
+     * @param string $path
+     * @param string $method
      */
-    public function __construct(string $propertyName, string $value)
+    public function __construct(string $path, string $method)
     {
-        parent::__construct(sprintf('Failed to normalize property "%s" with value "%s"', $propertyName, $value));
+        parent::__construct(sprintf('Swagger operation for path "%s" with "%s" was not found', $path, $method));
     }
 }
