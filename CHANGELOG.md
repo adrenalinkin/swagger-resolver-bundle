@@ -1,4 +1,4 @@
-## [Unreleased]
+## [0.4.1] - 2019-04-13
 ### Added
 - Added support of the several areas when `NelmioApiDocBundle` used for the configuration loading.
 
