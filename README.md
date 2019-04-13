@@ -14,6 +14,9 @@ You describe your API documentation by Swagger and provides verification of data
 with the described requirements.
 When documentation has been updated then verification will be updated too, all in one place!
 
+**Documentation is cached** through the standard `Symfony Warmers` mechanism.
+In debug mode, the cache automatically warms up if you change the file containing the description of the documentation.
+
 *Note:* as result bundle returns `SwaggerResolver` object - extension for the
 [OptionsResolver](https://github.com/symfony/options-resolver). 
 In this way you get full control over created resolver. 

@@ -27,7 +27,7 @@ services:
         arguments:
             - '@Linkin\Bundle\SwaggerResolverBundle\Builder\SwaggerResolverBuilder'
             - '@Linkin\Bundle\SwaggerResolverBundle\Configuration\SwaggerConfigurationInterface'
-            - '@router'
+            - '@Symfony\Component\Routing\RouterInterface'
     linkin_swagger_resolver.factory:
         alias: Linkin\Bundle\SwaggerResolverBundle\Factory\SwaggerResolverFactory
 

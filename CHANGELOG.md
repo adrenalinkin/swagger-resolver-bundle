@@ -1,3 +1,7 @@
+## [Unreleased]
+### Added
+- Added support of the several areas when `NelmioApiDocBundle` used for the configuration loading.
+
 ## [0.4.0] - 2019-03-24
 ### Added
 - Added symfony cache warmer for the swagger configuration and enable him by default.
