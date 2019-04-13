@@ -28,20 +28,30 @@ use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Routing\RouterInterface;
+use function array_merge_recursive;
 use function class_exists;
 use function end;
 use function explode;
+use function md5;
 use function sprintf;
+use function time;
+use function uniqid;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-class LinkinSwaggerResolverExtension extends Extension
+class LinkinSwaggerResolverExtension extends Extension implements PrependExtensionInterface
 {
+    /**
+     * @var string
+     */
+    private $globalAreaName;
+
     /**
      * {@inheritdoc}
      */
@@ -50,10 +60,10 @@ class LinkinSwaggerResolverExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        $container->setParameter('linkin_swagger_resolver.enable_normalization', $config['enable_normalization']);
+
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yaml');
-
-        $container->setParameter('linkin_swagger_resolver.enable_normalization', $config['enable_normalization']);
 
         $container->setAlias(MergeStrategyInterface::class, $config['path_merge_strategy']);
 
@@ -71,6 +81,35 @@ class LinkinSwaggerResolverExtension extends Extension
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function prepend(ContainerBuilder $container): void
+    {
+        if (!$container->hasExtension('nelmio_api_doc')) {
+            return;
+        }
+
+        $nelmioConfigs = $container->getExtensionConfig('nelmio_api_doc');
+        $globalArea = ['path_patterns' => [], 'host_patterns' => []];
+
+        foreach ($nelmioConfigs as $config) {
+            if (empty($config['areas'])) {
+                continue;
+            }
+
+            foreach ($config['areas'] as $area => $areaConfig) {
+                $globalArea = array_merge_recursive($globalArea, $areaConfig);
+            }
+        }
+
+        $globalArea['with_annotation'] = false;
+
+        $this->globalAreaName = md5(uniqid((string) time(), true));
+
+        $container->prependExtensionConfig('nelmio_api_doc', ['areas' => [$this->globalAreaName => $globalArea]]);
+    }
+
+    /**
      * @param ContainerBuilder $container
      * @param array $config
      */
@@ -83,10 +122,9 @@ class LinkinSwaggerResolverExtension extends Extension
         }
 
         $loaderDefinition = $this->getConfigurationLoaderDefinition($container, $config);
-        $configurationLoaderDefinitionId = 'linkin_swagger_resolver.loader.configuration';
 
-        $container->setDefinition($configurationLoaderDefinitionId, $loaderDefinition);
-        $container->setAlias(SwaggerConfigurationLoaderInterface::class, $configurationLoaderDefinitionId);
+        $container->setDefinition($loaderDefinition->getClass(), $loaderDefinition);
+        $container->setAlias(SwaggerConfigurationLoaderInterface::class, $loaderDefinition->getClass());
     }
 
     /**
@@ -106,7 +144,7 @@ class LinkinSwaggerResolverExtension extends Extension
             return $loaderDefinition
                 ->setClass(NelmioApiDocConfigurationLoader::class)
                 ->addArgument(new Reference(RouterInterface::class))
-                ->addArgument(new Reference('nelmio_api_doc.generator'))
+                ->addArgument(new Reference(sprintf('nelmio_api_doc.generator.%s', $this->globalAreaName)))
             ;
         }
 
