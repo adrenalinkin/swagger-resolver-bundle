@@ -61,7 +61,6 @@ abstract class AbstractAnnotationConfigurationLoader extends AbstractSwaggerConf
     {
         foreach ($this->router->getRouteCollection() as $alias => $route) {
             if ($route->getPath() === $path) {
-                $this->routerCollection[$alias] = $route;
 
                 return $alias;
             }
@@ -96,6 +95,10 @@ abstract class AbstractAnnotationConfigurationLoader extends AbstractSwaggerConf
      */
     protected function registerOperationResources(SchemaOperationCollection $operationCollection): void
     {
+        foreach ($this->router->getRouteCollection() as $routeName => $route) {
+            $this->routerCollection[$routeName] = $route;
+        }
+
         foreach ($operationCollection->getIterator() as $path => $methodList) {
             if (empty($this->routerCollection[$path])) {
                 continue;
