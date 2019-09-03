@@ -76,6 +76,13 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
     }
 
     /**
+     * @param string $path
+     *
+     * @return string
+     */
+    abstract protected function getRouteAlias(string $path): string;
+
+    /**
      * Load full configuration and returns Swagger object
      *
      * @return Swagger
@@ -117,7 +124,10 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
             /** @var Operation $operation */
             foreach ($pathObject->getOperations() as $method => $operation) {
                 $schema = $this->parameterMerger->merge($operation, $swaggerConfiguration->getDefinitions());
-                $operationCollection->addSchema($path, $method, $schema);
+
+                $routeAlias = $this->getRouteAlias($path);
+
+                $operationCollection->addSchema($routeAlias, $method, $schema);
 
                 /** @var Parameter $parameter */
                 foreach ($operation->getParameters()->getIterator() as $name => $parameter) {
@@ -131,7 +141,7 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
                     $definitionName = end($explodedName);
 
                     foreach ($definitionCollection->getSchemaResources($definitionName) as $fileResource) {
-                        $operationCollection->addSchemaResource($path, $fileResource);
+                        $operationCollection->addSchemaResource($routeAlias, $fileResource);
                     }
                 }
             }

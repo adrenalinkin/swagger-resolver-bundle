@@ -37,6 +37,11 @@ abstract class AbstractAnnotationConfigurationLoader extends AbstractSwaggerConf
     private $routerCollection;
 
     /**
+     * @var RouterInterface $router
+     */
+    private $router;
+
+    /**
      * @param OperationParameterMerger $parameterMerger
      * @param RouterInterface $router
      */
@@ -44,8 +49,22 @@ abstract class AbstractAnnotationConfigurationLoader extends AbstractSwaggerConf
     {
         parent::__construct($parameterMerger);
 
-        foreach ($router->getRouteCollection() as $routeName => $route) {
-            $this->routerCollection[$route->getPath()] = $route;
+        $this->router = $router;
+    }
+
+    /**
+     * @param string $path
+     *
+     * @return string
+     */
+    protected function getRouteAlias(string $path): string
+    {
+        foreach ($this->router->getRouteCollection() as $alias => $route) {
+            if ($route->getPath() === $path) {
+                $this->routerCollection[$alias] = $route;
+
+                return $alias;
+            }
         }
     }
 
