@@ -53,21 +53,6 @@ abstract class AbstractAnnotationConfigurationLoader extends AbstractSwaggerConf
     }
 
     /**
-     * @param string $path
-     *
-     * @return string
-     */
-    protected function getRouteAlias(string $path): string
-    {
-        foreach ($this->router->getRouteCollection() as $alias => $route) {
-            if ($route->getPath() === $path) {
-
-                return $alias;
-            }
-        }
-    }
-
-    /**
      * {@inheritdoc}
      */
     protected function registerDefinitionResources(SchemaDefinitionCollection $definitionCollection): void
