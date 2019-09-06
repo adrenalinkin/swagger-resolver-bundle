@@ -84,12 +84,12 @@ class SwaggerCachedConfiguration extends SwaggerConfiguration implements Warmabl
     /**
      * {@inheritdoc}
      */
-    public function getPathDefinition(string $routePath, string $method): Schema
+    public function getPathDefinition(string $routeName, string $method): Schema
     {
         $cache = $this->getConfigCacheFactory()->cache(
-            sprintf('%s/paths/%s/%s_%s.php', $this->cacheDir, $routePath, $method, md5($routePath . $method)),
-            function (ConfigCacheInterface $cache) use ($routePath, $method) {
-                $this->dumpOperation($routePath, $method, $cache);
+            sprintf('%s/paths/%s/%s_%s.php', $this->cacheDir, $routeName, $method, md5($routeName . $method)),
+            function (ConfigCacheInterface $cache) use ($routeName, $method) {
+                $this->dumpOperation($routeName, $method, $cache);
             }
         );
 
@@ -115,13 +115,13 @@ class SwaggerCachedConfiguration extends SwaggerConfiguration implements Warmabl
         $operationCollection = $this->loader->getSchemaOperationCollection();
 
         /** @var Path $pathObject */
-        foreach ($operationCollection as $path => $methodList) {
+        foreach ($operationCollection as $routeName => $methodList) {
             foreach ($methodList as $method => $operation) {
-                $this->getPathDefinition($path, $method);
+                $this->getPathDefinition($routeName, $method);
             }
 
-            if (empty($operationCollection->getSchemaResources($path))) {
-                $definitionWithoutResources[$path] = $path;
+            if (empty($operationCollection->getSchemaResources($routeName))) {
+                $definitionWithoutResources[$routeName] = $routeName;
             }
         }
 
@@ -165,15 +165,15 @@ class SwaggerCachedConfiguration extends SwaggerConfiguration implements Warmabl
     }
 
     /**
-     * @param string $path
+     * @param string $routeName
      * @param string $method
      * @param ConfigCacheInterface $cache
      */
-    private function dumpOperation(string $path, string $method, ConfigCacheInterface $cache): void
+    private function dumpOperation(string $routeName, string $method, ConfigCacheInterface $cache): void
     {
-        $definition = parent::getPathDefinition($path, $method);
+        $definition = parent::getPathDefinition($routeName, $method);
 
-        $resources = $this->loader->getSchemaOperationCollection()->getSchemaResources($path);
+        $resources = $this->loader->getSchemaOperationCollection()->getSchemaResources($routeName);
 
         $this->dumpSchema($definition, $resources, $cache);
     }

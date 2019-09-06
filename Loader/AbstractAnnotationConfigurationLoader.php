@@ -47,7 +47,7 @@ abstract class AbstractAnnotationConfigurationLoader extends AbstractSwaggerConf
      */
     public function __construct(OperationParameterMerger $parameterMerger, RouterInterface $router)
     {
-        parent::__construct($parameterMerger);
+        parent::__construct($parameterMerger, $router);
 
         $this->router = $router;
     }
@@ -99,17 +99,17 @@ abstract class AbstractAnnotationConfigurationLoader extends AbstractSwaggerConf
             $this->routerCollection[$routeName] = $route;
         }
 
-        foreach ($operationCollection->getIterator() as $path => $methodList) {
-            if (empty($this->routerCollection[$path])) {
+        foreach ($operationCollection->getIterator() as $routeName => $methodList) {
+            if (empty($this->routerCollection[$routeName])) {
                 continue;
             }
 
-            $route = $this->routerCollection[$path];
+            $route = $this->routerCollection[$routeName];
             $defaults = $route->getDefaults();
             $exploded = explode('::', $defaults['_controller']);
             $controllerName = reset($exploded);
 
-            $operationCollection->addSchemaResource($path, $this->getFileResource($controllerName));
+            $operationCollection->addSchemaResource($routeName, $this->getFileResource($controllerName));
         }
     }
 

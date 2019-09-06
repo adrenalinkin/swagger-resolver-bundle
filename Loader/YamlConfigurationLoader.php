@@ -15,6 +15,7 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Loader;
 
 use EXSyst\Component\Swagger\Swagger;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -29,11 +30,12 @@ class YamlConfigurationLoader extends AbstractFileConfigurationLoader
 
     /**
      * @param OperationParameterMerger $parameterMerger
+     * @param RouterInterface $router
      * @param string $pathToFile
      */
-    public function __construct(OperationParameterMerger $parameterMerger, string $pathToFile)
+    public function __construct(OperationParameterMerger $parameterMerger, RouterInterface $router, string $pathToFile)
     {
-        parent::__construct($parameterMerger, $pathToFile);
+        parent::__construct($parameterMerger, $router, $pathToFile);
 
         $this->pathToFile = $pathToFile;
     }

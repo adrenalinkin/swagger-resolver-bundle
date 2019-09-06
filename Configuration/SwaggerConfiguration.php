@@ -45,8 +45,8 @@ class SwaggerConfiguration implements SwaggerConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getPathDefinition(string $routePath, string $method): Schema
+    public function getPathDefinition(string $routeName, string $method): Schema
     {
-        return $this->configurationLoader->getSchemaOperationCollection()->getSchema($routePath, $method);
+        return $this->configurationLoader->getSchemaOperationCollection()->getSchema($routeName, $method);
     }
 }

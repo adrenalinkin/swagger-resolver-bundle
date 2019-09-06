@@ -136,14 +136,16 @@ class LinkinSwaggerResolverExtension extends Extension implements PrependExtensi
     private function getConfigurationLoaderDefinition(ContainerBuilder $container, array $config): Definition
     {
         $loaderDefinition = new Definition();
-        $loaderDefinition->addArgument(new Reference(OperationParameterMerger::class));
+        $loaderDefinition
+            ->addArgument(new Reference(OperationParameterMerger::class))
+            ->addArgument(new Reference(RouterInterface::class))
+        ;
 
         $bundles = $container->getParameter('kernel.bundles');
 
         if (isset($bundles['NelmioApiDocBundle'])) {
             return $loaderDefinition
                 ->setClass(NelmioApiDocConfigurationLoader::class)
-                ->addArgument(new Reference(RouterInterface::class))
                 ->addArgument(new Reference(sprintf('nelmio_api_doc.generator.%s', $this->globalAreaName)))
             ;
         }
@@ -158,7 +160,6 @@ class LinkinSwaggerResolverExtension extends Extension implements PrependExtensi
 
             return $loaderDefinition
                 ->setClass(SwaggerPhpConfigurationLoader::class)
-                ->addArgument(new Reference(RouterInterface::class))
                 ->addArgument($scanDir)
                 ->addArgument($excludeDir)
             ;

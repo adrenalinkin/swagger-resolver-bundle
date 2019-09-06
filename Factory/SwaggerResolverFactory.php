@@ -65,12 +65,12 @@ class SwaggerResolverFactory
     public function createForRequest(Request $request): SwaggerResolver
     {
         $pathInfo = $this->router->match($request->getPathInfo());
-        $routeAlias = $pathInfo['_route'];
+        $routeName = $pathInfo['_route'];
         $method = strtolower($request->getMethod());
 
-        $mergedSchema = $this->swaggerConfiguration->getPathDefinition($routeAlias, $method);
+        $mergedSchema = $this->swaggerConfiguration->getPathDefinition($routeName, $method);
 
-        return $this->builder->build($mergedSchema, $routeAlias);
+        return $this->builder->build($mergedSchema, $routeName);
     }
 
     /**
