@@ -111,6 +111,14 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
     abstract protected function registerOperationResources(SchemaOperationCollection $operationCollection): void;
 
     /**
+     * @return RouterInterface
+     */
+    protected function getRouter(): RouterInterface
+    {
+        return $this->router;
+    }
+
+    /**
      * @param string $path
      *
      * @return string
@@ -150,10 +158,12 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
 
         /** @var Path $pathObject */
         foreach ($swaggerConfiguration->getPaths()->getIterator() as $path => $pathObject) {
+            $routeName = $this->getRouteNameByPath($path);
+
             /** @var Operation $operation */
             foreach ($pathObject->getOperations() as $method => $operation) {
                 $schema = $this->parameterMerger->merge($operation, $swaggerConfiguration->getDefinitions());
-                $operationCollection->addSchema($this->getRouteNameByPath($path), $method, $schema);
+                $operationCollection->addSchema($routeName, $method, $schema);
 
                 /** @var Parameter $parameter */
                 foreach ($operation->getParameters()->getIterator() as $name => $parameter) {
@@ -167,7 +177,7 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
                     $definitionName = end($explodedName);
 
                     foreach ($definitionCollection->getSchemaResources($definitionName) as $fileResource) {
-                        $operationCollection->addSchemaResource($this->getRouteNameByPath($path), $fileResource);
+                        $operationCollection->addSchemaResource($routeName, $fileResource);
                     }
                 }
             }

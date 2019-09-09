@@ -32,27 +32,6 @@ use function reset;
 abstract class AbstractAnnotationConfigurationLoader extends AbstractSwaggerConfigurationLoader
 {
     /**
-     * @var Route[]
-     */
-    private $routerCollection;
-
-    /**
-     * @var RouterInterface $router
-     */
-    private $router;
-
-    /**
-     * @param OperationParameterMerger $parameterMerger
-     * @param RouterInterface $router
-     */
-    public function __construct(OperationParameterMerger $parameterMerger, RouterInterface $router)
-    {
-        parent::__construct($parameterMerger, $router);
-
-        $this->router = $router;
-    }
-
-    /**
      * {@inheritdoc}
      */
     protected function registerDefinitionResources(SchemaDefinitionCollection $definitionCollection): void
@@ -80,16 +59,13 @@ abstract class AbstractAnnotationConfigurationLoader extends AbstractSwaggerConf
      */
     protected function registerOperationResources(SchemaOperationCollection $operationCollection): void
     {
-        foreach ($this->router->getRouteCollection() as $routeName => $route) {
-            $this->routerCollection[$routeName] = $route;
-        }
-
         foreach ($operationCollection->getIterator() as $routeName => $methodList) {
-            if (empty($this->routerCollection[$routeName])) {
+            $route = $this->getRouter()->getRouteCollection()->get($routeName);
+
+            if ($route === null) {
                 continue;
             }
 
-            $route = $this->routerCollection[$routeName];
             $defaults = $route->getDefaults();
             $exploded = explode('::', $defaults['_controller']);
             $controllerName = reset($exploded);

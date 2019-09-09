@@ -40,7 +40,7 @@ interface SwaggerConfigurationInterface
      * Returns merged swagger path operation by @see OperationParameterMerger
      * according to specific @see MergeStrategyInterface
      *
-     * @param string $routePath
+     * @param string $routeName
      * @param string $method
      *
      * @return Schema
@@ -48,5 +48,5 @@ interface SwaggerConfigurationInterface
      * @throws OperationNotFoundException   When swagger operation was not found
      * @throws PathNotFoundException        When swagger path was not found
      */
-    public function getPathDefinition(string $routePath, string $method): Schema;
+    public function getPathDefinition(string $routeName, string $method): Schema;
 }
