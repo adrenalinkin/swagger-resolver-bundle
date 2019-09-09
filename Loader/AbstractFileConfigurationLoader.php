@@ -17,6 +17,7 @@ use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaDefinitionCollection;
 use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaOperationCollection;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Symfony\Component\Config\Resource\FileResource;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -30,11 +31,12 @@ abstract class AbstractFileConfigurationLoader extends AbstractSwaggerConfigurat
 
     /**
      * @param OperationParameterMerger $parameterMerger
+     * @param RouterInterface $router
      * @param string $pathToFile
      */
-    public function __construct(OperationParameterMerger $parameterMerger, string $pathToFile)
+    public function __construct(OperationParameterMerger $parameterMerger, RouterInterface $router, string $pathToFile)
     {
-        parent::__construct($parameterMerger);
+        parent::__construct($parameterMerger, $router);
 
         $this->fileResource = new FileResource($pathToFile);
     }
@@ -54,8 +56,8 @@ abstract class AbstractFileConfigurationLoader extends AbstractSwaggerConfigurat
      */
     protected function registerOperationResources(SchemaOperationCollection $operationCollection): void
     {
-        foreach ($operationCollection->getIterator() as $path => $methodList) {
-            $operationCollection->addSchemaResource($path, $this->fileResource);
+        foreach ($operationCollection->getIterator() as $routeName => $methodList) {
+            $operationCollection->addSchemaResource($routeName, $this->fileResource);
         }
     }
 }

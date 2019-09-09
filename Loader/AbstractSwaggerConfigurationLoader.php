@@ -19,7 +19,9 @@ use EXSyst\Component\Swagger\Path;
 use EXSyst\Component\Swagger\Swagger;
 use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaDefinitionCollection;
 use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaOperationCollection;
+use Linkin\Bundle\SwaggerResolverBundle\Exception\PathNotFoundException;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
+use Symfony\Component\Routing\RouterInterface;
 use function end;
 use function explode;
 
@@ -39,16 +41,28 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
     private $operationCollection;
 
     /**
+     * @var array
+     */
+    private $mapPathToRouteName;
+
+    /**
      * @var OperationParameterMerger
      */
     private $parameterMerger;
 
     /**
-     * @param OperationParameterMerger $parameterMerger
+     * @var RouterInterface $router
      */
-    public function __construct(OperationParameterMerger $parameterMerger)
+    private $router;
+
+    /**
+     * @param OperationParameterMerger $parameterMerger
+     * @param RouterInterface $router
+     */
+    public function __construct(OperationParameterMerger $parameterMerger, RouterInterface $router)
     {
         $this->parameterMerger = $parameterMerger;
+        $this->router = $router;
     }
 
     /**
@@ -97,6 +111,36 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
     abstract protected function registerOperationResources(SchemaOperationCollection $operationCollection): void;
 
     /**
+     * @return RouterInterface
+     */
+    protected function getRouter(): RouterInterface
+    {
+        return $this->router;
+    }
+
+    /**
+     * @param string $path
+     *
+     * @return string
+     */
+    protected function getRouteNameByPath(string $path): string
+    {
+        if (empty($this->mapPathToRouteName)) {
+            foreach ($this->router->getRouteCollection() as $routeName => $route) {
+                $this->mapPathToRouteName[$route->getPath()] = $routeName;
+            }
+        }
+
+        $route = $this->mapPathToRouteName[$path] ?? null;
+
+        if (!$route) {
+            throw new PathNotFoundException($path);
+        }
+
+        return $this->mapPathToRouteName[$path];
+    }
+
+    /**
      * Register collection according to loaded Swagger object
      */
     private function registerCollections(): void
@@ -114,10 +158,12 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
 
         /** @var Path $pathObject */
         foreach ($swaggerConfiguration->getPaths()->getIterator() as $path => $pathObject) {
+            $routeName = $this->getRouteNameByPath($path);
+
             /** @var Operation $operation */
             foreach ($pathObject->getOperations() as $method => $operation) {
                 $schema = $this->parameterMerger->merge($operation, $swaggerConfiguration->getDefinitions());
-                $operationCollection->addSchema($path, $method, $schema);
+                $operationCollection->addSchema($routeName, $method, $schema);
 
                 /** @var Parameter $parameter */
                 foreach ($operation->getParameters()->getIterator() as $name => $parameter) {
@@ -131,7 +177,7 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
                     $definitionName = end($explodedName);
 
                     foreach ($definitionCollection->getSchemaResources($definitionName) as $fileResource) {
-                        $operationCollection->addSchemaResource($path, $fileResource);
+                        $operationCollection->addSchemaResource($routeName, $fileResource);
                     }
                 }
             }

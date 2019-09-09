@@ -1,3 +1,7 @@
+## [Unreleased]
+### Changed
+- Improved performance due to avoid of usage `RouterInterface::getRouteCollection` at runtime.
+
 ## [0.4.1] - 2019-04-13
 ### Added
 - Added support of the several areas when `NelmioApiDocBundle` used for the configuration loading.

@@ -32,24 +32,6 @@ use function reset;
 abstract class AbstractAnnotationConfigurationLoader extends AbstractSwaggerConfigurationLoader
 {
     /**
-     * @var Route[]
-     */
-    private $routerCollection;
-
-    /**
-     * @param OperationParameterMerger $parameterMerger
-     * @param RouterInterface $router
-     */
-    public function __construct(OperationParameterMerger $parameterMerger, RouterInterface $router)
-    {
-        parent::__construct($parameterMerger);
-
-        foreach ($router->getRouteCollection() as $routeName => $route) {
-            $this->routerCollection[$route->getPath()] = $route;
-        }
-    }
-
-    /**
      * {@inheritdoc}
      */
     protected function registerDefinitionResources(SchemaDefinitionCollection $definitionCollection): void
@@ -77,17 +59,18 @@ abstract class AbstractAnnotationConfigurationLoader extends AbstractSwaggerConf
      */
     protected function registerOperationResources(SchemaOperationCollection $operationCollection): void
     {
-        foreach ($operationCollection->getIterator() as $path => $methodList) {
-            if (empty($this->routerCollection[$path])) {
+        foreach ($operationCollection->getIterator() as $routeName => $methodList) {
+            $route = $this->getRouter()->getRouteCollection()->get($routeName);
+
+            if ($route === null) {
                 continue;
             }
 
-            $route = $this->routerCollection[$path];
             $defaults = $route->getDefaults();
             $exploded = explode('::', $defaults['_controller']);
             $controllerName = reset($exploded);
 
-            $operationCollection->addSchemaResource($path, $this->getFileResource($controllerName));
+            $operationCollection->addSchemaResource($routeName, $this->getFileResource($controllerName));
         }
     }
 

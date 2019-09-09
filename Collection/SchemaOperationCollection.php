@@ -44,21 +44,21 @@ class SchemaOperationCollection implements IteratorAggregate
     }
 
     /**
-     * @param string $path
+     * @param string $routeName
      * @param string $method
      * @param Schema $schema
      *
      * @return self
      */
-    public function addSchema(string $path, string $method, Schema $schema): self
+    public function addSchema(string $routeName, string $method, Schema $schema): self
     {
-        $this->schemaCollection[$path][$method] = $schema;
+        $this->schemaCollection[$routeName][$method] = $schema;
 
         return $this;
     }
 
     /**
-     * @param string $path
+     * @param string $routeName
      * @param string $method
      *
      * @return Schema
@@ -66,39 +66,39 @@ class SchemaOperationCollection implements IteratorAggregate
      * @throws OperationNotFoundException
      * @throws PathNotFoundException
      */
-    public function getSchema(string $path, string $method): Schema
+    public function getSchema(string $routeName, string $method): Schema
     {
-        if (empty($this->schemaCollection[$path])) {
-            throw new PathNotFoundException($path);
+        if (empty($this->schemaCollection[$routeName])) {
+            throw new PathNotFoundException($routeName);
         }
 
-        if (empty($this->schemaCollection[$path][$method])) {
-            throw new OperationNotFoundException($path, $method);
+        if (empty($this->schemaCollection[$routeName][$method])) {
+            throw new OperationNotFoundException($routeName, $method);
         }
 
-        return $this->schemaCollection[$path][$method];
+        return $this->schemaCollection[$routeName][$method];
     }
 
     /**
-     * @param string $path
+     * @param string $routeName
      * @param FileResource $resource
      *
      * @return self
      */
-    public function addSchemaResource(string $path, FileResource $resource): self
+    public function addSchemaResource(string $routeName, FileResource $resource): self
     {
-        $this->resourceCollection[$path][] = $resource;
+        $this->resourceCollection[$routeName][] = $resource;
 
         return $this;
     }
 
     /**
-     * @param string $path
+     * @param string $routeName
      *
      * @return FileResource[]
      */
-    public function getSchemaResources(string $path): array
+    public function getSchemaResources(string $routeName): array
     {
-        return $this->resourceCollection[$path] ?? [];
+        return $this->resourceCollection[$routeName] ?? [];
     }
 }
