@@ -17,7 +17,6 @@ use ArrayIterator;
 use EXSyst\Component\Swagger\Schema;
 use IteratorAggregate;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\OperationNotFoundException;
-use Linkin\Bundle\SwaggerResolverBundle\Exception\PathNotFoundException;
 use Symfony\Component\Config\Resource\FileResource;
 
 /**
@@ -64,19 +63,16 @@ class SchemaOperationCollection implements IteratorAggregate
      * @return Schema
      *
      * @throws OperationNotFoundException
-     * @throws PathNotFoundException
      */
     public function getSchema(string $routeName, string $method): Schema
     {
-        if (empty($this->schemaCollection[$routeName])) {
-            throw new PathNotFoundException($routeName);
-        }
+        $schema = $this->schemaCollection[$routeName][$method] ?? null;
 
-        if (empty($this->schemaCollection[$routeName][$method])) {
+        if (!$schema) {
             throw new OperationNotFoundException($routeName, $method);
         }
 
-        return $this->schemaCollection[$routeName][$method];
+        return $schema;
     }
 
     /**
