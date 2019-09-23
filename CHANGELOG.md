@@ -1,4 +1,4 @@
-## [Unreleased] - 2019-09-23
+## [0.4.3] - 2019-09-23
 ### Fixed
 - Fixed rewriting `mapPathToRouteName` keys in `AbstractSwaggerConfigurationLoader`.
 
