@@ -1,5 +1,5 @@
 {
-    "name":        "adrenalinkin/swagger-resolver-bundle",
+    "name":        "wakeapp/swagger-resolver-bundle",
     "description": "Provides possibility for validate data according to Swagger documentation",
     "type":        "symfony-bundle",
     "license":     "MIT",
