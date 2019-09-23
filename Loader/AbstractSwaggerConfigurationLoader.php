@@ -19,7 +19,7 @@ use EXSyst\Component\Swagger\Path;
 use EXSyst\Component\Swagger\Swagger;
 use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaDefinitionCollection;
 use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaOperationCollection;
-use Linkin\Bundle\SwaggerResolverBundle\Exception\PathNotFoundException;
+use Linkin\Bundle\SwaggerResolverBundle\Exception\OperationNotFoundException;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Symfony\Component\Routing\RouterInterface;
 use function end;
@@ -120,24 +120,35 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
 
     /**
      * @param string $path
+     * @param string $method
      *
      * @return string
      */
-    protected function getRouteNameByPath(string $path): string
+    protected function getRouteNameByPath(string $path, string $method): string
     {
-        if (empty($this->mapPathToRouteName)) {
-            foreach ($this->router->getRouteCollection() as $routeName => $route) {
-                $this->mapPathToRouteName[$route->getPath()] = $routeName;
-            }
+        if (!$this->mapPathToRouteName) {
+            $this->initMapPathToRouteName();
         }
 
-        $route = $this->mapPathToRouteName[$path] ?? null;
+        $route = $this->mapPathToRouteName[$path][$method] ?? null;
 
         if (!$route) {
-            throw new PathNotFoundException($path);
+            throw new OperationNotFoundException($path, $method);
         }
 
-        return $this->mapPathToRouteName[$path];
+        return (string) $route;
+    }
+
+    /**
+     * Initialize map real path into appropriated route name
+     */
+    private function initMapPathToRouteName(): void
+    {
+        foreach ($this->router->getRouteCollection() as $routeName => $route) {
+            foreach ($route->getMethods() as $method) {
+                $this->mapPathToRouteName[$route->getPath()][$method] = $routeName;
+            }
+        }
     }
 
     /**
@@ -158,11 +169,10 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
 
         /** @var Path $pathObject */
         foreach ($swaggerConfiguration->getPaths()->getIterator() as $path => $pathObject) {
-            $routeName = $this->getRouteNameByPath($path);
-
             /** @var Operation $operation */
             foreach ($pathObject->getOperations() as $method => $operation) {
                 $schema = $this->parameterMerger->merge($operation, $swaggerConfiguration->getDefinitions());
+                $routeName = $this->getRouteNameByPath($path, $method);
                 $operationCollection->addSchema($routeName, $method, $schema);
 
                 /** @var Parameter $parameter */

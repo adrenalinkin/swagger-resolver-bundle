@@ -1,3 +1,9 @@
+## [Unreleased]
+### Fixed
+- Fixed problem with path ot route name when http method has been ignored.
+### Removed
+- Removed `PathNotFoundException` as redundant.
+
 ## [0.4.2] - 2019-09-09
 ### Changed
 - Improved performance due to avoid of usage `RouterInterface::getRouteCollection` at runtime.

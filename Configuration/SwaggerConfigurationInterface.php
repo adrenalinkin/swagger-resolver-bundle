@@ -16,7 +16,6 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Configuration;
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\DefinitionNotFoundException;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\OperationNotFoundException;
-use Linkin\Bundle\SwaggerResolverBundle\Exception\PathNotFoundException;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\MergeStrategyInterface;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 
@@ -45,8 +44,7 @@ interface SwaggerConfigurationInterface
      *
      * @return Schema
      *
-     * @throws OperationNotFoundException   When swagger operation was not found
-     * @throws PathNotFoundException        When swagger path was not found
+     * @throws OperationNotFoundException When swagger operation was not found
      */
     public function getPathDefinition(string $routeName, string $method): Schema;
 }
