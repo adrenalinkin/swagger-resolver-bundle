@@ -127,7 +127,11 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
     {
         if (empty($this->mapPathToRouteName)) {
             foreach ($this->router->getRouteCollection() as $routeName => $route) {
-                $this->mapPathToRouteName[$route->getPath()] = $routeName;
+                foreach ($route->getMethods() as $method) {
+                    $this->mapPathToRouteName[sprintf('%s %s', strtolower($method), $route->getPath())]
+                        = $routeName
+                    ;
+                }
             }
         }
 
@@ -158,10 +162,9 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
 
         /** @var Path $pathObject */
         foreach ($swaggerConfiguration->getPaths()->getIterator() as $path => $pathObject) {
-            $routeName = $this->getRouteNameByPath($path);
-
             /** @var Operation $operation */
             foreach ($pathObject->getOperations() as $method => $operation) {
+                $routeName = $this->getRouteNameByPath(sprintf('%s %s', strtolower($method), $path));
                 $schema = $this->parameterMerger->merge($operation, $swaggerConfiguration->getDefinitions());
                 $operationCollection->addSchema($routeName, $method, $schema);
 
