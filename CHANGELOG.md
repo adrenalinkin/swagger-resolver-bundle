@@ -1,8 +1,8 @@
-## [Unreleased]
-### Fixed
-- Fixed problem with path ot route name when http method has been ignored.
+## [0.4.3] - 2019-09-23
 ### Removed
 - Removed `PathNotFoundException` as redundant.
+### Fixed
+- Fixed problem with path to route name when http method has been ignored.
 
 ## [0.4.2] - 2019-09-09
 ### Changed
