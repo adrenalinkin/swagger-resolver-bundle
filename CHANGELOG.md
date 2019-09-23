@@ -1,3 +1,7 @@
+## [Unreleased] - 2019-09-23
+### Fixed
+- Fixed rewriting `mapPathToRouteName` keys in `AbstractSwaggerConfigurationLoader`.
+
 ## [0.4.2] - 2019-09-09
 ### Changed
 - Improved performance due to avoid of usage `RouterInterface::getRouteCollection` at runtime.
