@@ -20,7 +20,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
 use function end;
 use function explode;
-use function strtolower;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -66,9 +65,8 @@ class SwaggerResolverFactory
     {
         $pathInfo = $this->router->match($request->getPathInfo());
         $routeName = $pathInfo['_route'];
-        $method = strtolower($request->getMethod());
 
-        $mergedSchema = $this->swaggerConfiguration->getPathDefinition($routeName, $method);
+        $mergedSchema = $this->swaggerConfiguration->getPathDefinition($routeName, $request->getMethod());
 
         return $this->builder->build($mergedSchema, $routeName);
     }

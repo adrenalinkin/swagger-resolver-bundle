@@ -1,3 +1,7 @@
+## [Unreleased]
+### Fixed
+- Fixed problem with case-sensitive request method.
+
 ## [0.4.3] - 2019-09-23
 ### Removed
 - Removed `PathNotFoundException` as redundant.
