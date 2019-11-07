@@ -1,4 +1,4 @@
-## [Unreleased]
+## [0.4.4] - 2019-11-07
 ### Fixed
 - Fixed problem with case-sensitive request method.
 
