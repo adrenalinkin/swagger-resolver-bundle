@@ -24,6 +24,7 @@ use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Symfony\Component\Routing\RouterInterface;
 use function end;
 use function explode;
+use function strtolower;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -146,6 +147,7 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
     {
         foreach ($this->router->getRouteCollection() as $routeName => $route) {
             foreach ($route->getMethods() as $method) {
+                $method = $this->normalizeMethod($method);
                 $this->mapPathToRouteName[$route->getPath()][$method] = $routeName;
             }
         }
@@ -171,6 +173,7 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
         foreach ($swaggerConfiguration->getPaths()->getIterator() as $path => $pathObject) {
             /** @var Operation $operation */
             foreach ($pathObject->getOperations() as $method => $operation) {
+                $method = $this->normalizeMethod($method);
                 $schema = $this->parameterMerger->merge($operation, $swaggerConfiguration->getDefinitions());
                 $routeName = $this->getRouteNameByPath($path, $method);
                 $operationCollection->addSchema($routeName, $method, $schema);
@@ -197,5 +200,15 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
 
         $this->definitionCollection = $definitionCollection;
         $this->operationCollection = $operationCollection;
+    }
+
+    /**
+     * @param string $method
+     *
+     * @return string
+     */
+    private function normalizeMethod(string $method): string
+    {
+        return strtolower($method);
     }
 }
