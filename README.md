@@ -4,7 +4,10 @@ Swagger Resolver Bundle [![На Русском](https://img.shields.io/badge/П�
 [![Latest Stable Version](https://poser.pugx.org/adrenalinkin/swagger-resolver-bundle/v/stable)](https://packagist.org/packages/adrenalinkin/swagger-resolver-bundle)
 [![Total Downloads](https://poser.pugx.org/adrenalinkin/swagger-resolver-bundle/downloads)](https://packagist.org/packages/adrenalinkin/swagger-resolver-bundle)
 
-[![knpbundles.com](http://knpbundles.com/adrenalinkin/swagger-resolver-bundle/badge-short)](http://knpbundles.com/adrenalinkin/swagger-resolver-bundle)
+Feel free to connect with me by email [email](mailto:adrenalinkin@gmail.com)
+or in Telegram [Telegram](https://t.me/adrenaL1nkin).
+
+Usage example on [GitHub Gist](https://gist.github.com/adrenalinkin/f5cddf1afea865a3b91ac078a1cb8337#file-instruction-md)
 
 Introduction
 ------------
