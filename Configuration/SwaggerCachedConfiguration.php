@@ -2,36 +2,30 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of the SwaggerResolverBundle package.
- *
- * (c) Viktor Linkin <adrenalinkin@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Linkin\Bundle\SwaggerResolverBundle\Configuration;
 
 use EXSyst\Component\Swagger\Path;
 use EXSyst\Component\Swagger\Schema;
+use Linkin\Bundle\SwaggerResolverBundle\Configuration\SwaggerConfiguration;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerConfigurationLoaderInterface;
+use Psr\Cache\InvalidArgumentException;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Config\ConfigCacheFactory;
 use Symfony\Component\Config\ConfigCacheFactoryInterface;
 use Symfony\Component\Config\ConfigCacheInterface;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 use function json_decode;
 use function json_encode;
 use function md5;
 use function sprintf;
 use const PHP_SAPI;
 
-/**
- * @author Viktor Linkin <adrenalinkin@gmail.com>
- */
 class SwaggerCachedConfiguration extends SwaggerConfiguration implements WarmableInterface
 {
+    private const CACHE_KEY = 'linkin_swagger_resolver';
+
     /**
      * @var string
      */
@@ -53,6 +47,11 @@ class SwaggerCachedConfiguration extends SwaggerConfiguration implements Warmabl
     private $loader;
 
     /**
+     * @var FilesystemAdapter
+     */
+    private $cacheSchema;
+
+    /**
      * @param SwaggerConfigurationLoaderInterface $loader
      * @param string $cacheDir
      * @param bool $debug
@@ -61,18 +60,35 @@ class SwaggerCachedConfiguration extends SwaggerConfiguration implements Warmabl
     {
         parent::__construct($loader);
 
-        $this->cacheDir = $cacheDir . '/linkin_swagger_resolver';
+        $this->cacheDir = $cacheDir . '/' . self::CACHE_KEY;
         $this->debug = $debug;
         $this->loader = $loader;
+        $this->cacheSchema = new FilesystemAdapter(self::CACHE_KEY, 0, $this->cacheDir);
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @throws InvalidArgumentException
      */
     public function getDefinition(string $definitionName): Schema
     {
+        $key = sprintf('%s/definitions/%s_%s.php', $this->cacheDir, $definitionName, md5($definitionName));
+
+        $beta = 1.0;
+        $schema = $this->cacheSchema->get(md5($key), function (ItemInterface $item) use ($key, $definitionName) {
+            $item->expiresAfter(3600);
+
+            return $this->getDumpDefinition($key, $definitionName);
+        }, $beta);
+
+        return $schema;
+    }
+
+    private function getDumpDefinition(string $key, string $definitionName): Schema
+    {
         $cache = $this->getConfigCacheFactory()->cache(
-            sprintf('%s/definitions/%s_%s.php', $this->cacheDir, $definitionName, md5($definitionName)),
+            $key,
             function (ConfigCacheInterface $cache) use ($definitionName) {
                 $this->dumpDefinition($definitionName, $cache);
             }
@@ -83,11 +99,30 @@ class SwaggerCachedConfiguration extends SwaggerConfiguration implements Warmabl
 
     /**
      * {@inheritdoc}
+     *
+     * @throws InvalidArgumentException
      */
     public function getPathDefinition(string $routeName, string $method): Schema
     {
+        $key = sprintf('%s/paths/%s/%s_%s.php', $this->cacheDir, $routeName, $method, md5($routeName . $method));
+
+        $beta = 1.0;
+        $schema = $this->cacheSchema->get(md5($key), function (ItemInterface $item) use ($key, $routeName, $method) {
+            $item->expiresAfter(3600);
+
+            return $this->getDumpPathDefinition($key, $routeName, $method);
+        }, $beta);
+
+        return $schema;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDumpPathDefinition(string $key, string $routeName, string $method): Schema
+    {
         $cache = $this->getConfigCacheFactory()->cache(
-            sprintf('%s/paths/%s/%s_%s.php', $this->cacheDir, $routeName, $method, md5($routeName . $method)),
+            $key,
             function (ConfigCacheInterface $cache) use ($routeName, $method) {
                 $this->dumpOperation($routeName, $method, $cache);
             }
@@ -98,8 +133,10 @@ class SwaggerCachedConfiguration extends SwaggerConfiguration implements Warmabl
 
     /**
      * {@inheritdoc}
+     *
+     * @throws InvalidArgumentException
      */
-    public function warmUp($cacheDir)
+    public function warmUp($cacheDir): void
     {
         $definitionWithoutResources = [];
         $definitionCollection = $this->loader->getSchemaDefinitionCollection();

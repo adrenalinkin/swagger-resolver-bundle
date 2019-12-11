@@ -2,15 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of the SwaggerResolverBundle package.
- *
- * (c) Viktor Linkin <adrenalinkin@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Linkin\Bundle\SwaggerResolverBundle\DependencyInjection;
 
 use Closure;
@@ -24,9 +15,6 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use function is_subclass_of;
 use function sprintf;
 
-/**
- * @author Viktor Linkin <adrenalinkin@gmail.com>
- */
 class Configuration implements ConfigurationInterface
 {
     /**

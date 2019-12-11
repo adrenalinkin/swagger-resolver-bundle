@@ -2,15 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of the SwaggerResolverBundle package.
- *
- * (c) Viktor Linkin <adrenalinkin@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Linkin\Bundle\SwaggerResolverBundle\DependencyInjection\Compiler;
 
 use Linkin\Bundle\SwaggerResolverBundle\Builder\SwaggerResolverBuilder;
@@ -20,9 +11,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 use function iterator_to_array;
 
-/**
- * @author Viktor Linkin <adrenalinkin@gmail.com>
- */
 class SwaggerNormalizerCompilerPass implements CompilerPassInterface
 {
     public const TAG = 'linkin_swagger_resolver.normalizer';
