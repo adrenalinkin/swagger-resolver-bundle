@@ -4,7 +4,7 @@ Swagger Resolver Bundle [![In English](https://img.shields.io/badge/Switch_To-En
 [![Latest Stable Version](https://poser.pugx.org/adrenalinkin/swagger-resolver-bundle/v/stable)](https://packagist.org/packages/adrenalinkin/swagger-resolver-bundle)
 [![Total Downloads](https://poser.pugx.org/adrenalinkin/swagger-resolver-bundle/downloads)](https://packagist.org/packages/adrenalinkin/swagger-resolver-bundle)
 
-При возникновении вопросов можно свзаться по [email](mailto:adrenalinkin@gmail.com)
+При возникновении вопросов можно связаться по [email](mailto:adrenalinkin@gmail.com)
 или через [Telegram](https://t.me/adrenaL1nkin).
 
 Пример использования на [GitHub Gist](https://gist.github.com/adrenalinkin/f5cddf1afea865a3b91ac078a1cb8337#file-instruction-md)

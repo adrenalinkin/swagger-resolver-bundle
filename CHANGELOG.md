@@ -1,3 +1,7 @@
+## [0.4.5] - 2020-03-16
+### Changed
+- Symfony 5 allowed
+
 ## [0.4.4] - 2019-11-07
 ### Fixed
 - Fixed problem with case-sensitive request method.
