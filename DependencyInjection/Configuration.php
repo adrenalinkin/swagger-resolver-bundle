@@ -23,6 +23,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use function is_subclass_of;
 use function sprintf;
+use function method_exists;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -34,8 +35,14 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('linkin_swagger_resolver');
+        $treeBuilder = new TreeBuilder('linkin_swagger_resolver');
+
+        if (method_exists($treeBuilder, 'getRootNode')) {
+            $rootNode = $treeBuilder->getRootNode();
+        } else {
+            // BC layer for symfony/config 4.1 and older
+            $rootNode = $treeBuilder->root('linkin_swagger_resolver');
+        }
 
         $rootNode
             ->children()
@@ -81,7 +88,7 @@ class Configuration implements ConfigurationInterface
      */
     private function validationForConfigurationLoader(): Closure
     {
-        return function ($className) {
+        return static function ($className) {
             if (null === $className) {
                 return $className;
             }
@@ -102,7 +109,7 @@ class Configuration implements ConfigurationInterface
      */
     private function validationForPathMergeStrategy(): Closure
     {
-        return function ($className) {
+        return static function ($className) {
             if (!is_subclass_of($className, MergeStrategyInterface::class)) {
                 throw new InvalidConfigurationException(sprintf(
                     'Parameter "path_merge_strategy" should contain class which implements "%s"',
