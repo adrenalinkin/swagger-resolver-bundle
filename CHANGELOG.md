@@ -1,3 +1,7 @@
+## [0.4.6] - 2020-04-01
+### Fixed
+- Fixed problem with deprecated DI configuration
+
 ## [0.4.5] - 2020-03-16
 ### Changed
 - Symfony 5 allowed
