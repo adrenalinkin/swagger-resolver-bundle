@@ -24,16 +24,16 @@
     ],
 
     "require": {
-        "php": "~7.1",
+        "php": "^7.1",
         "ext-json": "*",
-        "exsyst/swagger": "~0.4",
-        "symfony/config": "~3.4||~4.0||~5.0",
-        "symfony/dependency-injection": "~3.4||~4.0||~5.0",
-        "symfony/http-foundation": "~3.4||~4.0||~5.0",
-        "symfony/http-kernel": "~3.4||~4.0||~5.0",
-        "symfony/options-resolver": "~3.4||~4.0||~5.0",
-        "symfony/routing": "~3.4||~4.0||~5.0",
-        "symfony/yaml": "~3.4||~4.0||~5.0"
+        "exsyst/swagger": "^0.4",
+        "symfony/config": "^3.4||^4.0||^5.0",
+        "symfony/dependency-injection": "^3.4||^4.0||^5.0",
+        "symfony/http-foundation": "^3.4||^4.0||^5.0",
+        "symfony/http-kernel": "^3.4||^4.0||^5.0",
+        "symfony/options-resolver": "^3.4||^4.0||^5.0",
+        "symfony/routing": "^3.4||^4.0||^5.0",
+        "symfony/yaml": "^3.4||^4.0||^5.0"
     },
 
     "suggest": {
