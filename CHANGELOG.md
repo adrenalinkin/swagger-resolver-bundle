@@ -1,3 +1,7 @@
+## [Unreleased]
+### Removed
+- Removed all unnecessary rows from the `.gitignore` according to `.gitignore_global` use instead.
+
 ## [0.4.6] - 2020-04-01
 ### Fixed
 - Fixed problem with deprecated DI configuration
