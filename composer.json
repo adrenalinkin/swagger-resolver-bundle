@@ -1,9 +1,9 @@
 {
-    "name":        "adrenalinkin/swagger-resolver-bundle",
+    "name": "adrenalinkin/swagger-resolver-bundle",
     "description": "Provides possibility for validate data according to Swagger documentation",
-    "type":        "symfony-bundle",
-    "license":     "MIT",
-    "keywords":    [
+    "type": "symfony-bundle",
+    "license":"MIT",
+    "keywords": [
         "symfony-bundle",
         "api",
         "documentation",
@@ -19,33 +19,36 @@
     "authors": [
         {
             "email": "adrenalinkin@gmail.com",
-            "name":  "Viktor Linkin",
-            "role":  "Developer"
+            "name": "Viktor Linkin"
         }
     ],
 
     "require": {
-        "php":                          "~7.1",
-        "ext-json":                     "*",
-        "exsyst/swagger":               "~0.4",
-        "symfony/config":               "~3.4||~4.0||~5.0",
+        "php": "~7.1",
+        "ext-json": "*",
+        "exsyst/swagger": "~0.4",
+        "symfony/config": "~3.4||~4.0||~5.0",
         "symfony/dependency-injection": "~3.4||~4.0||~5.0",
-        "symfony/http-foundation":      "~3.4||~4.0||~5.0",
-        "symfony/http-kernel":          "~3.4||~4.0||~5.0",
-        "symfony/options-resolver":     "~3.4||~4.0||~5.0",
-        "symfony/routing":              "~3.4||~4.0||~5.0",
-        "symfony/yaml":                 "~3.4||~4.0||~5.0"
+        "symfony/http-foundation": "~3.4||~4.0||~5.0",
+        "symfony/http-kernel": "~3.4||~4.0||~5.0",
+        "symfony/options-resolver": "~3.4||~4.0||~5.0",
+        "symfony/routing": "~3.4||~4.0||~5.0",
+        "symfony/yaml": "~3.4||~4.0||~5.0"
     },
 
     "suggest": {
-        "nelmio/api-doc-bundle":    "Generates documentation for your REST API from annotations",
-        "symfony/symfony":          "Allows more advanced functionality with full Symfony package",
-        "zircote/swagger-php":      "Allows to generate Swagger configuration by php annotations"
+        "nelmio/api-doc-bundle": "Generates documentation for your REST API from annotations",
+        "symfony/symfony": "Allows more advanced functionality with full Symfony package",
+        "zircote/swagger-php": "Allows to generate Swagger configuration by php annotations"
     },
 
     "autoload": {
         "psr-4": {
             "Linkin\\Bundle\\SwaggerResolverBundle\\": ""
         }
+    },
+
+    "config": {
+        "sort-packages": true
     }
 }
