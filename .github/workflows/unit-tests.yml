@@ -1,0 +1,70 @@
+name: UnitTests
+
+on: [push, pull_request]
+
+jobs:
+    tests:
+        name: "PHP ${{ matrix.php }}"
+        runs-on: ubuntu-latest
+
+        strategy:
+            fail-fast: true
+            matrix:
+                include:
+                    - php: '7.1'
+                      coverage: xdebug
+                    - php: '7.2'
+                      coverage: pcov
+                    - php: '7.3'
+                      coverage: pcov
+                    - php: '7.4'
+                      coverage: pcov
+
+        steps:
+            - name: Checkout source
+              uses: actions/checkout@v2
+
+            - name: PHP setup
+              uses: shivammathur/setup-php@v2
+              with:
+                php-version: ${{ matrix.php }}
+                coverage: ${{ matrix.coverage }}
+
+            - name: Validate composer.json
+              run: composer validate
+
+            - name: Update composer dependencies
+              uses: ramsey/composer-install@v1
+
+            - name: Cache PHPUnit
+              uses: actions/cache@v2
+              with:
+                path: vendor/bin/.phpunit
+                key: phpunit-${{ matrix.php }}
+
+            - name: Run test suite
+              run: ./vendor/bin/simple-phpunit -v
+
+            - name: Install php-coveralls
+              run: composer global require --no-interaction --no-progress php-coveralls/php-coveralls
+
+            - name: Upload coverage results to Coveralls
+              uses: nick-invision/retry@v2
+              env:
+                COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                COVERALLS_PARALLEL: true
+                COVERALLS_FLAG_NAME: "PHP ${{ matrix.php }}"
+              with:
+                timeout_seconds: 60
+                max_attempts: 3
+                command: php-coveralls -x var/build/clover.xml -o var/build/upload.json -v
+
+    coveralls-finish:
+        needs: tests
+        runs-on: ubuntu-latest
+        steps:
+            - name: Notify Coveralls when build is finished
+              uses: coverallsapp/github-action@master
+              with:
+                github-token: ${{ secrets.GITHUB_TOKEN }}
+                parallel-finished: true
