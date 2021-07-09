@@ -1,6 +1,9 @@
 Swagger Resolver Bundle [![На Русском](https://img.shields.io/badge/Перейти_на-Русский-green.svg?style=flat-square)](./README.RU.md)
 =======================
 
+
+[![PHPUnit](https://github.com/adrenalinkin/swagger-resolver-bundle/workflows/UnitTests/badge.svg)](https://github.com/adrenalinkin/swagger-resolver-bundle/actions/workflows/unit-tests.yml)
+[![Coverage Status](https://coveralls.io/repos/github/adrenalinkin/swagger-resolver-bundle/badge.svg?branch=master)](https://coveralls.io/github/adrenalinkin/swagger-resolver-bundle?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/adrenalinkin/swagger-resolver-bundle/v/stable)](https://packagist.org/packages/adrenalinkin/swagger-resolver-bundle)
 [![Total Downloads](https://poser.pugx.org/adrenalinkin/swagger-resolver-bundle/downloads)](https://packagist.org/packages/adrenalinkin/swagger-resolver-bundle)
 

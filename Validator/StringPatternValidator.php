@@ -40,7 +40,7 @@ class StringPatternValidator implements SwaggerValidatorInterface
     {
         $pattern = sprintf('/%s/', trim($property->getPattern(), '/'));
 
-        if (!preg_match($pattern, $value)) {
+        if (null === $value || !preg_match($pattern, (string) $value)) {
             throw new InvalidOptionsException(sprintf(
                 'Property "%s" should match the pattern "%s"',
                 $propertyName,

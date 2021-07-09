@@ -1,6 +1,8 @@
 Swagger Resolver Bundle [![In English](https://img.shields.io/badge/Switch_To-English-green.svg?style=flat-square)](./README.md)
 =======================
 
+[![PHPUnit](https://github.com/adrenalinkin/swagger-resolver-bundle/workflows/UnitTests/badge.svg)](https://github.com/adrenalinkin/swagger-resolver-bundle/actions/workflows/unit-tests.yml)
+[![Coverage Status](https://coveralls.io/repos/github/adrenalinkin/swagger-resolver-bundle/badge.svg?branch=master)](https://coveralls.io/github/adrenalinkin/swagger-resolver-bundle?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/adrenalinkin/swagger-resolver-bundle/v/stable)](https://packagist.org/packages/adrenalinkin/swagger-resolver-bundle)
 [![Total Downloads](https://poser.pugx.org/adrenalinkin/swagger-resolver-bundle/downloads)](https://packagist.org/packages/adrenalinkin/swagger-resolver-bundle)
 
@@ -14,7 +16,7 @@ Swagger Resolver Bundle [![In English](https://img.shields.io/badge/Switch_To-En
 
 Бандл предоставляет возможность валидировать данные в соответствии с описанной документацией Swagger 2.
 Единожды описав документацию api при помощи swagger вы получаете проверку данных на соответствие описанным требованиям.
-Обновляется документаци - обновляются требования, все в одном месте!
+Обновляется документации - обновляются требования, все в одном месте!
 
 **Документация кэшируется** посредством стандартного механизма `Symfony Warmers`. 
 В режиме отладки кэш автоматически прогревается если изменить файл, содержащий описание документации.
