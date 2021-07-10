@@ -4,21 +4,30 @@ on: [push, pull_request]
 
 jobs:
     tests:
-        name: "PHP ${{ matrix.php }}"
+        name: "PHP ${{ matrix.php }} with ${{ matrix.dependency }} dependencies"
         runs-on: ubuntu-latest
 
         strategy:
             fail-fast: true
             matrix:
                 include:
+                    # Lowest PHP with lowest dependencies
                     - php: '7.1'
                       coverage: xdebug
+                      dependency: lowest
+                    # All supported php versions with highest dependencies
+                    - php: '7.1'
+                      coverage: xdebug
+                      dependency: highest
                     - php: '7.2'
                       coverage: pcov
+                      dependency: highest
                     - php: '7.3'
                       coverage: pcov
+                      dependency: highest
                     - php: '7.4'
                       coverage: pcov
+                      dependency: highest
 
         steps:
             - name: Checkout source
@@ -35,6 +44,8 @@ jobs:
 
             - name: Update composer dependencies
               uses: ramsey/composer-install@v1
+              with:
+                dependency-versions: ${{ matrix.dependency }}
 
             - name: Cache PHPUnit
               uses: actions/cache@v2
@@ -53,7 +64,7 @@ jobs:
               env:
                 COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 COVERALLS_PARALLEL: true
-                COVERALLS_FLAG_NAME: "PHP ${{ matrix.php }}"
+                COVERALLS_FLAG_NAME: "PHP ${{ matrix.php }} with ${{ matrix.dependency }} dependencies"
               with:
                 timeout_seconds: 60
                 max_attempts: 3
