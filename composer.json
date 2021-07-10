@@ -37,7 +37,7 @@
     },
 
     "require-dev": {
-        "symfony/phpunit-bridge": "^3.4||^4.1.12||^5.0"
+        "symfony/phpunit-bridge": "^3.4.38||^4.1.12||^5.0"
     },
 
     "suggest": {
