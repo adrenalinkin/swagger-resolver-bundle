@@ -1,0 +1,16 @@
+version: 2
+updates:
+    -   package-ecosystem: "github-actions"
+        directory: "/"
+        schedule:
+            day: "monday"
+            interval: "weekly"
+        reviewers:
+            - "adrenalinkin"
+        assignees:
+            - "adrenalinkin"
+        commit-message:
+            prefix: "Update Github Action by Dependabot: "
+        pull-request-branch-name:
+            separator: "-"
+
