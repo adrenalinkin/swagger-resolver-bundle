@@ -12,84 +12,85 @@ jobs:
             matrix:
                 include:
                     # Lowest PHP with lowest dependencies for every supported lowest major version of the Symfony
-                    - php: '7.1'
-                      coverage: xdebug
-                      dependency: lowest
-                      symfony: '^3.4'
-                    - php: '7.1'
-                      coverage: xdebug
-                      dependency: lowest
-                      symfony: '^4.0'
-                    - php: '7.2'
-                      coverage: xdebug
-                      dependency: lowest
-                      symfony: '^5.0'
+                    -   php: '7.1'
+                        coverage: xdebug
+                        dependency: lowest
+                        symfony: '^3.4'
+                    -   php: '7.1'
+                        coverage: xdebug
+                        dependency: lowest
+                        symfony: '^4.0'
+                    -   php: '7.2'
+                        coverage: xdebug
+                        dependency: lowest
+                        symfony: '^5.0'
 
                     # All supported php versions with highest dependencies for any supported Symfony version
-                    - php: '7.1'
-                      coverage: xdebug
-                      dependency: highest
-                      symfony: 'any'
-                    - php: '7.2'
-                      coverage: pcov
-                      dependency: highest
-                      symfony: 'any'
-                    - php: '7.3'
-                      coverage: pcov
-                      dependency: highest
-                      symfony: 'any'
-                    - php: '7.4'
-                      coverage: pcov
-                      dependency: highest
-                      symfony: 'any'
+                    -   php: '7.1'
+                        coverage: xdebug
+                        dependency: highest
+                        symfony: 'any'
+                    -   php: '7.2'
+                        coverage: pcov
+                        dependency: highest
+                        symfony: 'any'
+                    -   php: '7.3'
+                        coverage: pcov
+                        dependency: highest
+                        symfony: 'any'
+                    -   php: '7.4'
+                        coverage: pcov
+                        dependency: highest
+                        symfony: 'any'
 
         steps:
-            - name: Checkout source
-              uses: actions/checkout@v2
+            -   name: Checkout source
+                uses: actions/checkout@v2
 
-            - name: PHP setup
-              uses: shivammathur/setup-php@v2
-              with:
-                php-version: ${{ matrix.php }}
-                coverage: ${{ matrix.coverage }}
+            -   name: PHP setup
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: ${{ matrix.php }}
+                    coverage: ${{ matrix.coverage }}
 
-            - name: Require Symfony version
-              if: matrix.symfony != 'any'
-              run: |
-                  composer global require --no-interaction --no-progress symfony/flex:^1.11
-                  composer config extra.symfony.require ${{ matrix.symfony }}
+            -   name: Require Symfony version
+                if: matrix.symfony != 'any'
+                run: |
+                    composer global require --no-interaction --no-progress symfony/flex:^1.11
+                    composer config extra.symfony.require ${{ matrix.symfony }}
 
-            - name: Validate composer.json
-              run: composer validate
+            -   name: Validate composer.json
+                run: composer validate
 
-            - name: Update composer dependencies
-              uses: ramsey/composer-install@v1
-              with:
-                dependency-versions: ${{ matrix.dependency }}
+            -   name: Update composer dependencies
+                uses: ramsey/composer-install@v1
+                with:
+                    dependency-versions: ${{ matrix.dependency }}
 
-            - name: Run test suite
-              run: ./vendor/bin/simple-phpunit -v
+            -   name: Run test suite
+                run: ./vendor/bin/simple-phpunit -v
 
-            - name: Install php-coveralls
-              run: composer global require --no-interaction --no-progress php-coveralls/php-coveralls
+            -   name: Install php-coveralls
+                run: composer global require --no-interaction --no-progress php-coveralls/php-coveralls
 
-            - name: Upload coverage results to Coveralls
-              uses: nick-invision/retry@v2
-              env:
-                COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                COVERALLS_PARALLEL: true
-                COVERALLS_FLAG_NAME: "PHP ${{ matrix.php }} + Symfony ${{ matrix.symfony }} + Composer ${{ matrix.dependency }}"
-              with:
-                timeout_seconds: 60
-                max_attempts: 3
-                command: php-coveralls -x var/build/clover.xml -o var/build/upload.json -v
+            -   name: Upload coverage results to Coveralls
+                uses: nick-invision/retry@v2
+                env:
+                    COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                    COVERALLS_PARALLEL: true
+                    COVERALLS_FLAG_NAME: |
+                        "PHP ${{ matrix.php }} + Symfony ${{ matrix.symfony }} + Composer ${{ matrix.dependency }}"
+                with:
+                    timeout_seconds: 60
+                    max_attempts: 3
+                    command: php-coveralls -x var/build/clover.xml -o var/build/upload.json -v
 
     coveralls-finish:
         needs: tests
         runs-on: ubuntu-latest
         steps:
-            - name: Notify Coveralls when build is finished
-              uses: coverallsapp/github-action@master
-              with:
-                github-token: ${{ secrets.GITHUB_TOKEN }}
-                parallel-finished: true
+            -   name: Notify Coveralls when build is finished
+                uses: coverallsapp/github-action@master
+                with:
+                    github-token: ${{ secrets.GITHUB_TOKEN }}
+                    parallel-finished: true
