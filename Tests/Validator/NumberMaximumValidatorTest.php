@@ -109,6 +109,16 @@ class NumberMaximumValidatorTest extends TestCase
                 'maximum' => 10,
                 'value' => 11,
             ],
+            'Fail with negative maximal int value' => [
+                'isExclusiveMaximum' => false,
+                'maximum' => -10,
+                'value' => -9,
+            ],
+            'Fail with int value as string' => [
+                'isExclusiveMaximum' => false,
+                'maximum' => -10,
+                'value' => '-9',
+            ],
             'Fail with maximal float value and exclusive mode' => [
                 'isExclusiveMaximum' => true,
                 'maximum' => 10.01,
@@ -118,6 +128,16 @@ class NumberMaximumValidatorTest extends TestCase
                 'isExclusiveMaximum' => false,
                 'maximum' => 10.1,
                 'value' => 10.1001,
+            ],
+            'Fail with negative maximal float value' => [
+                'isExclusiveMaximum' => false,
+                'maximum' => -10.1,
+                'value' => -10.09,
+            ],
+            'Fail with float value as string' => [
+                'isExclusiveMaximum' => false,
+                'maximum' => -10.1,
+                'value' => '-10.09',
             ],
         ];
     }
@@ -150,6 +170,21 @@ class NumberMaximumValidatorTest extends TestCase
                 'maximum' => 10,
                 'value' => 10,
             ],
+            'Pass validation with negative maximal int value and exclusive mode' => [
+                'isExclusiveMaximum' => true,
+                'maximum' => -10,
+                'value' => -11,
+            ],
+            'Pass validation with negative maximal int value' => [
+                'isExclusiveMaximum' => false,
+                'maximum' => -10,
+                'value' => -10,
+            ],
+            'Pass validation with int value as string' => [
+                'isExclusiveMaximum' => true,
+                'maximum' => 0,
+                'value' => '-10',
+            ],
             'Pass validation with lower than maximal float value and exclusive mode' => [
                 'isExclusiveMaximum' => true,
                 'maximum' => 10.002,
@@ -159,6 +194,21 @@ class NumberMaximumValidatorTest extends TestCase
                 'isExclusiveMaximum' => false,
                 'maximum' => 10.002,
                 'value' => 10.002,
+            ],
+            'Pass validation with negative maximal float value and exclusive mode' => [
+                'isExclusiveMaximum' => true,
+                'maximum' => -1.0001,
+                'value' => -1.0002,
+            ],
+            'Pass validation with negative maximal float value' => [
+                'isExclusiveMaximum' => false,
+                'maximum' => -1.0002,
+                'value' => -1.0002,
+            ],
+            'Pass validation with float value as string' => [
+                'isExclusiveMaximum' => true,
+                'maximum' => 0,
+                'value' => '-0.001',
             ],
         ];
     }
