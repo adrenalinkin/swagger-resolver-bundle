@@ -1,4 +1,7 @@
 ## [Unreleased]
+### Changed
+- Allowed only appropriated type for the `string` validators. 
+  To prevent problems with validation use normalization mechanism.
 ### Removed
 - Removed all unnecessary rows from the `.gitignore` according to `.gitignore_global` use instead.
 
@@ -31,7 +34,7 @@
 ## [0.4.0] - 2019-03-24
 ### Added
 - Added symfony cache warmer for the swagger configuration and enable him by default.
-- Added console notification when some api definitions have not reference to the source file.
+- Added console notification when some api definitions have not referenced to the source file.
 - Added automatic cache warm up in the debug mode, according to source file modification.
 - Added composer requirement: `symfony/yaml`.
 ### Changed

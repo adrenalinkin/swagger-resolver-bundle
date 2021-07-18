@@ -30,9 +30,6 @@ class StringPatternValidatorTest extends TestCase
      */
     private $sut;
 
-    /**
-     * {@inheritDoc}
-     */
     protected function setUp(): void
     {
         $this->sut = new StringPatternValidator();
@@ -96,6 +93,18 @@ class StringPatternValidatorTest extends TestCase
                 'pattern' => '^[\d]+\.[\d]+\.[\d]+$',
                 'value' => null,
             ],
+            'Fail with boolean instead string' => [
+                'pattern' => '^[\d]+\.[\d]+\.[\d]+$',
+                'value' => true,
+            ],
+            'Fail with integer instead string' => [
+                'pattern' => '^[\d]+\.[\d]+\.[\d]+$',
+                'value' => 110,
+            ],
+            'Fail with float instead string' => [
+                'pattern' => '^[\d]+\.[\d]+\.[\d]+$',
+                'value' => 1.10,
+            ],
             'Fail with string not match pattern' => [
                 'pattern' => '^[\d]+\.[\d]+\.[\d]+$',
                 'value' => '1-2-3',
@@ -128,13 +137,9 @@ class StringPatternValidatorTest extends TestCase
                 'pattern' => '/^[\d]+\.[\d]+\.[\d]+$/',
                 'value' => '1.2.3',
             ],
-            'Pass validation with integer' => [
-                'pattern' => '^[\d]+$',
-                'value' => 100,
-            ],
-            'Pass validation with float' => [
-                'pattern' => '^[\d]+\.[\d]+$',
-                'value' => 100.1,
+            'Pass validation with specific symbols' => [
+                'pattern' => '/.*\:\/\/.*/',
+                'value' => 'https://some string',
             ],
         ];
     }

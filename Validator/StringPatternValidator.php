@@ -16,6 +16,9 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Validator;
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterTypeEnum;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
+
+use function gettype;
+use function is_string;
 use function preg_match;
 use function sprintf;
 use function trim;
@@ -25,27 +28,25 @@ use function trim;
  */
 class StringPatternValidator implements SwaggerValidatorInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function supports(Schema $property, array $context = []): bool
+    public function supports(Schema $propertySchema, array $context = []): bool
     {
-        return ParameterTypeEnum::STRING === $property->getType() && null !== $property->getPattern();
+        return ParameterTypeEnum::STRING === $propertySchema->getType() && null !== $propertySchema->getPattern();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function validate(Schema $property, string $propertyName, $value): void
+    public function validate(Schema $propertySchema, string $propertyName, $value): void
     {
-        $pattern = sprintf('/%s/', trim($property->getPattern(), '/'));
+        if (false === is_string($value)) {
+            $message = sprintf('Property "%s" should be string "%s" received instead', $propertyName, gettype($value));
 
-        if (null === $value || !preg_match($pattern, (string) $value)) {
-            throw new InvalidOptionsException(sprintf(
-                'Property "%s" should match the pattern "%s"',
-                $propertyName,
-                $pattern
-            ));
+            throw new InvalidOptionsException($message);
+        }
+
+        $pattern = sprintf('/%s/', trim($propertySchema->getPattern(), '/'));
+
+        if (!preg_match($pattern, $value)) {
+            $message = sprintf('Property "%s" should match the pattern "%s"', $propertyName, $pattern);
+
+            throw new InvalidOptionsException($message);
         }
     }
 }
