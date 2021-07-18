@@ -84,6 +84,21 @@ class NumberMinimumValidatorTest extends TestCase
     public function failToPassValidationDataProvider(): array
     {
         return [
+            'Fail with null instead number' => [
+                'isExclusiveMinimum' => true,
+                'minimum' => 0,
+                'value' => null,
+            ],
+            'Fail with boolean instead number' => [
+                'isExclusiveMinimum' => true,
+                'minimum' => 0,
+                'value' => true,
+            ],
+            'Fail with string instead number' => [
+                'isExclusiveMinimum' => true,
+                'minimum' => 0,
+                'value' => 'some-string',
+            ],
             'Fail with minimal int value and exclusive mode' => [
                 'isExclusiveMinimum' => true,
                 'minimum' => 10,
