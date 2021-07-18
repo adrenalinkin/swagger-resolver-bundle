@@ -14,35 +14,37 @@ declare(strict_types=1);
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Validator;
 
 use EXSyst\Component\Swagger\Schema;
-use Linkin\Bundle\SwaggerResolverBundle\Validator\StringPatternValidator;
+use Linkin\Bundle\SwaggerResolverBundle\Validator\StringMaxLengthValidator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
+
+use function str_repeat;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-class StringPatternValidatorTest extends TestCase
+class StringMaxLengthValidatorTest extends TestCase
 {
     private const TYPE = 'string';
 
     /**
-     * @var StringPatternValidator
+     * @var StringMaxLengthValidator
      */
     private $sut;
 
     protected function setUp(): void
     {
-        $this->sut = new StringPatternValidator();
+        $this->sut = new StringMaxLengthValidator();
     }
 
     /**
      * @dataProvider supportsDataProvider
      */
-    public function testSupports(string $type, ?string $pattern, bool $expectedResult): void
+    public function testSupports(string $type, ?int $maxLength, bool $expectedResult): void
     {
         $schema = new Schema([
             'type' => $type,
-            'pattern' => $pattern,
+            'maxLength' => $maxLength,
         ]);
 
         $isSupported = $this->sut->supports($schema);
@@ -55,17 +57,17 @@ class StringPatternValidatorTest extends TestCase
         return [
             'Fail with unsupported type' => [
                 'type' => '_invalid_type_',
-                'pattern' => '\d',
+                'maxLength' => 100,
                 'expectedResult' => false,
             ],
-            'Fail with empty pattern' => [
+            'Fail with empty maxLength' => [
                 'type' => self::TYPE,
-                'pattern' => null,
+                'maxLength' => null,
                 'expectedResult' => false,
             ],
             'Success' => [
                 'type' => self::TYPE,
-                'pattern' => '\d',
+                'maxLength' => 100,
                 'expectedResult' => true,
             ],
         ];
@@ -74,40 +76,44 @@ class StringPatternValidatorTest extends TestCase
     /**
      * @dataProvider failToPassValidationDataProvider
      */
-    public function testFailToPassValidation(string $pattern, $value): void
+    public function testFailToPassValidation(int $maxLength, $value): void
     {
         $schema = new Schema([
             'type' => self::TYPE,
-            'pattern' => $pattern,
+            'maxLength' => $maxLength,
         ]);
 
         $this->expectException(InvalidOptionsException::class);
 
-        $this->sut->validate($schema, 'version', $value);
+        $this->sut->validate($schema, 'description', $value);
     }
 
     public function failToPassValidationDataProvider(): array
     {
         return [
             'Fail with null instead string' => [
-                'pattern' => '^[\d]+\.[\d]+\.[\d]+$',
+                'maxLength' => 10,
                 'value' => null,
             ],
             'Fail with boolean instead string' => [
-                'pattern' => '^[\d]+\.[\d]+\.[\d]+$',
+                'maxLength' => 10,
                 'value' => true,
             ],
             'Fail with integer instead string' => [
-                'pattern' => '^[\d]+\.[\d]+\.[\d]+$',
+                'maxLength' => 10,
                 'value' => 110,
             ],
             'Fail with float instead string' => [
-                'pattern' => '^[\d]+\.[\d]+\.[\d]+$',
+                'maxLength' => 10,
                 'value' => 1.10,
             ],
-            'Fail with string not match pattern' => [
-                'pattern' => '^[\d]+\.[\d]+\.[\d]+$',
-                'value' => '1-2-3',
+            'Fail with latin string greater than allowed' => [
+                'maxLength' => 10,
+                'value' => str_repeat('w', 11),
+            ],
+            'Fail with cyrillic string greater than allowed' => [
+                'maxLength' => 10,
+                'value' => str_repeat('я', 11),
             ],
         ];
     }
@@ -115,31 +121,35 @@ class StringPatternValidatorTest extends TestCase
     /**
      * @dataProvider canPassValidationDataProvider
      */
-    public function testCanPassValidation(string $pattern, $value): void
+    public function testCanPassValidation(int $maxLength, $value): void
     {
         $schema = new Schema([
             'type' => self::TYPE,
-            'pattern' => $pattern,
+            'maxLength' => $maxLength,
         ]);
 
-        $this->sut->validate($schema, 'version', $value);
+        $this->sut->validate($schema, 'description', $value);
         self::assertTrue(true);
     }
 
     public function canPassValidationDataProvider(): array
     {
         return [
-            'Pass validation with string' => [
-                'pattern' => '^[\d]+\.[\d]+\.[\d]+$',
-                'value' => '1.2.3',
+            'Pass validation with latin string equal to allowed' => [
+                'maxLength' => 10,
+                'value' => str_repeat('w', 10),
             ],
-            'Pass validation with string wrapped in backslashes' => [
-                'pattern' => '/^[\d]+\.[\d]+\.[\d]+$/',
-                'value' => '1.2.3',
+            'Pass validation with cyrillic string equal to allowed' => [
+                'maxLength' => 10,
+                'value' => str_repeat('я', 10),
             ],
-            'Pass validation with specific symbols' => [
-                'pattern' => '/.*\:\/\/.*/',
-                'value' => 'https://some string',
+            'Pass validation with latin string' => [
+                'maxLength' => 10,
+                'value' => str_repeat('w', 9),
+            ],
+            'Pass validation with cyrillic string' => [
+                'maxLength' => 10,
+                'value' => str_repeat('я', 9),
             ],
         ];
     }
