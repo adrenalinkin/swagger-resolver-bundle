@@ -19,7 +19,6 @@ use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
 use function gettype;
 use function in_array;
-use function is_int;
 use function is_numeric;
 use function sprintf;
 
@@ -49,14 +48,16 @@ class NumberMultipleOfValidator implements SwaggerValidatorInterface
             throw new InvalidOptionsException($message);
         }
 
-        $divisionResult = $value / $propertySchema->getMultipleOf();
+        $divisionResult = $value % $propertySchema->getMultipleOf();
 
-        if (!is_int($divisionResult)) {
-            throw new InvalidOptionsException(sprintf(
+        if ($divisionResult !== 0) {
+            $message = sprintf(
                 'Property "%s" should be an integer after division by %s',
                 $propertyName,
                 $propertySchema->getMultipleOf()
-            ));
+            );
+
+            throw new InvalidOptionsException($message);
         }
     }
 }

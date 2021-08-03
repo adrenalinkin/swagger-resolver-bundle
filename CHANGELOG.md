@@ -4,6 +4,8 @@
   To prevent problems with validation use normalization mechanism.
 ### Removed
 - Removed all unnecessary rows from the `.gitignore` according to `.gitignore_global` use instead.
+### Fixed
+- Fixed incorrect behavior of the `multipleOf` validation when received value and `multipleOf` was a float type.
 
 ## [0.4.6] - 2020-04-01
 ### Fixed

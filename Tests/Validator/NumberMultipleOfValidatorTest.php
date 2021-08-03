@@ -147,23 +147,22 @@ class NumberMultipleOfValidatorTest extends TestCase
                 'multipleOf' => 13,
                 'value' => -26,
             ],
-            // TODO: fix incorrect realization
-//            'Pass validation with int value as string' => [
-//                'multipleOf' => 13,
-//                'value' => '-26',
-//            ],
-//            'Pass validation with multiple of float value' => [
-//                'multipleOf' => 13.3,
-//                'value' => 26.6,
-//            ],
-//            'Pass validation with multiple of float negative value' => [
-//                'multipleOf' => 13.3,
-//                'value' => -26.6,
-//            ],
-//            'Pass validation with float value as string' => [
-//                'multipleOf' => 13.3,
-//                'value' => '-26.6',
-//            ],
+            'Pass validation with int value as string' => [
+                'multipleOf' => 13,
+                'value' => '-26',
+            ],
+            'Pass validation with multiple of float value' => [
+                'multipleOf' => 13.3,
+                'value' => 26.6,
+            ],
+            'Pass validation with multiple of float negative value' => [
+                'multipleOf' => 13.3,
+                'value' => -26.6,
+            ],
+            'Pass validation with float value as string' => [
+                'multipleOf' => 13.3,
+                'value' => '-26.6',
+            ],
         ];
     }
 }
