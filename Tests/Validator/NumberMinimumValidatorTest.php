@@ -192,22 +192,22 @@ class NumberMinimumValidatorTest extends TestCase
             ],
             'Pass validation with equal to minimal float value' => [
                 'isExclusiveMinimum' => false,
-                'minimal' => 10.002,
+                'minimum' => 10.002,
                 'value' => 10.002,
             ],
             'Pass validation with negative minimal float value and exclusive mode' => [
                 'isExclusiveMinimum' => true,
-                'minimal' => -1.1,
+                'minimum' => -1.1,
                 'value' => -1.0,
             ],
             'Pass validation with negative minimal float value' => [
                 'isExclusiveMinimum' => false,
-                'minimal' => -1.0002,
+                'minimum' => -1.0002,
                 'value' => -1.0002,
             ],
             'Pass validation with float value as string' => [
                 'isExclusiveMinimum' => true,
-                'minimal' => -1,
+                'minimum' => -1,
                 'value' => '-0.999',
             ],
         ];
