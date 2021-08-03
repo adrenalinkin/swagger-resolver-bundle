@@ -16,8 +16,10 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Validator;
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterTypeEnum;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
+
+use function gettype;
 use function in_array;
-use function is_int;
+use function is_numeric;
 use function sprintf;
 
 /**
@@ -28,26 +30,34 @@ class NumberMultipleOfValidator implements SwaggerValidatorInterface
     /**
      * {@inheritdoc}
      */
-    public function supports(Schema $property, array $context = []): bool
+    public function supports(Schema $propertySchema, array $context = []): bool
     {
-        return in_array($property->getType(), [ParameterTypeEnum::NUMBER, ParameterTypeEnum::INTEGER], true)
-            && null !== $property->getMultipleOf()
+        return in_array($propertySchema->getType(), [ParameterTypeEnum::NUMBER, ParameterTypeEnum::INTEGER], true)
+            && null !== $propertySchema->getMultipleOf()
         ;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function validate(Schema $property, string $propertyName, $value): void
+    public function validate(Schema $propertySchema, string $propertyName, $value): void
     {
-        $divisionResult = $value / $property->getMultipleOf();
+        if (false === is_numeric($value)) {
+            $message = sprintf('Property "%s" should be number "%s" received instead', $propertyName, gettype($value));
 
-        if (!is_int($divisionResult)) {
-            throw new InvalidOptionsException(sprintf(
+            throw new InvalidOptionsException($message);
+        }
+
+        $divisionResult = $value % $propertySchema->getMultipleOf();
+
+        if ($divisionResult !== 0) {
+            $message = sprintf(
                 'Property "%s" should be an integer after division by %s',
                 $propertyName,
-                $property->getMultipleOf()
-            ));
+                $propertySchema->getMultipleOf()
+            );
+
+            throw new InvalidOptionsException($message);
         }
     }
 }
