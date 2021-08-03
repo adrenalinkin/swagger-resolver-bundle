@@ -83,20 +83,18 @@ class NumberMultipleOfValidatorTest extends TestCase
     public function failToPassValidationDataProvider(): array
     {
         return [
-            // TODO: fix incorrect realization
-//            'Fail with null instead number' => [
-//                'multipleOf' => 3,
-//                'value' => null,
-//            ],
+            'Fail with null instead number' => [
+                'multipleOf' => 3,
+                'value' => null,
+            ],
             'Fail with boolean instead number' => [
                 'multipleOf' => 3,
                 'value' => true,
             ],
-            // TODO: fix incorrect realization
-//            'Fail with string instead number' => [
-//                'multipleOf' => 3,
-//                'value' => 'some-string',
-//            ],
+            'Fail with string instead number' => [
+                'multipleOf' => 3,
+                'value' => 'some-string',
+            ],
             'Fail with not multiple of int value' => [
                 'multipleOf' => 13,
                 'value' => 9,
