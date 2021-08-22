@@ -81,6 +81,10 @@ class FormatTimeValidatorTest extends TestCase
     public function failToPassValidationDataProvider(): array
     {
         return [
+            'Fail when true value' => [
+                'pattern' => null,
+                'value' => true,
+            ],
             'Fail when value with incorrect time pattern - number' => [
                 'pattern' => null,
                 'value' => '100',

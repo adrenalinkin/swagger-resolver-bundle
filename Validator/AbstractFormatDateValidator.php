@@ -28,21 +28,23 @@ abstract class AbstractFormatDateValidator implements SwaggerValidatorInterface
     /**
      * {@inheritdoc}
      */
-    public function supports(Schema $property, array $context = []): bool
+    public function supports(Schema $propertySchema, array $context = []): bool
     {
-        return $this->getSupportedFormatName() === $property->getFormat();
+        return $this->getSupportedFormatName() === $propertySchema->getFormat();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function validate(Schema $property, string $propertyName, $value): void
+    public function validate(Schema $propertySchema, string $propertyName, $value): void
     {
         if (empty($value)) {
             return;
         }
 
-        if (null === $property->getPattern()) {
+        $value = (string) $value;
+
+        if (null === $propertySchema->getPattern()) {
             $this->validateDatePattern($propertyName, $value);
         }
 
