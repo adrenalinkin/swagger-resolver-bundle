@@ -109,6 +109,10 @@ class ArrayUniqueItemsValidatorTest extends TestCase
                 'collectionFormat' => self::COLLECTION_FORMAT_MULTI,
                 'value' => 'days-monday&days-tuesday&days-wednesday',
             ],
+            'Fail when not unique values in array' => [
+                'collectionFormat' => self::COLLECTION_FORMAT_MULTI,
+                'value' => 'days=monday&days=tuesday&days=wednesday&days=monday',
+            ],
         ];
     }
 
@@ -142,7 +146,7 @@ class ArrayUniqueItemsValidatorTest extends TestCase
                 'collectionFormat' => self::COLLECTION_FORMAT_CSV,
                 'value' => 'monday,tuesday,wednesday',
             ],
-            'Pass when valid multi format' => [
+            'Pass when valid multi format with unique items' => [
                 'collectionFormat' => self::COLLECTION_FORMAT_MULTI,
                 'value' => 'days=monday&days=tuesday&days=wednesday',
             ],
