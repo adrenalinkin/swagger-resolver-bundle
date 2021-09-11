@@ -76,22 +76,32 @@ abstract class AbstractArrayValidator implements SwaggerValidatorInterface
             return $arrayValue;
         }
 
-        foreach ($arrayValue as &$item) {
+        return $this->convertMultiFormatToArray($propertyName, $arrayValue);
+    }
+
+    private function convertMultiFormatToArray(string $propertyName, array $arrayValue): array
+    {
+        $result = [];
+
+        foreach ($arrayValue as $item) {
             $exploded = (array) explode('=', $item);
+            $itemValue = $exploded[1] ?? null;
 
-            if (!isset($exploded[1])) {
-                $message = sprintf(
-                    'Property "%s" should contains valid string with "%s" format like "key=value1&key=value2"',
-                    $propertyName,
-                    ParameterCollectionFormatEnum::MULTI
-                );
+            if ($itemValue !== null) {
+                $result[] = $itemValue;
 
-                throw new InvalidOptionsException($message);
+                continue;
             }
 
-            $item = $exploded[1];
+            $message = sprintf(
+                'Property "%s" should contains valid string with "%s" format like "key=value1&key=value2"',
+                $propertyName,
+                ParameterCollectionFormatEnum::MULTI
+            );
+
+            throw new InvalidOptionsException($message);
         }
 
-        return $arrayValue;
+        return $result;
     }
 }
