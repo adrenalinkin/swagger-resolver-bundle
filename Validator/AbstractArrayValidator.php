@@ -40,6 +40,9 @@ abstract class AbstractArrayValidator implements SwaggerValidatorInterface
     abstract public function validate(Schema $propertySchema, string $propertyName, $value): void;
 
     /**
+     * TODO: Move into new ArrayNormalizer
+     *       https://github.com/adrenalinkin/swagger-resolver-bundle/issues/55
+     *
      * @param string      $propertyName
      * @param mixed       $value
      * @param string|null $collectionFormat
@@ -69,16 +72,16 @@ abstract class AbstractArrayValidator implements SwaggerValidatorInterface
         $delimiter = ParameterCollectionFormatEnum::getDelimiter($collectionFormat);
         $arrayValue = explode($delimiter, $value);
 
-        if (ParameterCollectionFormatEnum::MULTI !== $delimiter) {
+        if (ParameterCollectionFormatEnum::MULTI !== $collectionFormat) {
             return $arrayValue;
         }
 
         foreach ($arrayValue as &$item) {
-            $exploded = explode('=', $item);
+            $exploded = (array) explode('=', $item);
 
-            if ($exploded === false) {
+            if (!isset($exploded[1])) {
                 $message = sprintf(
-                    'Property "%s" should contains valid string with "%s" delimiter',
+                    'Property "%s" should contains valid string with "%s" format like "key=value1&key=value2"',
                     $propertyName,
                     ParameterCollectionFormatEnum::MULTI
                 );

@@ -16,6 +16,7 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Validator;
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\ArrayUniqueItemsValidator;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -23,6 +24,9 @@ use PHPUnit\Framework\TestCase;
 class ArrayUniqueItemsValidatorTest extends TestCase
 {
     private const TYPE_ARRAY = 'array';
+
+    private const COLLECTION_FORMAT_CSV = 'csv';
+    private const COLLECTION_FORMAT_MULTI = 'multi';
 
     /**
      * @var ArrayUniqueItemsValidator
@@ -66,6 +70,81 @@ class ArrayUniqueItemsValidatorTest extends TestCase
                 'type' => self::TYPE_ARRAY,
                 'hasUniqueItems' => true,
                 'expectedResult' => true,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider failToPassValidationDataProvider
+     */
+    public function testFailToPassValidation(?string $collectionFormat, $value): void
+    {
+        $schema = new Schema([
+            'type' => self::TYPE_ARRAY,
+            'uniqueItems' => true,
+            'collectionFormat' => $collectionFormat,
+        ]);
+
+        $this->expectException(InvalidOptionsException::class);
+
+        $this->sut->validate($schema, 'days', $value);
+    }
+
+    public function failToPassValidationDataProvider(): array
+    {
+        return [
+            'Fail when null collectionFormat and received array as string' => [
+                'collectionFormat' => null,
+                'value' => 'monday,tuesday,wednesday',
+            ],
+            'Fail when set collectionFormat and received plain array' => [
+                'collectionFormat' => self::COLLECTION_FORMAT_CSV,
+                'value' => ['monday', 'tuesday', 'wednesday'],
+            ],
+            'Fail when unexpected delimiter' => [
+                'collectionFormat' => '__delimiter__',
+                'value' => ['monday', 'tuesday',  'wednesday'],
+            ],
+            'Fail when invalid multi format' => [
+                'collectionFormat' => self::COLLECTION_FORMAT_MULTI,
+                'value' => 'days-monday&days-tuesday&days-wednesday',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider canPassValidationDataProvider
+     */
+    public function testCanPassValidation(?string $collectionFormat, $value): void
+    {
+        $schema = new Schema([
+            'type' => self::TYPE_ARRAY,
+            'uniqueItems' => true,
+            'collectionFormat' => $collectionFormat,
+        ]);
+
+        $this->sut->validate($schema, 'days', $value);
+        self::assertTrue(true);
+    }
+
+    public function canPassValidationDataProvider(): array
+    {
+        return [
+            'Pass when null value' => [
+                'collectionFormat' => self::COLLECTION_FORMAT_CSV,
+                'value' => null,
+            ],
+            'Pass when null collectionFormat and received plain array' => [
+                'collectionFormat' => null,
+                'value' => ['monday', 'tuesday',  'wednesday'],
+            ],
+            'Pass when CSV collectionFormat' => [
+                'collectionFormat' => self::COLLECTION_FORMAT_CSV,
+                'value' => 'monday,tuesday,wednesday',
+            ],
+            'Pass when valid multi format' => [
+                'collectionFormat' => self::COLLECTION_FORMAT_MULTI,
+                'value' => 'days=monday&days=tuesday&days=wednesday',
             ],
         ];
     }
