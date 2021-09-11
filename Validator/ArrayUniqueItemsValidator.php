@@ -27,17 +27,17 @@ class ArrayUniqueItemsValidator extends AbstractArrayValidator
     /**
      * {@inheritdoc}
      */
-    public function supports(Schema $property, array $context = []): bool
+    public function supports(Schema $propertySchema, array $context = []): bool
     {
-        return parent::supports($property, $context) && true === $property->hasUniqueItems();
+        return parent::supports($propertySchema, $context) && true === $propertySchema->hasUniqueItems();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function validate(Schema $property, string $propertyName, $value): void
+    public function validate(Schema $propertySchema, string $propertyName, $value): void
     {
-        $value = $this->convertValueToArray($propertyName, $value, $property->getCollectionFormat());
+        $value = $this->convertValueToArray($propertyName, $value, $propertySchema->getCollectionFormat());
 
         $itemsUnique = array_unique($value);
 

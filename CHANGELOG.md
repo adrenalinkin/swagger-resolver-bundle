@@ -1,11 +1,12 @@
 ## [Unreleased]
 ### Changed
-- Allowed only appropriated type for the `string` validators. 
+- Allowed only appropriated type for the `string` validators.
   To prevent problems with validation use normalization mechanism.
 ### Removed
 - Removed all unnecessary rows from the `.gitignore` according to `.gitignore_global` use instead.
 ### Fixed
 - Fixed incorrect behavior of the `multipleOf` validation when received value and `multipleOf` was a float type.
+- Fixed not worked array validation for the `multi` format.
 
 ## [0.4.6] - 2020-04-01
 ### Fixed
@@ -50,7 +51,7 @@
 - Added normalizers usage and provides possibility for enable this for concrete parameter locations.
 - Added new configuration parameter `enable_normalization`.
 - Added `SwaggerNormalizerInterface` and implementation for `integer`, `number` and `boolean`.
-- Added enums for typical swagger parameter options: 
+- Added enums for typical swagger parameter options:
     `ParameterCollectionFormatEnum`, `ParameterLocationEnum`, `ParameterTypeEnum`.
 ### Removed
 - Removed `linkin_swagger_resolver.builder` alias.

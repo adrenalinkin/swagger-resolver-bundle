@@ -29,17 +29,20 @@ abstract class AbstractArrayValidator implements SwaggerValidatorInterface
     /**
      * {@inheritdoc}
      */
-    public function supports(Schema $property, array $context = []): bool
+    public function supports(Schema $propertySchema, array $context = []): bool
     {
-        return ParameterTypeEnum::ARRAY === $property->getType();
+        return ParameterTypeEnum::ARRAY === $propertySchema->getType();
     }
 
     /**
      * {@inheritdoc}
      */
-    abstract public function validate(Schema $property, string $propertyName, $value): void;
+    abstract public function validate(Schema $propertySchema, string $propertyName, $value): void;
 
     /**
+     * TODO: Move into new ArrayNormalizer
+     *       https://github.com/adrenalinkin/swagger-resolver-bundle/issues/55
+     *
      * @param string      $propertyName
      * @param mixed       $value
      * @param string|null $collectionFormat
@@ -61,23 +64,44 @@ abstract class AbstractArrayValidator implements SwaggerValidatorInterface
         }
 
         if (is_array($value)) {
-            throw new InvalidOptionsException(sprintf(
-                'Property "%s" should contain valid "%s" string',
-                $propertyName,
-                $collectionFormat
-            ));
+            $message = sprintf('Property "%s" should contain valid "%s" string', $propertyName, $collectionFormat);
+
+            throw new InvalidOptionsException($message);
         }
 
         $delimiter = ParameterCollectionFormatEnum::getDelimiter($collectionFormat);
         $arrayValue = explode($delimiter, $value);
 
-        if (ParameterCollectionFormatEnum::MULTI === $delimiter) {
-            foreach ($arrayValue as &$item) {
-                $exploded = explode('=', $item);
-                $item = $exploded[1];
-            }
+        if (ParameterCollectionFormatEnum::MULTI !== $collectionFormat) {
+            return $arrayValue;
         }
 
-        return $arrayValue;
+        return $this->convertMultiFormatToArray($propertyName, $arrayValue);
+    }
+
+    private function convertMultiFormatToArray(string $propertyName, array $arrayValue): array
+    {
+        $result = [];
+
+        foreach ($arrayValue as $item) {
+            $exploded = (array) explode('=', $item);
+            $itemValue = $exploded[1] ?? null;
+
+            if ($itemValue !== null) {
+                $result[] = $itemValue;
+
+                continue;
+            }
+
+            $message = sprintf(
+                'Property "%s" should contains valid string with "%s" format like "key=value1&key=value2"',
+                $propertyName,
+                ParameterCollectionFormatEnum::MULTI
+            );
+
+            throw new InvalidOptionsException($message);
+        }
+
+        return $result;
     }
 }
