@@ -14,7 +14,9 @@ declare(strict_types=1);
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Normalizer;
 
 use EXSyst\Component\Swagger\Schema;
+use Linkin\Bundle\SwaggerResolverBundle\Exception\NormalizationFailedException;
 use Linkin\Bundle\SwaggerResolverBundle\Normalizer\IntegerNormalizer;
+use Linkin\Bundle\SwaggerResolverBundle\Resolver\SwaggerResolver;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -58,6 +60,40 @@ class IntegerNormalizerTest extends TestCase
                 'type' => self::TYPE_INTEGER,
                 'expectedResult' => true,
             ],
+        ];
+    }
+
+    /**
+     * @dataProvider failToNormalizeDataProvider
+     */
+    public function testFailToNormalize($value): void
+    {
+        $fieldName = 'clickCount';
+        $isRequired = true;
+
+        $schema = new Schema([
+            'properties' => $this->createSchema($fieldName),
+        ]);
+
+        $closure = $this->sut->getNormalizer($schema, $fieldName, $isRequired);
+
+        $resolver = new SwaggerResolver($schema);
+        $resolver->setDefined($fieldName);
+        $resolver->setNormalizer($fieldName, $closure);
+
+        $this->expectException(NormalizationFailedException::class);
+
+        $resolver->resolve([$fieldName => $value]);
+    }
+
+    public function failToNormalizeDataProvider(): array
+    {
+        return [
+            ['not_int'],
+            ['f1'],
+            ['1f'],
+            ['true'],
+            [true],
         ];
     }
 

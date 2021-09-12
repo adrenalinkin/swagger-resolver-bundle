@@ -38,7 +38,7 @@ class IntegerNormalizer implements SwaggerNormalizerInterface
      */
     public function getNormalizer(Schema $propertySchema, string $propertyName, bool $isRequired): Closure
     {
-        return function (Options $options, $value) use ($isRequired, $propertyName) {
+        return static function (Options $options, $value) use ($isRequired, $propertyName) {
             if (is_numeric($value)) {
                 return (int) $value;
             }
