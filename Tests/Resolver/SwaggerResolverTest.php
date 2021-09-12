@@ -15,11 +15,13 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Resolver;
 
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterTypeEnum;
+use Linkin\Bundle\SwaggerResolverBundle\Exception\NormalizationFailedException;
 use Linkin\Bundle\SwaggerResolverBundle\Resolver\SwaggerResolver;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\SwaggerFactory;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\SwaggerValidatorInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -28,19 +30,12 @@ class SwaggerResolverTest extends TestCase
 {
     public function testCanClearValidators(): void
     {
-        $fieldName = 'description';
-        $schemaDefinition = SwaggerFactory::createSchemaDefinition([
-            $fieldName => [
-                'type' => ParameterTypeEnum::STRING,
-            ]
-        ]);
+        $sut = new SwaggerResolver(new Schema());
 
-        $sut = new SwaggerResolver($schemaDefinition);
+        $sut->addValidator($this->createMock(SwaggerValidatorInterface::class));
+        $sut->addValidator($this->createAnonymousValidator(ParameterTypeEnum::STRING));
 
-        $validatorMock = $this->createMock(SwaggerValidatorInterface::class);
-        $sut->addValidator($validatorMock);
-
-        self::assertCount(1, $sut->getValidators());
+        self::assertCount(2, $sut->getValidators());
 
         $sut->clear();
 
@@ -93,24 +88,38 @@ class SwaggerResolverTest extends TestCase
     public function testCanAddOnlyOneValidatorOfTheSameClass(): void
     {
         $validatorMock = $this->createMock(SwaggerValidatorInterface::class);
+        $validatorAnonymous = $this->createAnonymousValidator(ParameterTypeEnum::STRING);
 
         $sut = new SwaggerResolver(new Schema());
         $sut->addValidator($validatorMock);
+
+        self::assertCount(1, $sut->getValidators());
+
         $sut->addValidator($validatorMock);
 
         self::assertCount(1, $sut->getValidators());
+
+        $sut->addValidator($validatorAnonymous);
+
+        self::assertCount(2, $sut->getValidators());
     }
 
     public function testCanRemoveValidator(): void
     {
         $validatorMock = $this->createMock(SwaggerValidatorInterface::class);
+        $validatorAnonymous = $this->createAnonymousValidator(ParameterTypeEnum::BOOLEAN);
 
         $sut = new SwaggerResolver(new Schema());
         $sut->addValidator($validatorMock);
+        $sut->addValidator($validatorAnonymous);
+
+        self::assertCount(2, $sut->getValidators());
+
+        $sut->removeValidator($validatorMock);
 
         self::assertCount(1, $sut->getValidators());
 
-        $sut->removeValidator($validatorMock);
+        $sut->removeValidator($validatorAnonymous);
 
         self::assertCount(0, $sut->getValidators());
     }
@@ -133,5 +142,30 @@ class SwaggerResolverTest extends TestCase
         ;
 
         return $validatorMock;
+    }
+
+    private function createAnonymousValidator(string $supportedType): SwaggerValidatorInterface
+    {
+        return new class($supportedType) implements SwaggerValidatorInterface {
+            /**
+             * @var string
+             */
+            private $supportedType;
+
+            public function __construct(string $supportedType)
+            {
+                $this->supportedType = $supportedType;
+            }
+
+            public function supports(Schema $propertySchema, array $context = []): bool
+            {
+                return $propertySchema->getType() === $this->supportedType;
+            }
+
+            public function validate(Schema $propertySchema, string $propertyName, $value): void
+            {
+                throw new InvalidOptionsException();
+            }
+        };
     }
 }
