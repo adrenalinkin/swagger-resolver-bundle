@@ -5,6 +5,7 @@
 ### Removed
 - Removed all unnecessary rows from the `.gitignore` according to `.gitignore_global` use instead.
 ### Fixed
+- Fixed incompatible with Symfony 5 according to new contract in `OptionResolver::offsetGet()`.
 - Fixed incorrect behavior of the `multipleOf` validation when received value and `multipleOf` was a float type.
 - Fixed not worked array validation for the `multi` format.
 
