@@ -90,6 +90,17 @@ class SwaggerResolverTest extends TestCase
         $sut->resolve([$fieldName => 'any text']);
     }
 
+    public function testCanAddOnlyOneValidatorOfTheSameClass(): void
+    {
+        $validatorMock = $this->createMock(SwaggerValidatorInterface::class);
+
+        $sut = new SwaggerResolver(new Schema());
+        $sut->addValidator($validatorMock);
+        $sut->addValidator($validatorMock);
+
+        self::assertCount(1, $sut->getValidators());
+    }
+
     /**
      * @return SwaggerValidatorInterface|MockObject
      */
