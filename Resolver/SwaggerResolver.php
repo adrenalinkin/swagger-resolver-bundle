@@ -35,7 +35,7 @@ class SwaggerResolver extends OptionsResolver
      *
      * @var SwaggerValidatorInterface[]
      */
-    private $validators;
+    private $validators = [];
 
     /**
      * @param Schema $schema
