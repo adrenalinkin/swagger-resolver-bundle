@@ -35,7 +35,7 @@ class SwaggerResolver extends OptionsResolver
      *
      * @var SwaggerValidatorInterface[]
      */
-    private $validators;
+    private $validators = [];
 
     /**
      * @param Schema $schema
@@ -60,9 +60,9 @@ class SwaggerResolver extends OptionsResolver
     /**
      * {@inheritdoc}
      */
-    public function offsetGet($option)
+    public function offsetGet($option, bool $triggerDeprecation = true)
     {
-        $resolvedValue = parent::offsetGet($option);
+        $resolvedValue = parent::offsetGet($option, $triggerDeprecation);
         $property = $this->schema->getProperties()->get($option);
 
         foreach ($this->validators as $validator) {

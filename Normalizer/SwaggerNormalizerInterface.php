@@ -34,6 +34,9 @@ interface SwaggerNormalizerInterface
     public function supports(Schema $propertySchema, string $propertyName, bool $isRequired, array $context = []): bool;
 
     /**
+     * TODO: normalizer should not throw an error - better return value as is.
+     *       https://github.com/adrenalinkin/swagger-resolver-bundle/issues/57
+     *
      * Returns closure for normalizing property
      *
      * @param Schema $propertySchema
