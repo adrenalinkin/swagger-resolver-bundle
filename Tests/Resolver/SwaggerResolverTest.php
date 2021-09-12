@@ -45,4 +45,31 @@ class SwaggerResolverTest extends TestCase
         $sut->setDefined($fieldName);
         $sut->resolve([$fieldName => 'any text']);
     }
+
+    public function testValidatorWillNotCallWhenOptionDoesNotExistInSchema(): void
+    {
+        $fieldNameMain = 'description';
+        $fieldNameOther = 'otherProperty';
+        $schemaProperty = new Schema(['type' => ParameterTypeEnum::STRING, 'title' => $fieldNameMain]);
+        $schema = new Schema(['properties' => $schemaProperty]);
+
+        $validatorMock = $this->createMock(SwaggerValidatorInterface::class);
+        $validatorMock->expects(self::never())->method('validate');
+        $validatorMock
+            ->expects(self::atLeastOnce())
+            ->method('supports')
+            ->willReturnCallback(
+                static function(Schema $property) use ($schemaProperty) {
+                    return $property->getTitle() === $schemaProperty->getTitle()
+                        && $property->getType() === $schemaProperty->getType();
+                }
+            )
+        ;
+
+        $sut = new SwaggerResolver($schema);
+        $sut->addValidator($validatorMock);
+        $sut->setDefined($fieldNameMain);
+        $sut->setDefined($fieldNameOther);
+        $sut->resolve([$fieldNameOther => 'any text']);
+    }
 }
