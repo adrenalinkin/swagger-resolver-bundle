@@ -97,6 +97,71 @@ class IntegerNormalizerTest extends TestCase
         ];
     }
 
+    public function testCanNormalizeNullWhenNotRequired(): void
+    {
+        $fieldName = 'clickCount';
+        $isRequired = false;
+        $originValue = null;
+
+        $schema = new Schema([
+            'properties' => $this->createSchema($fieldName),
+        ]);
+
+        $closure = $this->sut->getNormalizer($schema, $fieldName, $isRequired);
+
+        $resolver = new SwaggerResolver($schema);
+        $resolver->setDefined($fieldName);
+        $resolver->setNormalizer($fieldName, $closure);
+
+        $result = $resolver->resolve([$fieldName => $originValue]);
+
+        self::assertSame($result[$fieldName], $originValue);
+    }
+
+    /**
+     * @dataProvider normalizationDataProvider
+     */
+    public function testCanNormalize($originValue, int $expectedResult): void
+    {
+        $fieldName = 'clickCount';
+        $isRequired = true;
+        $schema = new Schema([
+            'properties' => $this->createSchema($fieldName),
+        ]);
+
+        $closure = $this->sut->getNormalizer($schema, $fieldName, $isRequired);
+
+        $resolver = new SwaggerResolver($schema);
+        $resolver->setDefined($fieldName);
+        $resolver->setNormalizer($fieldName, $closure);
+
+        $result = $resolver->resolve([$fieldName => $originValue]);
+
+        self::assertSame($result[$fieldName], $expectedResult);
+    }
+
+    public function normalizationDataProvider(): array
+    {
+        return [
+            'int as string int' => [
+                'originValue' => '100',
+                'expectedResult' => 100,
+            ],
+            'int as int' => [
+                'originValue' => 100,
+                'expectedResult' => 100,
+            ],
+            'int as string float' => [
+                'originValue' => '99.9',
+                'expectedResult' => 99,
+            ],
+            'int as float' => [
+                'originValue' => 90.9,
+                'expectedResult' => 90,
+            ],
+        ];
+    }
+
     private function createSchema(string $fieldName, string $type = self::TYPE_INTEGER): Schema
     {
         return new Schema([
