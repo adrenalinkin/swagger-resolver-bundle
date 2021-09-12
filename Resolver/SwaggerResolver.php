@@ -75,6 +75,14 @@ class SwaggerResolver extends OptionsResolver
     }
 
     /**
+     * @return SwaggerValidatorInterface[]
+     */
+    public function getValidators(): array
+    {
+        return $this->validators;
+    }
+
+    /**
      * Adds property validator
      *
      * @param SwaggerValidatorInterface $validator
