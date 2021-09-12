@@ -99,14 +99,14 @@ class SwaggerResolver extends OptionsResolver
     }
 
     /**
-     * Removes property validator
-     *
-     * @param string $className
+     * @param SwaggerValidatorInterface $validator
      *
      * @return self
      */
-    public function removeValidator(string $className): self
+    public function removeValidator(SwaggerValidatorInterface $validator): self
     {
+        $className = get_class($validator);
+
         unset($this->validators[$className]);
 
         return $this;

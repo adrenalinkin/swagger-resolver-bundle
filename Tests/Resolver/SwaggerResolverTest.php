@@ -101,6 +101,20 @@ class SwaggerResolverTest extends TestCase
         self::assertCount(1, $sut->getValidators());
     }
 
+    public function testCanRemoveValidator(): void
+    {
+        $validatorMock = $this->createMock(SwaggerValidatorInterface::class);
+
+        $sut = new SwaggerResolver(new Schema());
+        $sut->addValidator($validatorMock);
+
+        self::assertCount(1, $sut->getValidators());
+
+        $sut->removeValidator($validatorMock);
+
+        self::assertCount(0, $sut->getValidators());
+    }
+
     /**
      * @return SwaggerValidatorInterface|MockObject
      */
