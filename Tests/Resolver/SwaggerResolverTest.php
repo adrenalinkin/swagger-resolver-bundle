@@ -69,6 +69,29 @@ class SwaggerResolverTest extends TestCase
         $sut->resolve([$fieldNameOther => 'any text']);
     }
 
+    public function testValidatorWillBeCallWhenOptionExistInSchema(): void
+    {
+        $fieldNameMain = 'description';
+        $fieldNameOther = 'otherProperty';
+
+        $schemaDefinition = SwaggerFactory::createSchemaDefinition([
+            $fieldNameMain => [
+                'type' => ParameterTypeEnum::STRING,
+            ]
+        ]);
+
+        $schemaProperty = $schemaDefinition->getProperties()->get($fieldNameMain);
+
+        $validatorMock = $this->createValidatorMock($schemaProperty);
+        $validatorMock->expects(self::once())->method('validate');
+
+        $sut = new SwaggerResolver($schemaDefinition);
+        $sut->addValidator($validatorMock);
+        $sut->setDefined($fieldNameMain);
+        $sut->setDefined($fieldNameOther);
+        $sut->resolve([$fieldNameMain => 'any text']);
+    }
+
     /**
      * @return SwaggerValidatorInterface|MockObject
      */
@@ -76,7 +99,7 @@ class SwaggerResolverTest extends TestCase
     {
         $validatorMock = $this->createMock(SwaggerValidatorInterface::class);
         $validatorMock
-            ->expects(self::atLeastOnce())
+            ->expects(self::once())
             ->method('supports')
             ->willReturnCallback(
                 static function(Schema $property) use ($expectedSchemaProperty) {
