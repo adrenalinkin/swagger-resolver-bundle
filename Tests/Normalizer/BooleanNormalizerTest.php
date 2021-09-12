@@ -104,6 +104,58 @@ class BooleanNormalizerTest extends TestCase
         self::assertSame($result[$fieldName], $originValue);
     }
 
+    /**
+     * @dataProvider normalizationDataProvider
+     */
+    public function testCanNormalize($originValue, bool $expectedResult): void
+    {
+        $fieldName = 'rememberMe';
+        $isRequired = true;
+        $schema = new Schema([
+            'properties' => $this->createSchema($fieldName),
+        ]);
+
+        $closure = $this->sut->getNormalizer($schema, $fieldName, $isRequired);
+
+        $resolver = new SwaggerResolver($schema);
+        $resolver->setDefined($fieldName);
+        $resolver->setNormalizer($fieldName, $closure);
+
+        $result = $resolver->resolve([$fieldName => $originValue]);
+
+        self::assertSame($result[$fieldName], $expectedResult);
+    }
+
+    public function normalizationDataProvider(): array
+    {
+        return [
+            'string true' => [
+                'originValue' => 'true',
+                'expectedResult' => true,
+            ],
+            'integer true' => [
+                'originValue' => 1,
+                'expectedResult' => true,
+            ],
+            'boolean true' => [
+                'originValue' => true,
+                'expectedResult' => true,
+            ],
+            'string false' => [
+                'originValue' => 'false',
+                'expectedResult' => false,
+            ],
+            'integer false' => [
+                'originValue' => 0,
+                'expectedResult' => false,
+            ],
+            'boolean false' => [
+                'originValue' => false,
+                'expectedResult' => false,
+            ],
+        ];
+    }
+
     private function createSchema(string $fieldName, string $type = self::TYPE_BOOLEAN): Schema
     {
         return new Schema([
