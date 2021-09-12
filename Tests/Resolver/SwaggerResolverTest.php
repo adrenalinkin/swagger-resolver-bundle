@@ -15,7 +15,6 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Resolver;
 
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterTypeEnum;
-use Linkin\Bundle\SwaggerResolverBundle\Exception\NormalizationFailedException;
 use Linkin\Bundle\SwaggerResolverBundle\Resolver\SwaggerResolver;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\SwaggerFactory;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\SwaggerValidatorInterface;
@@ -82,6 +81,33 @@ class SwaggerResolverTest extends TestCase
         $sut = new SwaggerResolver($schemaDefinition);
         $sut->addValidator($validatorMock);
         $sut->setDefined($fieldName);
+        $sut->resolve([$fieldName => 'any text']);
+    }
+
+    public function testCanCallSeveralValidatorForOneProperty(): void
+    {
+        $fieldName = 'description';
+
+        $schemaDefinition = SwaggerFactory::createSchemaDefinition([
+            $fieldName => [
+                'type' => ParameterTypeEnum::STRING,
+            ]
+        ]);
+
+        $schemaProperty = $schemaDefinition->getProperties()->get($fieldName);
+
+        $validatorFirstMock = $this->createValidatorMock($schemaProperty);
+        $validatorFirstMock->expects(self::once())->method('validate');
+
+        $validatorAnonymous = $this->createAnonymousValidator(ParameterTypeEnum::STRING);
+
+        $sut = new SwaggerResolver($schemaDefinition);
+        $sut->addValidator($validatorFirstMock);
+        $sut->addValidator($validatorAnonymous);
+        $sut->setDefined($fieldName);
+
+        $this->expectException(InvalidOptionsException::class);
+
         $sut->resolve([$fieldName => 'any text']);
     }
 
