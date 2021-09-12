@@ -16,7 +16,9 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Resolver;
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterTypeEnum;
 use Linkin\Bundle\SwaggerResolverBundle\Resolver\SwaggerResolver;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\SwaggerFactory;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\SwaggerValidatorInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -27,14 +29,13 @@ class SwaggerResolverTest extends TestCase
     public function testCanClearValidators(): void
     {
         $fieldName = 'description';
-        $schema = new Schema([
-            'properties' => new Schema([
+        $schemaDefinition = SwaggerFactory::createSchemaDefinition([
+            $fieldName => [
                 'type' => ParameterTypeEnum::STRING,
-                'title' => $fieldName,
-            ])
+            ]
         ]);
 
-        $sut = new SwaggerResolver($schema);
+        $sut = new SwaggerResolver($schemaDefinition);
 
         $validatorMock = $this->createMock(SwaggerValidatorInterface::class);
         $validatorMock->expects(self::never())->method('supports');
@@ -50,26 +51,41 @@ class SwaggerResolverTest extends TestCase
     {
         $fieldNameMain = 'description';
         $fieldNameOther = 'otherProperty';
-        $schemaProperty = new Schema(['type' => ParameterTypeEnum::STRING, 'title' => $fieldNameMain]);
-        $schema = new Schema(['properties' => $schemaProperty]);
+        $schemaDefinition = SwaggerFactory::createSchemaDefinition([
+            $fieldNameMain => [
+                'type' => ParameterTypeEnum::STRING,
+            ]
+        ]);
 
-        $validatorMock = $this->createMock(SwaggerValidatorInterface::class);
+        $schemaProperty = $schemaDefinition->getProperties()->get($fieldNameMain);
+
+        $validatorMock = $this->createValidatorMock($schemaProperty);
         $validatorMock->expects(self::never())->method('validate');
-        $validatorMock
-            ->expects(self::atLeastOnce())
-            ->method('supports')
-            ->willReturnCallback(
-                static function(Schema $property) use ($schemaProperty) {
-                    return $property->getTitle() === $schemaProperty->getTitle()
-                        && $property->getType() === $schemaProperty->getType();
-                }
-            )
-        ;
 
-        $sut = new SwaggerResolver($schema);
+        $sut = new SwaggerResolver($schemaDefinition);
         $sut->addValidator($validatorMock);
         $sut->setDefined($fieldNameMain);
         $sut->setDefined($fieldNameOther);
         $sut->resolve([$fieldNameOther => 'any text']);
+    }
+
+    /**
+     * @return SwaggerValidatorInterface|MockObject
+     */
+    private function createValidatorMock(Schema $expectedSchemaProperty): SwaggerValidatorInterface
+    {
+        $validatorMock = $this->createMock(SwaggerValidatorInterface::class);
+        $validatorMock
+            ->expects(self::atLeastOnce())
+            ->method('supports')
+            ->willReturnCallback(
+                static function(Schema $property) use ($expectedSchemaProperty) {
+                    return $property->getTitle() === $expectedSchemaProperty->getTitle()
+                        && $property->getType() === $expectedSchemaProperty->getType();
+                }
+            )
+        ;
+
+        return $validatorMock;
     }
 }
