@@ -41,11 +41,10 @@ class BooleanNormalizerTest extends TestCase
      */
     public function testSupports(string $type, bool $expectedResult): void
     {
-        $schema = new Schema([
-            'type' => $type,
-        ]);
+        $fieldName = 'rememberMe';
+        $schema = $this->createSchema($fieldName, $type);
 
-        $isSupported = $this->sut->supports($schema, 'rememberMe', true);
+        $isSupported = $this->sut->supports($schema, $fieldName, true);
 
         self::assertSame($isSupported, $expectedResult);
     }
@@ -70,10 +69,7 @@ class BooleanNormalizerTest extends TestCase
         $isRequired = true;
 
         $schema = new Schema([
-            'properties' => new Schema([
-                'type' => self::TYPE_BOOLEAN,
-                'title' => $fieldName,
-            ])
+            'properties' => $this->createSchema($fieldName),
         ]);
 
         $closure = $this->sut->getNormalizer($schema, $fieldName, $isRequired);
@@ -85,5 +81,34 @@ class BooleanNormalizerTest extends TestCase
         $this->expectException(NormalizationFailedException::class);
 
         $resolver->resolve([$fieldName => 'not_bool']);
+    }
+
+    public function testCanNormalizeNullWhenNotRequired(): void
+    {
+        $fieldName = 'rememberMe';
+        $isRequired = false;
+        $originValue = null;
+
+        $schema = new Schema([
+            'properties' => $this->createSchema($fieldName),
+        ]);
+
+        $closure = $this->sut->getNormalizer($schema, $fieldName, $isRequired);
+
+        $resolver = new SwaggerResolver($schema);
+        $resolver->setDefined($fieldName);
+        $resolver->setNormalizer($fieldName, $closure);
+
+        $result = $resolver->resolve([$fieldName => $originValue]);
+
+        self::assertSame($result[$fieldName], $originValue);
+    }
+
+    private function createSchema(string $fieldName, string $type = self::TYPE_BOOLEAN): Schema
+    {
+        return new Schema([
+            'type' => $type,
+            'title' => $fieldName,
+        ]);
     }
 }
