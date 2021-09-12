@@ -37,7 +37,7 @@ class BooleanNormalizer implements SwaggerNormalizerInterface
      */
     public function getNormalizer(Schema $propertySchema, string $propertyName, bool $isRequired): Closure
     {
-        return function (Options $options, $value) use ($isRequired, $propertyName) {
+        return static function (Options $options, $value) use ($isRequired, $propertyName) {
             if ($value === 'true' || $value === '1' || $value === 1 || $value === true) {
                 return true;
             }

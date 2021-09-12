@@ -14,7 +14,9 @@ declare(strict_types=1);
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Normalizer;
 
 use EXSyst\Component\Swagger\Schema;
+use Linkin\Bundle\SwaggerResolverBundle\Exception\NormalizationFailedException;
 use Linkin\Bundle\SwaggerResolverBundle\Normalizer\BooleanNormalizer;
+use Linkin\Bundle\SwaggerResolverBundle\Resolver\SwaggerResolver;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -60,5 +62,28 @@ class BooleanNormalizerTest extends TestCase
                 'expectedResult' => true,
             ],
         ];
+    }
+
+    public function testFailToNormalize(): void
+    {
+        $fieldName = 'rememberMe';
+        $isRequired = true;
+
+        $schema = new Schema([
+            'properties' => new Schema([
+                'type' => self::TYPE_BOOLEAN,
+                'title' => $fieldName,
+            ])
+        ]);
+
+        $closure = $this->sut->getNormalizer($schema, $fieldName, $isRequired);
+
+        $resolver = new SwaggerResolver($schema);
+        $resolver->setDefined($fieldName);
+        $resolver->setNormalizer($fieldName, $closure);
+
+        $this->expectException(NormalizationFailedException::class);
+
+        $resolver->resolve([$fieldName => 'not_bool']);
     }
 }
