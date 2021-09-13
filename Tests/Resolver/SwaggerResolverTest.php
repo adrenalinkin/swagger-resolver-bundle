@@ -22,6 +22,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
+use function get_class;
+
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
@@ -141,11 +143,31 @@ class SwaggerResolverTest extends TestCase
 
         self::assertCount(2, $sut->getValidators());
 
-        $sut->removeValidator($validatorMock);
+        $sut->removeValidator(get_class($validatorMock));
 
         self::assertCount(1, $sut->getValidators());
 
-        $sut->removeValidator($validatorAnonymous);
+        $sut->removeValidator(get_class($validatorAnonymous));
+
+        self::assertCount(0, $sut->getValidators());
+    }
+
+    public function testCanRemoveValidatorByObject(): void
+    {
+        $validatorMock = $this->createMock(SwaggerValidatorInterface::class);
+        $validatorAnonymous = $this->createAnonymousValidator(ParameterTypeEnum::BOOLEAN);
+
+        $sut = new SwaggerResolver(new Schema());
+        $sut->addValidator($validatorMock);
+        $sut->addValidator($validatorAnonymous);
+
+        self::assertCount(2, $sut->getValidators());
+
+        $sut->removeValidatorByObject($validatorMock);
+
+        self::assertCount(1, $sut->getValidators());
+
+        $sut->removeValidatorByObject($validatorAnonymous);
 
         self::assertCount(0, $sut->getValidators());
     }

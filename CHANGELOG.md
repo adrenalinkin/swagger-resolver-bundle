@@ -2,8 +2,6 @@
 ### Changed
 - Allowed only appropriated type for the `string` validators.
   To prevent problems with validation use normalization mechanism.
-- Changed signature from `SwaggerResolver::removeValidator(string $className)`
-  to the `removeValidator(SwaggerValidatorInterface $validator)`.
 ### Removed
 - Removed all unnecessary rows from the `.gitignore` according to `.gitignore_global` use instead.
 ### Fixed
