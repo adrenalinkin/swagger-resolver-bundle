@@ -20,6 +20,20 @@ use EXSyst\Component\Swagger\Schema;
  */
 class SwaggerFactory
 {
+    /**
+     * @param array $properties
+     *
+     * @example [
+     *      'firstPropertyName' => [
+     *          'type' => 'boolean',
+     *      ],
+     *      'secondPropertyName' => [
+     *          'type' => 'integer',
+     *      ]
+     *  ]
+     *
+     * @return Schema
+     */
     public static function createSchemaDefinition(array $properties): Schema
     {
         return new Schema([
