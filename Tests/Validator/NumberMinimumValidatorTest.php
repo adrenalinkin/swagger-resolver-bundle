@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Validator;
 
-use EXSyst\Component\Swagger\Schema;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\SwaggerFactory;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\NumberMinimumValidator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -41,12 +41,12 @@ class NumberMinimumValidatorTest extends TestCase
      */
     public function testSupports(string $type, $minimum, bool $expectedResult): void
     {
-        $schema = new Schema([
+        $schemaProperty = SwaggerFactory::createSchemaProperty([
             'type' => $type,
             'minimum' => $minimum,
         ]);
 
-        $isSupported = $this->sut->supports($schema);
+        $isSupported = $this->sut->supports($schemaProperty);
 
         self::assertSame($isSupported, $expectedResult);
     }
@@ -82,7 +82,7 @@ class NumberMinimumValidatorTest extends TestCase
      */
     public function testFailToPassValidation(bool $isExclusiveMinimum, $minimum, $value): void
     {
-        $schema = new Schema([
+        $schemaProperty = SwaggerFactory::createSchemaProperty([
             'type' => self::TYPE_INT,
             'minimum' => $minimum,
             'exclusiveMinimum' => $isExclusiveMinimum,
@@ -90,7 +90,7 @@ class NumberMinimumValidatorTest extends TestCase
 
         $this->expectException(InvalidOptionsException::class);
 
-        $this->sut->validate($schema, 'age', $value);
+        $this->sut->validate($schemaProperty, 'age', $value);
     }
 
     public function failToPassValidationDataProvider(): array
@@ -159,13 +159,13 @@ class NumberMinimumValidatorTest extends TestCase
      */
     public function testCanPassValidation(bool $isExclusiveMinimum, $minimum, $value): void
     {
-        $schema = new Schema([
+        $schemaProperty = SwaggerFactory::createSchemaProperty([
             'type' => self::TYPE_INT,
             'minimum' => $minimum,
             'exclusiveMinimum' => $isExclusiveMinimum,
         ]);
 
-        $this->sut->validate($schema, 'age', $value);
+        $this->sut->validate($schemaProperty, 'age', $value);
         self::assertTrue(true);
     }
 

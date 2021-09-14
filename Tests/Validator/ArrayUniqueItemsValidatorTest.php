@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Validator;
 
-use EXSyst\Component\Swagger\Schema;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\SwaggerFactory;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\ArrayUniqueItemsValidator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -43,12 +43,12 @@ class ArrayUniqueItemsValidatorTest extends TestCase
      */
     public function testSupports(string $format, ?bool $hasUniqueItems, bool $expectedResult): void
     {
-        $schema = new Schema([
+        $schemaProperty = SwaggerFactory::createSchemaProperty([
             'type' => $format,
             'uniqueItems' => $hasUniqueItems,
         ]);
 
-        $isSupported = $this->sut->supports($schema);
+        $isSupported = $this->sut->supports($schemaProperty);
 
         self::assertSame($isSupported, $expectedResult);
     }
@@ -79,7 +79,7 @@ class ArrayUniqueItemsValidatorTest extends TestCase
      */
     public function testFailToPassValidation(?string $collectionFormat, $value): void
     {
-        $schema = new Schema([
+        $schemaProperty = SwaggerFactory::createSchemaProperty([
             'type' => self::TYPE_ARRAY,
             'uniqueItems' => true,
             'collectionFormat' => $collectionFormat,
@@ -87,7 +87,7 @@ class ArrayUniqueItemsValidatorTest extends TestCase
 
         $this->expectException(InvalidOptionsException::class);
 
-        $this->sut->validate($schema, 'days', $value);
+        $this->sut->validate($schemaProperty, 'days', $value);
     }
 
     public function failToPassValidationDataProvider(): array
@@ -121,13 +121,13 @@ class ArrayUniqueItemsValidatorTest extends TestCase
      */
     public function testCanPassValidation(?string $collectionFormat, $value): void
     {
-        $schema = new Schema([
+        $schemaProperty = SwaggerFactory::createSchemaProperty([
             'type' => self::TYPE_ARRAY,
             'uniqueItems' => true,
             'collectionFormat' => $collectionFormat,
         ]);
 
-        $this->sut->validate($schema, 'days', $value);
+        $this->sut->validate($schemaProperty, 'days', $value);
         self::assertTrue(true);
     }
 

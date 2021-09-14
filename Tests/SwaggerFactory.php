@@ -41,4 +41,19 @@ class SwaggerFactory
             'properties' => $properties,
         ]);
     }
+
+    /**
+     * @param array $data
+     *
+     * @example [
+     *      'type' => 'integer',
+     *      'minimum' => 10,
+     *  ]
+     *
+     * @return Schema
+     */
+    public static function createSchemaProperty(array $data): Schema
+    {
+        return new Schema($data);
+    }
 }

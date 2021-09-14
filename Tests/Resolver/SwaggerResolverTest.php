@@ -31,7 +31,7 @@ class SwaggerResolverTest extends TestCase
 {
     public function testCanClearValidators(): void
     {
-        $sut = new SwaggerResolver(new Schema());
+        $sut = new SwaggerResolver(SwaggerFactory::createSchemaDefinition([]));
 
         $sut->addValidator($this->createMock(SwaggerValidatorInterface::class));
         $sut->addValidator($this->createAnonymousValidator(ParameterTypeEnum::STRING));
@@ -118,7 +118,7 @@ class SwaggerResolverTest extends TestCase
         $validatorMock = $this->createMock(SwaggerValidatorInterface::class);
         $validatorAnonymous = $this->createAnonymousValidator(ParameterTypeEnum::STRING);
 
-        $sut = new SwaggerResolver(new Schema());
+        $sut = new SwaggerResolver(SwaggerFactory::createSchemaDefinition([]));
         $sut->addValidator($validatorMock);
 
         self::assertCount(1, $sut->getValidators());
@@ -137,7 +137,7 @@ class SwaggerResolverTest extends TestCase
         $validatorMock = $this->createMock(SwaggerValidatorInterface::class);
         $validatorAnonymous = $this->createAnonymousValidator(ParameterTypeEnum::BOOLEAN);
 
-        $sut = new SwaggerResolver(new Schema());
+        $sut = new SwaggerResolver(SwaggerFactory::createSchemaDefinition([]));
         $sut->addValidator($validatorMock);
         $sut->addValidator($validatorAnonymous);
 
@@ -157,7 +157,7 @@ class SwaggerResolverTest extends TestCase
         $validatorMock = $this->createMock(SwaggerValidatorInterface::class);
         $validatorAnonymous = $this->createAnonymousValidator(ParameterTypeEnum::BOOLEAN);
 
-        $sut = new SwaggerResolver(new Schema());
+        $sut = new SwaggerResolver(SwaggerFactory::createSchemaDefinition([]));
         $sut->addValidator($validatorMock);
         $sut->addValidator($validatorAnonymous);
 

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Validator;
 
-use EXSyst\Component\Swagger\Schema;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\SwaggerFactory;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\NumberMultipleOfValidator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -41,12 +41,12 @@ class NumberMultipleOfValidatorTest extends TestCase
      */
     public function testSupports(string $type, $multipleOf, bool $expectedResult): void
     {
-        $schema = new Schema([
+        $schemaProperty = SwaggerFactory::createSchemaProperty([
             'type' => $type,
             'multipleOf' => $multipleOf,
         ]);
 
-        $isSupported = $this->sut->supports($schema);
+        $isSupported = $this->sut->supports($schemaProperty);
 
         self::assertSame($isSupported, $expectedResult);
     }
@@ -82,14 +82,14 @@ class NumberMultipleOfValidatorTest extends TestCase
      */
     public function testFailToPassValidation($multipleOf, $value): void
     {
-        $schema = new Schema([
+        $schemaProperty = SwaggerFactory::createSchemaProperty([
             'type' => self::TYPE_INT,
             'multipleOf' => $multipleOf,
         ]);
 
         $this->expectException(InvalidOptionsException::class);
 
-        $this->sut->validate($schema, 'age', $value);
+        $this->sut->validate($schemaProperty, 'age', $value);
     }
 
     public function failToPassValidationDataProvider(): array
@@ -139,12 +139,12 @@ class NumberMultipleOfValidatorTest extends TestCase
      */
     public function testCanPassValidation($multipleOf, $value): void
     {
-        $schema = new Schema([
+        $schemaProperty = SwaggerFactory::createSchemaProperty([
             'type' => self::TYPE_INT,
             'multipleOf' => $multipleOf,
         ]);
 
-        $this->sut->validate($schema, 'age', $value);
+        $this->sut->validate($schemaProperty, 'age', $value);
         self::assertTrue(true);
     }
 

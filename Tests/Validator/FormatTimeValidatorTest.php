@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Validator;
 
-use EXSyst\Component\Swagger\Schema;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\SwaggerFactory;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\FormatTimeValidator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -40,11 +40,11 @@ class FormatTimeValidatorTest extends TestCase
      */
     public function testSupports(string $format, bool $expectedResult): void
     {
-        $schema = new Schema([
+        $schemaProperty = SwaggerFactory::createSchemaProperty([
             'format' => $format,
         ]);
 
-        $isSupported = $this->sut->supports($schema);
+        $isSupported = $this->sut->supports($schemaProperty);
 
         self::assertSame($isSupported, $expectedResult);
     }
@@ -68,14 +68,14 @@ class FormatTimeValidatorTest extends TestCase
      */
     public function testFailToPassValidation(?string $pattern, $value): void
     {
-        $schema = new Schema([
+        $schemaProperty = SwaggerFactory::createSchemaProperty([
             'format' => self::FORMAT_TIME,
             'pattern' => $pattern,
         ]);
 
         $this->expectException(InvalidOptionsException::class);
 
-        $this->sut->validate($schema, 'savedAtTime', $value);
+        $this->sut->validate($schemaProperty, 'savedAtTime', $value);
     }
 
     public function failToPassValidationDataProvider(): array
@@ -105,12 +105,12 @@ class FormatTimeValidatorTest extends TestCase
      */
     public function testCanPassValidation(?string $pattern, $value): void
     {
-        $schema = new Schema([
+        $schemaProperty = SwaggerFactory::createSchemaProperty([
             'format' => self::FORMAT_TIME,
             'pattern' => $pattern,
         ]);
 
-        $this->sut->validate($schema, 'savedAtTime', $value);
+        $this->sut->validate($schemaProperty, 'savedAtTime', $value);
         self::assertTrue(true);
     }
 
