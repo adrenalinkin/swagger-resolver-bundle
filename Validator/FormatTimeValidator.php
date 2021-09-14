@@ -13,24 +13,54 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Validator;
 
+use EXSyst\Component\Swagger\Schema;
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
+
+use function sprintf;
+
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-class FormatTimeValidator extends AbstractFormatDateValidator
+class FormatTimeValidator implements SwaggerValidatorInterface
 {
+    private const SUPPORTED_TYPE = 'time';
+    private const PATTERN = '/^(\d{2}):(\d{2}):(\d{2})$/';
+
     /**
      * {@inheritdoc}
      */
-    protected function getSupportedFormatName(): string
+    public function supports(Schema $propertySchema, array $context = []): bool
     {
-        return 'time';
+        return self::SUPPORTED_TYPE === $propertySchema->getFormat();
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function getDefaultPattern(): string
+    public function validate(Schema $propertySchema, string $propertyName, $value): void
     {
-        return '^[\d]{2}:[\d]{2}:[\d]{2}$';
+        if (null === $value || '' === $value) {
+            return;
+        }
+
+        $value = (string) $value;
+
+        if (!preg_match(self::PATTERN, $value, $matches)) {
+            throw new InvalidOptionsException(sprintf('Property "%s" contains invalid time format', $propertyName));
+        }
+
+        [, $hour, $minute, $second] = $matches;
+
+        if ($hour < 0 || $hour > 23) {
+            throw new InvalidOptionsException(sprintf('Property "%s" contains invalid hours value', $propertyName));
+        }
+
+        if ($minute < 0 || $minute > 59) {
+            throw new InvalidOptionsException(sprintf('Property "%s" contains invalid minutes value', $propertyName));
+        }
+
+        if ($second < 0 || $second > 59) {
+            throw new InvalidOptionsException(sprintf('Property "%s" contains invalid seconds value', $propertyName));
+        }
     }
 }

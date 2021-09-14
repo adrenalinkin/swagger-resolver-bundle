@@ -1,7 +1,6 @@
 ## [Unreleased]
 ### Changed
-- Allowed only appropriated type for the `string` validators.
-  To prevent problems with validation use normalization mechanism.
+- Improved `time` format validation.
 ### Removed
 - Removed all unnecessary rows from the `.gitignore` according to `.gitignore_global` use instead.
 ### Fixed
