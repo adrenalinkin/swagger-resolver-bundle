@@ -89,19 +89,15 @@ class StringPatternValidatorTest extends TestCase
     public function failToPassValidationDataProvider(): array
     {
         return [
-            'Fail with null instead string' => [
-                'pattern' => '^[\d]+\.[\d]+\.[\d]+$',
-                'value' => null,
-            ],
-            'Fail with boolean instead string' => [
+            'Fail with boolean not match pattern' => [
                 'pattern' => '^[\d]+\.[\d]+\.[\d]+$',
                 'value' => true,
             ],
-            'Fail with integer instead string' => [
+            'Fail with integer not match pattern' => [
                 'pattern' => '^[\d]+\.[\d]+\.[\d]+$',
                 'value' => 110,
             ],
-            'Fail with float instead string' => [
+            'Fail with float not match pattern' => [
                 'pattern' => '^[\d]+\.[\d]+\.[\d]+$',
                 'value' => 1.10,
             ],
@@ -129,6 +125,18 @@ class StringPatternValidatorTest extends TestCase
     public function canPassValidationDataProvider(): array
     {
         return [
+            'Pass validation with boolean' => [
+                'pattern' => '^[\d]+$',
+                'value' => true,
+            ],
+            'Pass validation with integer' => [
+                'pattern' => '^[\d]+$',
+                'value' => 110,
+            ],
+            'Pass validation with float' => [
+                'pattern' => '^[\d]+\.[\d]+$',
+                'value' => 1.10,
+            ],
             'Pass validation with string' => [
                 'pattern' => '^[\d]+\.[\d]+\.[\d]+$',
                 'value' => '1.2.3',

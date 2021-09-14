@@ -91,21 +91,17 @@ class StringMaxLengthValidatorTest extends TestCase
     public function failToPassValidationDataProvider(): array
     {
         return [
-            'Fail with null instead string' => [
-                'maxLength' => 10,
-                'value' => null,
-            ],
-            'Fail with boolean instead string' => [
-                'maxLength' => 10,
+            'Fail with boolean greater than allowed' => [
+                'maxLength' => 0,
                 'value' => true,
             ],
-            'Fail with integer instead string' => [
-                'maxLength' => 10,
+            'Fail with integer greater than allowed' => [
+                'maxLength' => 2,
                 'value' => 110,
             ],
-            'Fail with float instead string' => [
-                'maxLength' => 10,
-                'value' => 1.10,
+            'Fail with float greater than allowed' => [
+                'maxLength' => 3,
+                'value' => 1.11,
             ],
             'Fail with latin string greater than allowed' => [
                 'maxLength' => 10,
@@ -135,6 +131,18 @@ class StringMaxLengthValidatorTest extends TestCase
     public function canPassValidationDataProvider(): array
     {
         return [
+            'Pass with boolean equal to allowed' => [
+                'maxLength' => 1,
+                'value' => false,
+            ],
+            'Pass with integer equal to allowed' => [
+                'maxLength' => 3,
+                'value' => 110,
+            ],
+            'Pass with float equal to allowed' => [
+                'maxLength' => 4,
+                'value' => 1.11,
+            ],
             'Pass validation with latin string equal to allowed' => [
                 'maxLength' => 10,
                 'value' => str_repeat('w', 10),
