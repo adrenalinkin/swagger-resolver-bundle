@@ -16,6 +16,7 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Resolver;
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\SwaggerValidatorInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+
 use function get_class;
 
 /**
@@ -75,6 +76,14 @@ class SwaggerResolver extends OptionsResolver
     }
 
     /**
+     * @return SwaggerValidatorInterface[]
+     */
+    public function getValidators(): array
+    {
+        return $this->validators;
+    }
+
+    /**
      * Adds property validator
      *
      * @param SwaggerValidatorInterface $validator
@@ -91,8 +100,6 @@ class SwaggerResolver extends OptionsResolver
     }
 
     /**
-     * Removes property validator
-     *
      * @param string $className
      *
      * @return self
@@ -102,5 +109,15 @@ class SwaggerResolver extends OptionsResolver
         unset($this->validators[$className]);
 
         return $this;
+    }
+
+    /**
+     * @param SwaggerValidatorInterface $validator
+     *
+     * @return self
+     */
+    public function removeValidatorByObject(SwaggerValidatorInterface $validator): self
+    {
+        return $this->removeValidator(get_class($validator));
     }
 }

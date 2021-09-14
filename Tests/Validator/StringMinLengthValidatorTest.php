@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Validator;
 
-use EXSyst\Component\Swagger\Schema;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\SwaggerFactory;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\StringMinLengthValidator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -42,12 +42,12 @@ class StringMinLengthValidatorTest extends TestCase
      */
     public function testSupports(string $type, ?int $minLength, bool $expectedResult): void
     {
-        $schema = new Schema([
+        $schemaProperty = SwaggerFactory::createSchemaProperty([
             'type' => $type,
             'minLength' => $minLength,
         ]);
 
-        $isSupported = $this->sut->supports($schema);
+        $isSupported = $this->sut->supports($schemaProperty);
 
         self::assertSame($isSupported, $expectedResult);
     }
@@ -78,14 +78,14 @@ class StringMinLengthValidatorTest extends TestCase
      */
     public function testFailToPassValidation(int $minLength, $value): void
     {
-        $schema = new Schema([
+        $schemaProperty = SwaggerFactory::createSchemaProperty([
             'type' => self::TYPE,
             'minLength' => $minLength,
         ]);
 
         $this->expectException(InvalidOptionsException::class);
 
-        $this->sut->validate($schema, 'description', $value);
+        $this->sut->validate($schemaProperty, 'description', $value);
     }
 
     public function failToPassValidationDataProvider(): array
@@ -123,12 +123,12 @@ class StringMinLengthValidatorTest extends TestCase
      */
     public function testCanPassValidation(int $minLength, $value): void
     {
-        $schema = new Schema([
+        $schemaProperty = SwaggerFactory::createSchemaProperty([
             'type' => self::TYPE,
             'minLength' => $minLength,
         ]);
 
-        $this->sut->validate($schema, 'description', $value);
+        $this->sut->validate($schemaProperty, 'description', $value);
         self::assertTrue(true);
     }
 

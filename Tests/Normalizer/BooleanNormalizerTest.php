@@ -17,6 +17,7 @@ use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\NormalizationFailedException;
 use Linkin\Bundle\SwaggerResolverBundle\Normalizer\BooleanNormalizer;
 use Linkin\Bundle\SwaggerResolverBundle\Resolver\SwaggerResolver;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\SwaggerFactory;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -42,9 +43,10 @@ class BooleanNormalizerTest extends TestCase
     public function testSupports(string $type, bool $expectedResult): void
     {
         $fieldName = 'rememberMe';
-        $schema = $this->createSchema($fieldName, $type);
+        $schemaDefinition = $this->createSchemaDefinition($fieldName, $type);
+        $schemaProperty =  $schemaDefinition->getProperties()->get($fieldName);
 
-        $isSupported = $this->sut->supports($schema, $fieldName, true);
+        $isSupported = $this->sut->supports($schemaProperty, $fieldName, true);
 
         self::assertSame($isSupported, $expectedResult);
     }
@@ -68,13 +70,12 @@ class BooleanNormalizerTest extends TestCase
         $fieldName = 'rememberMe';
         $isRequired = true;
 
-        $schema = new Schema([
-            'properties' => $this->createSchema($fieldName),
-        ]);
+        $schemaDefinition = $this->createSchemaDefinition($fieldName);
+        $schemaProperty =  $schemaDefinition->getProperties()->get($fieldName);
 
-        $closure = $this->sut->getNormalizer($schema, $fieldName, $isRequired);
+        $closure = $this->sut->getNormalizer($schemaProperty, $fieldName, $isRequired);
 
-        $resolver = new SwaggerResolver($schema);
+        $resolver = new SwaggerResolver($schemaDefinition);
         $resolver->setDefined($fieldName);
         $resolver->setNormalizer($fieldName, $closure);
 
@@ -89,13 +90,12 @@ class BooleanNormalizerTest extends TestCase
         $isRequired = false;
         $originValue = null;
 
-        $schema = new Schema([
-            'properties' => $this->createSchema($fieldName),
-        ]);
+        $schemaDefinition = $this->createSchemaDefinition($fieldName);
+        $schemaProperty =  $schemaDefinition->getProperties()->get($fieldName);
 
-        $closure = $this->sut->getNormalizer($schema, $fieldName, $isRequired);
+        $closure = $this->sut->getNormalizer($schemaProperty, $fieldName, $isRequired);
 
-        $resolver = new SwaggerResolver($schema);
+        $resolver = new SwaggerResolver($schemaDefinition);
         $resolver->setDefined($fieldName);
         $resolver->setNormalizer($fieldName, $closure);
 
@@ -111,13 +111,12 @@ class BooleanNormalizerTest extends TestCase
     {
         $fieldName = 'rememberMe';
         $isRequired = true;
-        $schema = new Schema([
-            'properties' => $this->createSchema($fieldName),
-        ]);
+        $schemaDefinition = $this->createSchemaDefinition($fieldName);
+        $schemaProperty =  $schemaDefinition->getProperties()->get($fieldName);
 
-        $closure = $this->sut->getNormalizer($schema, $fieldName, $isRequired);
+        $closure = $this->sut->getNormalizer($schemaProperty, $fieldName, $isRequired);
 
-        $resolver = new SwaggerResolver($schema);
+        $resolver = new SwaggerResolver($schemaDefinition);
         $resolver->setDefined($fieldName);
         $resolver->setNormalizer($fieldName, $closure);
 
@@ -156,11 +155,12 @@ class BooleanNormalizerTest extends TestCase
         ];
     }
 
-    private function createSchema(string $fieldName, string $type = self::TYPE_BOOLEAN): Schema
+    private function createSchemaDefinition(string $fieldName, string $type = self::TYPE_BOOLEAN): Schema
     {
-        return new Schema([
-            'type' => $type,
-            'title' => $fieldName,
+        return SwaggerFactory::createSchemaDefinition([
+            $fieldName => [
+                'type' => $type
+            ]
         ]);
     }
 }
