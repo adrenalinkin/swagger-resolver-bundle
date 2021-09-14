@@ -96,21 +96,6 @@ class NumberMaximumValidatorTest extends TestCase
     public function failToPassValidationDataProvider(): array
     {
         return [
-            'Fail with null instead number' => [
-                'isExclusiveMaximum' => true,
-                'maximum' => 0,
-                'value' => null,
-            ],
-            'Fail with boolean instead number' => [
-                'isExclusiveMaximum' => true,
-                'maximum' => 0,
-                'value' => true,
-            ],
-            'Fail with string instead number' => [
-                'isExclusiveMaximum' => true,
-                'maximum' => 0,
-                'value' => 'some-string',
-            ],
             'Fail with maximal int value and exclusive mode' => [
                 'isExclusiveMaximum' => true,
                 'maximum' => 10,
