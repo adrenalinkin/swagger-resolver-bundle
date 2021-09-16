@@ -13,41 +13,45 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Validator;
 
-use DateTime;
-use Exception;
+use EXSyst\Component\Swagger\Schema;
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
+
+use function is_numeric;
+use function sprintf;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-class FormatTimestampValidator extends AbstractFormatDateValidator
+class FormatTimestampValidator implements SwaggerValidatorInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function createDateFromValue($value): DateTime
-    {
-        $date = DateTime::createFromFormat('U', $value);
+    private const SUPPORTED_TYPE = 'timestamp';
 
-        if ($date instanceof DateTime) {
-            return $date;
+    public function supports(Schema $propertySchema, array $context = []): bool
+    {
+        return self::SUPPORTED_TYPE === $propertySchema->getFormat();
+    }
+
+    public function validate(Schema $propertySchema, string $propertyName, $value): void
+    {
+        if (null === $value || '' === $value) {
+            return;
         }
 
-        throw new Exception('Invalid timestamp value');
+        if (!is_numeric($value)) {
+            $this->throwException($propertyName);
+        }
+
+        $value = (float) $value;
+
+        if ($value < 0) {
+            $this->throwException($propertyName);
+        }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function getSupportedFormatName(): string
+    private function throwException(string $propertyName): void
     {
-        return 'timestamp';
-    }
+        $message = sprintf('Property "%s" contains invalid %s value', $propertyName, self::SUPPORTED_TYPE);
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function getDefaultPattern(): string
-    {
-        return '^[\d]+$';
+        throw new InvalidOptionsException($message);
     }
 }
