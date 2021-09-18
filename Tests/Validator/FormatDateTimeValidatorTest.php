@@ -23,7 +23,7 @@ use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
  */
 class FormatDateTimeValidatorTest extends TestCase
 {
-    private const FORMAT_DATETIME = 'datetime';
+    private const FORMAT_DATETIME = 'date-time';
 
     /**
      * @var FormatDateTimeValidator
@@ -66,11 +66,10 @@ class FormatDateTimeValidatorTest extends TestCase
     /**
      * @dataProvider failToPassValidationDataProvider
      */
-    public function testFailToPassValidation(?string $pattern, $value): void
+    public function testFailToPassValidation($value): void
     {
         $schemaProperty = SwaggerFactory::createSchemaProperty([
             'format' => self::FORMAT_DATETIME,
-            'pattern' => $pattern,
         ]);
 
         $this->expectException(InvalidOptionsException::class);
@@ -81,33 +80,24 @@ class FormatDateTimeValidatorTest extends TestCase
     public function failToPassValidationDataProvider(): array
     {
         return [
-            'Fail when true value' => [
-                'pattern' => null,
-                'value' => true,
-            ],
-            'Fail when value with incorrect datetime pattern - number' => [
-                'pattern' => null,
-                'value' => '2020-07/01 10:00:01',
-            ],
-            'Fail when value with incorrect datetime pattern - more than 4 digit' => [
-                'pattern' => null,
-                'value' => '19999-01-01 10:00:00',
-            ],
-            'Fail when pattern set and value can NOT convert into DateTime' => [
-                'pattern' => 'any-string-here', // TODO: should check format
-                'value' => '2020_05_05_10_00_00',
-            ],
+            'Fail when true value' => [true],
+            'Fail when false value' => [false],
+            'Fail when zero value' => ['0'],
+            'Fail when incorrect datetime pattern - number' => ['2020-07-01 10:00:01'],
+            'Fail when incorrect datetime pattern - more than 4 digit' => ['19999-01-01T10:00:00Z'],
+            // PHP does not support spec fraction
+            'Fail when received time spec fraction' => ['1937-01-01T12:00:27.87+03:00'],
+            'Fail when received time spec fraction UTC' => ['1985-04-12T23:20:50.52Z'],
         ];
     }
 
     /**
      * @dataProvider canPassValidationDataProvider
      */
-    public function testCanPassValidation(?string $pattern, $value): void
+    public function testCanPassValidation($value): void
     {
         $schemaProperty = SwaggerFactory::createSchemaProperty([
             'format' => self::FORMAT_DATETIME,
-            'pattern' => $pattern,
         ]);
 
         $this->sut->validate($schemaProperty, 'createdAt', $value);
@@ -116,31 +106,15 @@ class FormatDateTimeValidatorTest extends TestCase
 
     public function canPassValidationDataProvider(): array
     {
+        /** @see https://xml2rfc.tools.ietf.org/public/rfc/html/rfc3339.html#anchor14 */
         return [
-            'Pass when null value' => [
-                'pattern' => null,
-                'value' => null,
-            ],
-            'Pass when empty string value' => [
-                'pattern' => null,
-                'value' => '',
-            ],
-            'Pass when empty zero value' => [ // TODO: should not pass validation
-                'pattern' => null,
-                'value' => '0',
-            ],
-            'Pass when false value' => [ // TODO: should not pass validation
-                'pattern' => null,
-                'value' => false,
-            ],
-            'Pass when value with correct date pattern' => [
-                'pattern' => null,
-                'value' => '2020-01-01 10:00:00',
-            ],
-            'Pass when pattern set and value can convert into DateTime' => [
-                'pattern' => 'any-string-here', // TODO: should check format
-                'value' => '2020/01/01 10:00:00',
-            ],
+            'Pass when null value' => [null],
+            'Pass when empty string value' => [''],
+            'Pass when value with UTC' => ['1985-04-12T23:20:50Z'],
+            'Pass when value with offset' => ['1996-12-19T16:39:57-08:00'],
+            'Pass when value with UTC and leap second' => ['1990-12-31T23:59:60Z'],
+            'Pass when value with offset and leap second' => ['1990-12-31T15:59:60-08:00'],
+            'Pass when value with Netherlands time' => ['1937-01-01T12:00:27+03:00'],
         ];
     }
 }

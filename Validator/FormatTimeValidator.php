@@ -19,6 +19,8 @@ use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use function sprintf;
 
 /**
+ * This validation based on rfc3339 {@see https://xml2rfc.tools.ietf.org/public/rfc/html/rfc3339.html#anchor14}
+ *
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
 class FormatTimeValidator implements SwaggerValidatorInterface

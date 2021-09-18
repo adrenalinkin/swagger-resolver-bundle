@@ -1,6 +1,8 @@
 ## [Unreleased]
 ### Changed
-- Improved `time` format validation.
+- Changed `datetime` format to `date-time` according to [swagger specification](https://swagger.io/specification/).
+- Applied `time`, `date`, `date-time` format validation
+  according to specification [RFC3339](https://xml2rfc.tools.ietf.org/public/rfc/html/rfc3339.html#anchor14).
 ### Removed
 - Removed all unnecessary rows from the `.gitignore` according to `.gitignore_global` use instead.
 ### Fixed
