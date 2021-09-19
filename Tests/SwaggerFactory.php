@@ -22,6 +22,7 @@ class SwaggerFactory
 {
     /**
      * @param array $properties
+     * @param array $required
      *
      * @example [
      *      'firstPropertyName' => [
@@ -34,10 +35,11 @@ class SwaggerFactory
      *
      * @return Schema
      */
-    public static function createSchemaDefinition(array $properties): Schema
+    public static function createSchemaDefinition(array $properties, array $required = []): Schema
     {
         return new Schema([
             'type' => 'object',
+            'required' => $required,
             'properties' => $properties,
         ]);
     }
