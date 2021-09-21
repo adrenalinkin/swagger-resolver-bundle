@@ -91,21 +91,17 @@ class StringMinLengthValidatorTest extends TestCase
     public function failToPassValidationDataProvider(): array
     {
         return [
-            'Fail with null instead string' => [
-                'minLength' => 10,
-                'value' => null,
-            ],
-            'Fail with boolean instead string' => [
-                'minLength' => 10,
+            'Fail with boolean lower than allowed' => [
+                'maxLength' => 2,
                 'value' => true,
             ],
-            'Fail with integer instead string' => [
-                'minLength' => 10,
-                'value' => 99,
+            'Fail with integer lower than allowed' => [
+                'maxLength' => 4,
+                'value' => 110,
             ],
-            'Fail with float instead string' => [
-                'minLength' => 10,
-                'value' => 19.10,
+            'Fail with float lower than allowed' => [
+                'maxLength' => 5,
+                'value' => 1.11,
             ],
             'Fail with latin string lower than allowed' => [
                 'minLength' => 5,
@@ -135,6 +131,18 @@ class StringMinLengthValidatorTest extends TestCase
     public function canPassValidationDataProvider(): array
     {
         return [
+            'Fail with boolean equal to allowed' => [
+                'maxLength' => 1,
+                'value' => true,
+            ],
+            'Fail with integer equal to allowed' => [
+                'maxLength' => 3,
+                'value' => 110,
+            ],
+            'Fail with float equal to allowed' => [
+                'maxLength' => 4,
+                'value' => 1.11,
+            ],
             'Pass validation with latin string equal to allowed' => [
                 'minLength' => 10,
                 'value' => str_repeat('w', 10),

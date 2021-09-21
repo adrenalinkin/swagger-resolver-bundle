@@ -66,11 +66,10 @@ class FormatTimeValidatorTest extends TestCase
     /**
      * @dataProvider failToPassValidationDataProvider
      */
-    public function testFailToPassValidation(?string $pattern, $value): void
+    public function testFailToPassValidation($value): void
     {
         $schemaProperty = SwaggerFactory::createSchemaProperty([
             'format' => self::FORMAT_TIME,
-            'pattern' => $pattern,
         ]);
 
         $this->expectException(InvalidOptionsException::class);
@@ -81,33 +80,24 @@ class FormatTimeValidatorTest extends TestCase
     public function failToPassValidationDataProvider(): array
     {
         return [
-            'Fail when true value' => [
-                'pattern' => null,
-                'value' => true,
-            ],
-            'Fail when value with incorrect time pattern - number' => [
-                'pattern' => null,
-                'value' => '100',
-            ],
-            'Fail when value with incorrect time pattern - more than 2 digit' => [
-                'pattern' => null,
-                'value' => '100:05:55',
-            ],
-            'Fail when pattern set and value can NOT convert into DateTime' => [
-                'pattern' => 'any-string-here', // TODO: should check format
-                'value' => '10_05_45',
-            ],
+            'Fail when true value' => [true],
+            'Fail when false value' => [false],
+            'Fail when zero value' => [0],
+            'Fail when value with incorrect format - number' => ['100'],
+            'Fail when value with incorrect format - more than 2 digit' => ['100:05:55'],
+            'Fail when value with incorrect hours' => ['24:00:00'],
+            'Fail when value with incorrect minutes' => ['23:60:00'],
+            'Fail when value with incorrect seconds' => ['23:59:60'],
         ];
     }
 
     /**
      * @dataProvider canPassValidationDataProvider
      */
-    public function testCanPassValidation(?string $pattern, $value): void
+    public function testCanPassValidation($value): void
     {
         $schemaProperty = SwaggerFactory::createSchemaProperty([
             'format' => self::FORMAT_TIME,
-            'pattern' => $pattern,
         ]);
 
         $this->sut->validate($schemaProperty, 'savedAtTime', $value);
@@ -117,30 +107,11 @@ class FormatTimeValidatorTest extends TestCase
     public function canPassValidationDataProvider(): array
     {
         return [
-            'Pass when null value' => [
-                'pattern' => null,
-                'value' => null,
-            ],
-            'Pass when empty string value' => [
-                'pattern' => null,
-                'value' => '',
-            ],
-            'Pass when empty zero value' => [ // TODO: should not pass validation
-                'pattern' => null,
-                'value' => '0',
-            ],
-            'Pass when false value' => [ // TODO: should not pass validation
-                'pattern' => null,
-                'value' => false,
-            ],
-            'Pass when value with correct time pattern' => [
-                'pattern' => null,
-                'value' => '10:05:45',
-            ],
-            'Pass when pattern set and value can convert into DateTime' => [
-                'pattern' => 'any-string-here', // TODO: should check format
-                'value' => '10/05/45',
-            ],
+            'Pass when null value' => [null],
+            'Pass when empty string value' => [''],
+            'Pass when value with correct time' => ['01:02:03'],
+            'Pass when value with correct time min' => ['00:00:00'],
+            'Pass when value with correct time max' => ['23:59:59'],
         ];
     }
 }

@@ -66,11 +66,10 @@ class FormatTimestampValidatorTest extends TestCase
     /**
      * @dataProvider failToPassValidationDataProvider
      */
-    public function testFailToPassValidation(?string $pattern, $value): void
+    public function testFailToPassValidation($value): void
     {
         $schemaProperty = SwaggerFactory::createSchemaProperty([
             'format' => self::FORMAT_TIMESTAMP,
-            'pattern' => $pattern,
         ]);
 
         $this->expectException(InvalidOptionsException::class);
@@ -81,25 +80,20 @@ class FormatTimestampValidatorTest extends TestCase
     public function failToPassValidationDataProvider(): array
     {
         return [
-            'Fail when value with incorrect timestamp pattern' => [
-                'pattern' => null,
-                'value' => '2020-10-10',
-            ],
-            'Fail when pattern set and value can NOT convert into DateTime' => [
-                'pattern' => 'any-string-here',
-                'value' => '2020-10-10 00:00:00',
-            ],
+            'Fail when timestamp is not numeric' => ['2020-10-10 10:00:00'],
+            'Fail when lower than zero' => ['-1'],
+            'Fail when false value' => [false],
+            'Fail when true value' => [true],
         ];
     }
 
     /**
      * @dataProvider canPassValidationDataProvider
      */
-    public function testCanPassValidation(?string $pattern, $value): void
+    public function testCanPassValidation($value): void
     {
         $schemaProperty = SwaggerFactory::createSchemaProperty([
             'format' => self::FORMAT_TIMESTAMP,
-            'pattern' => $pattern,
         ]);
 
         $this->sut->validate($schemaProperty, 'updatedAt', $value);
@@ -109,34 +103,10 @@ class FormatTimestampValidatorTest extends TestCase
     public function canPassValidationDataProvider(): array
     {
         return [
-            'Pass when null value' => [
-                'pattern' => null,
-                'value' => null,
-            ],
-            'Pass when empty string value' => [
-                'pattern' => null,
-                'value' => '',
-            ],
-            'Pass when empty zero value' => [
-                'pattern' => null,
-                'value' => '0',
-            ],
-            'Pass when false value' => [
-                'pattern' => null,
-                'value' => false,
-            ],
-            'Fail when true value' => [
-                'pattern' => null,
-                'value' => true,
-            ],
-            'Pass when value with correct time pattern' => [
-                'pattern' => null,
-                'value' => '1629620000',
-            ],
-            'Pass when pattern set and value can convert into DateTime' => [
-                'pattern' => 'any-string-here', // TODO: should check format
-                'value' => '1620000000',
-            ],
+            'Pass when null value' => [null],
+            'Pass when empty string value' => [''],
+            'Pass when empty zero value' => ['0'],
+            'Pass when value with correct timestamp' => ['1629620000'],
         ];
     }
 }

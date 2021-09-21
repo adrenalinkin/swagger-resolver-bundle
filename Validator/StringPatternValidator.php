@@ -17,8 +17,6 @@ use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterTypeEnum;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
-use function gettype;
-use function is_string;
 use function preg_match;
 use function sprintf;
 use function trim;
@@ -35,15 +33,14 @@ class StringPatternValidator implements SwaggerValidatorInterface
 
     public function validate(Schema $propertySchema, string $propertyName, $value): void
     {
-        if (false === is_string($value)) {
-            $message = sprintf('Property "%s" should be string "%s" received instead', $propertyName, gettype($value));
-
-            throw new InvalidOptionsException($message);
+        if (null === $value) {
+            return;
         }
 
+        $stringValue = (string) $value;
         $pattern = sprintf('/%s/', trim($propertySchema->getPattern(), '/'));
 
-        if (!preg_match($pattern, $value)) {
+        if (!preg_match($pattern, $stringValue)) {
             $message = sprintf('Property "%s" should match the pattern "%s"', $propertyName, $pattern);
 
             throw new InvalidOptionsException($message);

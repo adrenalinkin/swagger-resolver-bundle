@@ -17,7 +17,6 @@ use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterTypeEnum;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
-use function gettype;
 use function in_array;
 use function is_numeric;
 use function sprintf;
@@ -39,9 +38,7 @@ class NumberMinimumValidator implements SwaggerValidatorInterface
     public function validate(Schema $propertySchema, string $propertyName, $value): void
     {
         if (false === is_numeric($value)) {
-            $message = sprintf('Property "%s" should be number "%s" received instead', $propertyName, gettype($value));
-
-            throw new InvalidOptionsException($message);
+            return;
         }
 
         $message = sprintf('Property "%s" value should be', $propertyName);
