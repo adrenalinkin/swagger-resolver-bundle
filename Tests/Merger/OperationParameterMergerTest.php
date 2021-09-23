@@ -132,6 +132,19 @@ class OperationParameterMergerTest extends TestCase
             'definitions' => $swagger->getDefinitions(),
             'expectedResult' => SwaggerFactory::createSchemaDefinition($mergedProperties, $requiredFields),
         ];
+
+        $operation = $swagger->getPaths()->get('/customers/{userId}')->getOperation('delete');
+        $requiredFields = ['x-auth-token', 'userId'];
+        $mergedProperties = [
+            'x-auth-token' => $this->getOperationParameters($operation, 'x-auth-token', 'header'),
+            'userId' => $this->getOperationParameters($operation, 'userId', 'path'),
+        ];
+
+        yield 'delete /customer/{userId} - header+path' => [
+            'parameters' => $operation,
+            'definitions' => $swagger->getDefinitions(),
+            'expectedResult' => SwaggerFactory::createSchemaDefinition($mergedProperties, $requiredFields),
+        ];
     }
 
     private function getDefinitionProperties(Schema $definition): array
