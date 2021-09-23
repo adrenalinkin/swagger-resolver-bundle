@@ -145,6 +145,24 @@ class OperationParameterMergerTest extends TestCase
             'definitions' => $swagger->getDefinitions(),
             'expectedResult' => SwaggerFactory::createSchemaDefinition($mergedProperties, $requiredFields),
         ];
+
+        $operation = $swagger->getPaths()->get('/customers/{userId}/password')->getOperation('post');
+        $requiredFields = ['x-auth-token', 'userId', 'password'];
+        $mergedProperties = [
+            'x-auth-token' => $this->getOperationParameters($operation, 'x-auth-token', 'header'),
+            'userId' => $this->getOperationParameters($operation, 'userId', 'path'),
+            'password' => [
+                'title' => 'body',
+                'type' => 'string',
+                'maxLength' => 30,
+            ],
+        ];
+
+        yield 'post /customers/{userId}/password - header+path+body as scalar' => [
+            'parameters' => $operation,
+            'definitions' => $swagger->getDefinitions(),
+            'expectedResult' => SwaggerFactory::createSchemaDefinition($mergedProperties, $requiredFields),
+        ];
     }
 
     private function getDefinitionProperties(Schema $definition): array

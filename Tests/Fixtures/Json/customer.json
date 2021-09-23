@@ -18,7 +18,7 @@
                     {
                         "name": "x-auth-token",
                         "in": "header",
-                        "description": "Alternative token fot authorization",
+                        "description": "Alternative token for the authorization",
                         "required": true,
                         "type": "string",
                         "pattern": "^\\w{36}$"
@@ -60,7 +60,7 @@
                     {
                         "name": "x-auth-token",
                         "in": "header",
-                        "description": "Alternative token fot authorization",
+                        "description": "Alternative token for the authorization",
                         "required": true,
                         "type": "string",
                         "pattern": "^\\w{36}$"
@@ -108,7 +108,7 @@
                     {
                         "name": "x-auth-token",
                         "in": "header",
-                        "description": "Alternative token fot authorization",
+                        "description": "Alternative token for the authorization",
                         "required": true,
                         "type": "string",
                         "pattern": "^\\w{36}$"
@@ -139,7 +139,7 @@
                     {
                         "name": "x-auth-token",
                         "in": "header",
-                        "description": "Alternative token fot authorization",
+                        "description": "Alternative token for the authorization",
                         "required": true,
                         "type": "string",
                         "pattern": "^\\w{36}$"
@@ -194,7 +194,7 @@
                     {
                         "name": "x-auth-token",
                         "in": "header",
-                        "description": "Alternative token fot authorization",
+                        "description": "Alternative token for the authorization",
                         "required": true,
                         "type": "string",
                         "pattern": "^\\w{36}$"
@@ -262,7 +262,7 @@
                     {
                         "name": "x-auth-token",
                         "in": "header",
-                        "description": "Alternative token fot authorization",
+                        "description": "Alternative token for the authorization",
                         "required": true,
                         "type": "string",
                         "pattern": "^\\w{36}$"
@@ -280,6 +280,95 @@
                 "responses": {
                     "204": {
                         "description": "Empty response when removed successfully"
+                    }
+                }
+            }
+        },
+        "/customers/{userId}/password": {
+            "post": {
+                "description": "Create new password when not even set",
+                "deprecated": true,
+                "parameters": [
+                    {
+                        "name": "x-auth-token",
+                        "in": "header",
+                        "description": "Alternative token for the authorization",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "^\\w{36}$"
+                    },
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "Customer ID to update",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64",
+                        "minimum": 0,
+                        "exclusiveMinimum": true
+                    },
+                    {
+                        "name": "password",
+                        "in": "body",
+                        "description": "New password",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 30
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response when updated successfully"
+                    }
+                }
+            },
+            "put": {
+                "description": "Change password",
+                "parameters": [
+                    {
+                        "name": "x-auth-token",
+                        "in": "header",
+                        "description": "Alternative token for the authorization",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "^\\w{36}$"
+                    },
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "Customer ID to update",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64",
+                        "minimum": 0,
+                        "exclusiveMinimum": true
+                    },
+                    {
+                        "name": "password-reset",
+                        "in": "body",
+                        "description": "body to change password",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "required": ["oldPassword", "newPassword"],
+                            "properties": {
+                                "oldPassword": {
+                                    "type": "string",
+                                    "maxLength": 30
+                                },
+                                "newPassword": {
+                                    "type": "string",
+                                    "maxLength": 30
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response when updated successfully"
                     }
                 }
             }
