@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Validator;
 
-use Linkin\Bundle\SwaggerResolverBundle\Tests\SwaggerFactory;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\FixturesProvider;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\StringMaxLengthValidator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -42,7 +42,7 @@ class StringMaxLengthValidatorTest extends TestCase
      */
     public function testSupports(string $type, ?int $maxLength, bool $expectedResult): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'type' => $type,
             'maxLength' => $maxLength,
         ]);
@@ -78,7 +78,7 @@ class StringMaxLengthValidatorTest extends TestCase
      */
     public function testFailToPassValidation(int $maxLength, $value): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'type' => self::TYPE,
             'maxLength' => $maxLength,
         ]);
@@ -119,7 +119,7 @@ class StringMaxLengthValidatorTest extends TestCase
      */
     public function testCanPassValidation(int $maxLength, $value): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'type' => self::TYPE,
             'maxLength' => $maxLength,
         ]);

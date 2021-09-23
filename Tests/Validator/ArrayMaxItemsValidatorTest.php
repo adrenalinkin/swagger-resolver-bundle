@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Validator;
 
-use Linkin\Bundle\SwaggerResolverBundle\Tests\SwaggerFactory;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\FixturesProvider;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\ArrayMaxItemsValidator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -43,7 +43,7 @@ class ArrayMaxItemsValidatorTest extends TestCase
      */
     public function testSupports(string $format, ?int $maxItems, bool $expectedResult): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'type' => $format,
             'maxItems' => $maxItems,
         ]);
@@ -79,7 +79,7 @@ class ArrayMaxItemsValidatorTest extends TestCase
      */
     public function testFailToPassValidation(?string $collectionFormat, int $maxItems, $value): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'type' => self::TYPE_ARRAY,
             'maxItems' => $maxItems,
             'collectionFormat' => $collectionFormat,
@@ -126,7 +126,7 @@ class ArrayMaxItemsValidatorTest extends TestCase
      */
     public function testCanPassValidation(?string $collectionFormat, int $maxItems, $value): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'type' => self::TYPE_ARRAY,
             'maxItems' => $maxItems,
             'collectionFormat' => $collectionFormat,

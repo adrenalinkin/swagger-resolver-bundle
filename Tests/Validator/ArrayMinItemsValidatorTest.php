@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Validator;
 
-use Linkin\Bundle\SwaggerResolverBundle\Tests\SwaggerFactory;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\FixturesProvider;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\ArrayMinItemsValidator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -43,7 +43,7 @@ class ArrayMinItemsValidatorTest extends TestCase
      */
     public function testSupports(string $format, ?int $minItems, bool $expectedResult): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'type' => $format,
             'minItems' => $minItems,
         ]);
@@ -79,7 +79,7 @@ class ArrayMinItemsValidatorTest extends TestCase
      */
     public function testFailToPassValidation(?string $collectionFormat, int $minItems, $value): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'type' => self::TYPE_ARRAY,
             'minItems' => $minItems,
             'collectionFormat' => $collectionFormat,
@@ -126,7 +126,7 @@ class ArrayMinItemsValidatorTest extends TestCase
      */
     public function testCanPassValidation(?string $collectionFormat, int $minItems, $value): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'type' => self::TYPE_ARRAY,
             'minItems' => $minItems,
             'collectionFormat' => $collectionFormat,

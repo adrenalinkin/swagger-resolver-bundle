@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Validator;
 
-use Linkin\Bundle\SwaggerResolverBundle\Tests\SwaggerFactory;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\FixturesProvider;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\NumberMaximumValidator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -41,7 +41,7 @@ class NumberMaximumValidatorTest extends TestCase
      */
     public function testSupports(string $type, $maximum, bool $expectedResult): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'type' => $type,
             'maximum' => $maximum,
         ]);
@@ -82,7 +82,7 @@ class NumberMaximumValidatorTest extends TestCase
      */
     public function testFailToPassValidation(bool $isExclusiveMaximum, $maximum, $value): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'type' => self::TYPE_INT,
             'maximum' => $maximum,
             'exclusiveMaximum' => $isExclusiveMaximum,
@@ -144,7 +144,7 @@ class NumberMaximumValidatorTest extends TestCase
      */
     public function testCanPassValidation(bool $isExclusiveMaximum, $maximum, $value): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'type' => self::TYPE_INT,
             'maximum' => $maximum,
             'exclusiveMaximum' => $isExclusiveMaximum,

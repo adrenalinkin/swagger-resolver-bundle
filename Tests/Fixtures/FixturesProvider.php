@@ -11,17 +11,33 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Linkin\Bundle\SwaggerResolverBundle\Tests;
+namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures;
 
 use EXSyst\Component\Swagger\Schema;
+use EXSyst\Component\Swagger\Swagger;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-class SwaggerFactory
+class FixturesProvider
 {
     /**
+     * @var Swagger
+     */
+    private static $cachedSwagger;
+
+    public static function loadFromJson(): Swagger
+    {
+        if (self::$cachedSwagger === null) {
+            self::$cachedSwagger = Swagger::fromFile(__DIR__ . '/Json/customer.json');
+        }
+
+        return self::$cachedSwagger;
+    }
+
+    /**
      * @param array $properties
+     * @param array $required
      *
      * @example [
      *      'firstPropertyName' => [
@@ -34,10 +50,11 @@ class SwaggerFactory
      *
      * @return Schema
      */
-    public static function createSchemaDefinition(array $properties): Schema
+    public static function createSchemaDefinition(array $properties, array $required = []): Schema
     {
         return new Schema([
             'type' => 'object',
+            'required' => $required,
             'properties' => $properties,
         ]);
     }

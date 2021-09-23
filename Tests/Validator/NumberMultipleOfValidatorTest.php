@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Validator;
 
-use Linkin\Bundle\SwaggerResolverBundle\Tests\SwaggerFactory;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\FixturesProvider;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\NumberMultipleOfValidator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -41,7 +41,7 @@ class NumberMultipleOfValidatorTest extends TestCase
      */
     public function testSupports(string $type, $multipleOf, bool $expectedResult): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'type' => $type,
             'multipleOf' => $multipleOf,
         ]);
@@ -82,7 +82,7 @@ class NumberMultipleOfValidatorTest extends TestCase
      */
     public function testFailToPassValidation($multipleOf, $value): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'type' => self::TYPE_INT,
             'multipleOf' => $multipleOf,
         ]);
@@ -127,7 +127,7 @@ class NumberMultipleOfValidatorTest extends TestCase
      */
     public function testCanPassValidation($multipleOf, $value): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'type' => self::TYPE_INT,
             'multipleOf' => $multipleOf,
         ]);

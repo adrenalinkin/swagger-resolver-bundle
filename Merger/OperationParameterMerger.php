@@ -18,9 +18,11 @@ use EXSyst\Component\Swagger\Operation;
 use EXSyst\Component\Swagger\Parameter;
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterLocationEnum;
+
 use function array_flip;
 use function end;
 use function explode;
+use function is_string;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -66,7 +68,7 @@ class OperationParameterMerger
             $ref = $parameterSchema->getRef();
 
             // body as reference
-            if ($ref) {
+            if (is_string($ref)) {
                 $explodedName = explode('/', $ref);
                 $definitionName = end($explodedName);
 

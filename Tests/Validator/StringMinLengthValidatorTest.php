@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Validator;
 
-use Linkin\Bundle\SwaggerResolverBundle\Tests\SwaggerFactory;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\FixturesProvider;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\StringMinLengthValidator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -42,7 +42,7 @@ class StringMinLengthValidatorTest extends TestCase
      */
     public function testSupports(string $type, ?int $minLength, bool $expectedResult): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'type' => $type,
             'minLength' => $minLength,
         ]);
@@ -78,7 +78,7 @@ class StringMinLengthValidatorTest extends TestCase
      */
     public function testFailToPassValidation(int $minLength, $value): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'type' => self::TYPE,
             'minLength' => $minLength,
         ]);
@@ -119,7 +119,7 @@ class StringMinLengthValidatorTest extends TestCase
      */
     public function testCanPassValidation(int $minLength, $value): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'type' => self::TYPE,
             'minLength' => $minLength,
         ]);

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Validator;
 
-use Linkin\Bundle\SwaggerResolverBundle\Tests\SwaggerFactory;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\FixturesProvider;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\StringPatternValidator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -40,7 +40,7 @@ class StringPatternValidatorTest extends TestCase
      */
     public function testSupports(string $type, ?string $pattern, bool $expectedResult): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'type' => $type,
             'pattern' => $pattern,
         ]);
@@ -76,7 +76,7 @@ class StringPatternValidatorTest extends TestCase
      */
     public function testFailToPassValidation(string $pattern, $value): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'type' => self::TYPE,
             'pattern' => $pattern,
         ]);
@@ -113,7 +113,7 @@ class StringPatternValidatorTest extends TestCase
      */
     public function testCanPassValidation(string $pattern, $value): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'type' => self::TYPE,
             'pattern' => $pattern,
         ]);
