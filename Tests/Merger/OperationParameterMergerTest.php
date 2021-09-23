@@ -61,6 +61,7 @@ class OperationParameterMergerTest extends TestCase
     public function mergeDataProvider(): iterable
     {
         $swagger = FixturesLoader::loadFromJson();
+
         $operation = $swagger->getPaths()->get('/customers')->getOperation('get');
         $requiredFields = ['x-auth-token'];
         $mergedProperties = [
@@ -83,6 +84,19 @@ class OperationParameterMergerTest extends TestCase
         $mergedProperties['x-auth-token'] = $this->getOperationParameters($operation, 'x-auth-token', 'header');
 
         yield 'post /customer - header+query+body as reference' => [
+            'parameters' => $operation,
+            'definitions' => $swagger->getDefinitions(),
+            'expectedResult' => SwaggerFactory::createSchemaDefinition($mergedProperties, $requiredFields),
+        ];
+
+        $operation = $swagger->getPaths()->get('/customers/{userId}')->getOperation('get');
+        $requiredFields = ['x-auth-token', 'userId'];
+        $mergedProperties = [
+            'x-auth-token' => $this->getOperationParameters($operation, 'x-auth-token', 'header'),
+            'userId' => $this->getOperationParameters($operation, 'userId', 'path'),
+        ];
+
+        yield 'get /customers/{userId} - header+path' => [
             'parameters' => $operation,
             'definitions' => $swagger->getDefinitions(),
             'expectedResult' => SwaggerFactory::createSchemaDefinition($mergedProperties, $requiredFields),
