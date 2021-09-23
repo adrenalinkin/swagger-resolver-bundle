@@ -151,14 +151,25 @@ class OperationParameterMergerTest extends TestCase
         $mergedProperties = [
             'x-auth-token' => $this->getOperationParameters($operation, 'x-auth-token', 'header'),
             'userId' => $this->getOperationParameters($operation, 'userId', 'path'),
-            'password' => [
-                'title' => 'body',
-                'type' => 'string',
-                'maxLength' => 30,
-            ],
+            'password' => ['title' => 'body', 'type' => 'string', 'maxLength' => 30],
         ];
 
         yield 'post /customers/{userId}/password - header+path+body as scalar' => [
+            'parameters' => $operation,
+            'definitions' => $swagger->getDefinitions(),
+            'expectedResult' => SwaggerFactory::createSchemaDefinition($mergedProperties, $requiredFields),
+        ];
+
+        $operation = $swagger->getPaths()->get('/customers/{userId}/password')->getOperation('put');
+        $requiredFields = ['x-auth-token', 'userId', 'oldPassword', 'newPassword'];
+        $mergedProperties = [
+            'x-auth-token' => $this->getOperationParameters($operation, 'x-auth-token', 'header'),
+            'userId' => $this->getOperationParameters($operation, 'userId', 'path'),
+            'oldPassword' => ['title' => 'body', 'type' => 'string', 'maxLength' => 30],
+            'newPassword' => ['title' => 'body', 'type' => 'string', 'maxLength' => 30],
+        ];
+
+        yield 'put /customers/{userId}/password - header+path+body as scalar' => [
             'parameters' => $operation,
             'definitions' => $swagger->getDefinitions(),
             'expectedResult' => SwaggerFactory::createSchemaDefinition($mergedProperties, $requiredFields),
