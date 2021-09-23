@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Validator;
 
-use Linkin\Bundle\SwaggerResolverBundle\Tests\SwaggerFactory;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\FixturesProvider;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\ArrayUniqueItemsValidator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -43,7 +43,7 @@ class ArrayUniqueItemsValidatorTest extends TestCase
      */
     public function testSupports(string $format, ?bool $hasUniqueItems, bool $expectedResult): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'type' => $format,
             'uniqueItems' => $hasUniqueItems,
         ]);
@@ -79,7 +79,7 @@ class ArrayUniqueItemsValidatorTest extends TestCase
      */
     public function testFailToPassValidation(?string $collectionFormat, $value): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'type' => self::TYPE_ARRAY,
             'uniqueItems' => true,
             'collectionFormat' => $collectionFormat,
@@ -121,7 +121,7 @@ class ArrayUniqueItemsValidatorTest extends TestCase
      */
     public function testCanPassValidation(?string $collectionFormat, $value): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'type' => self::TYPE_ARRAY,
             'uniqueItems' => true,
             'collectionFormat' => $collectionFormat,

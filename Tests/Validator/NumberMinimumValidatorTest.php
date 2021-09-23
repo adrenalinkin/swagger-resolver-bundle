@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Validator;
 
-use Linkin\Bundle\SwaggerResolverBundle\Tests\SwaggerFactory;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\FixturesProvider;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\NumberMinimumValidator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -41,7 +41,7 @@ class NumberMinimumValidatorTest extends TestCase
      */
     public function testSupports(string $type, $minimum, bool $expectedResult): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'type' => $type,
             'minimum' => $minimum,
         ]);
@@ -82,7 +82,7 @@ class NumberMinimumValidatorTest extends TestCase
      */
     public function testFailToPassValidation(bool $isExclusiveMinimum, $minimum, $value): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'type' => self::TYPE_INT,
             'minimum' => $minimum,
             'exclusiveMinimum' => $isExclusiveMinimum,
@@ -144,7 +144,7 @@ class NumberMinimumValidatorTest extends TestCase
      */
     public function testCanPassValidation(bool $isExclusiveMinimum, $minimum, $value): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'type' => self::TYPE_INT,
             'minimum' => $minimum,
             'exclusiveMinimum' => $isExclusiveMinimum,

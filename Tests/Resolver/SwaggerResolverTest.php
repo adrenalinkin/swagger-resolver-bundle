@@ -16,7 +16,7 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Resolver;
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterTypeEnum;
 use Linkin\Bundle\SwaggerResolverBundle\Resolver\SwaggerResolver;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\SwaggerFactory;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\FixturesProvider;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\SwaggerValidatorInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -31,7 +31,7 @@ class SwaggerResolverTest extends TestCase
 {
     public function testCanClearValidators(): void
     {
-        $sut = new SwaggerResolver(SwaggerFactory::createSchemaDefinition([]));
+        $sut = new SwaggerResolver(FixturesProvider::createSchemaDefinition([]));
 
         $sut->addValidator($this->createMock(SwaggerValidatorInterface::class));
         $sut->addValidator($this->createAnonymousValidator(ParameterTypeEnum::STRING));
@@ -47,7 +47,7 @@ class SwaggerResolverTest extends TestCase
     {
         $fieldNameMain = 'description';
         $fieldNameOther = 'otherProperty';
-        $schemaDefinition = SwaggerFactory::createSchemaDefinition([
+        $schemaDefinition = FixturesProvider::createSchemaDefinition([
             $fieldNameMain => [
                 'type' => ParameterTypeEnum::STRING,
             ]
@@ -69,7 +69,7 @@ class SwaggerResolverTest extends TestCase
     {
         $fieldName = 'description';
 
-        $schemaDefinition = SwaggerFactory::createSchemaDefinition([
+        $schemaDefinition = FixturesProvider::createSchemaDefinition([
             $fieldName => [
                 'type' => ParameterTypeEnum::STRING,
             ]
@@ -90,7 +90,7 @@ class SwaggerResolverTest extends TestCase
     {
         $fieldName = 'description';
 
-        $schemaDefinition = SwaggerFactory::createSchemaDefinition([
+        $schemaDefinition = FixturesProvider::createSchemaDefinition([
             $fieldName => [
                 'type' => ParameterTypeEnum::STRING,
             ]
@@ -118,7 +118,7 @@ class SwaggerResolverTest extends TestCase
         $validatorMock = $this->createMock(SwaggerValidatorInterface::class);
         $validatorAnonymous = $this->createAnonymousValidator(ParameterTypeEnum::STRING);
 
-        $sut = new SwaggerResolver(SwaggerFactory::createSchemaDefinition([]));
+        $sut = new SwaggerResolver(FixturesProvider::createSchemaDefinition([]));
         $sut->addValidator($validatorMock);
 
         self::assertCount(1, $sut->getValidators());
@@ -137,7 +137,7 @@ class SwaggerResolverTest extends TestCase
         $validatorMock = $this->createMock(SwaggerValidatorInterface::class);
         $validatorAnonymous = $this->createAnonymousValidator(ParameterTypeEnum::BOOLEAN);
 
-        $sut = new SwaggerResolver(SwaggerFactory::createSchemaDefinition([]));
+        $sut = new SwaggerResolver(FixturesProvider::createSchemaDefinition([]));
         $sut->addValidator($validatorMock);
         $sut->addValidator($validatorAnonymous);
 
@@ -157,7 +157,7 @@ class SwaggerResolverTest extends TestCase
         $validatorMock = $this->createMock(SwaggerValidatorInterface::class);
         $validatorAnonymous = $this->createAnonymousValidator(ParameterTypeEnum::BOOLEAN);
 
-        $sut = new SwaggerResolver(SwaggerFactory::createSchemaDefinition([]));
+        $sut = new SwaggerResolver(FixturesProvider::createSchemaDefinition([]));
         $sut->addValidator($validatorMock);
         $sut->addValidator($validatorAnonymous);
 

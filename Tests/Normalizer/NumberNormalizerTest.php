@@ -17,7 +17,7 @@ use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\NormalizationFailedException;
 use Linkin\Bundle\SwaggerResolverBundle\Normalizer\NumberNormalizer;
 use Linkin\Bundle\SwaggerResolverBundle\Resolver\SwaggerResolver;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\SwaggerFactory;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\FixturesProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -163,7 +163,7 @@ class NumberNormalizerTest extends TestCase
 
     private function createSchemaDefinition(string $fieldName, string $type = self::TYPE_NUMBER): Schema
     {
-        return SwaggerFactory::createSchemaDefinition([
+        return FixturesProvider::createSchemaDefinition([
             $fieldName => [
                 'type' => $type
             ]

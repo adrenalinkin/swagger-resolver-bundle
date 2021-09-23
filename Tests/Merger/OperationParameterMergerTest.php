@@ -18,8 +18,7 @@ use EXSyst\Component\Swagger\Operation;
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrategy;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\FixturesLoader;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\SwaggerFactory;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\FixturesProvider;
 use PHPUnit\Framework\TestCase;
 
 use function count;
@@ -60,7 +59,7 @@ class OperationParameterMergerTest extends TestCase
 
     public function mergeDataProvider(): iterable
     {
-        $swagger = FixturesLoader::loadFromJson();
+        $swagger = FixturesProvider::loadFromJson();
 
         $operation = $swagger->getPaths()->get('/customers')->getOperation('get');
         $requiredFields = ['x-auth-token'];
@@ -73,7 +72,7 @@ class OperationParameterMergerTest extends TestCase
         yield 'get /customer - header+query' => [
             'parameters' => $operation,
             'definitions' => $swagger->getDefinitions(),
-            'expectedResult' => SwaggerFactory::createSchemaDefinition($mergedProperties, $requiredFields),
+            'expectedResult' => FixturesProvider::createSchemaDefinition($mergedProperties, $requiredFields),
         ];
 
         $operation = $swagger->getPaths()->get('/customers')->getOperation('post');
@@ -86,7 +85,7 @@ class OperationParameterMergerTest extends TestCase
         yield 'post /customer - header+query+body as reference' => [
             'parameters' => $operation,
             'definitions' => $swagger->getDefinitions(),
-            'expectedResult' => SwaggerFactory::createSchemaDefinition($mergedProperties, $requiredFields),
+            'expectedResult' => FixturesProvider::createSchemaDefinition($mergedProperties, $requiredFields),
         ];
 
         $operation = $swagger->getPaths()->get('/customers/{userId}')->getOperation('get');
@@ -99,7 +98,7 @@ class OperationParameterMergerTest extends TestCase
         yield 'get /customers/{userId} - header+path' => [
             'parameters' => $operation,
             'definitions' => $swagger->getDefinitions(),
-            'expectedResult' => SwaggerFactory::createSchemaDefinition($mergedProperties, $requiredFields),
+            'expectedResult' => FixturesProvider::createSchemaDefinition($mergedProperties, $requiredFields),
         ];
 
         $operation = $swagger->getPaths()->get('/customers/{userId}')->getOperation('put');
@@ -114,7 +113,7 @@ class OperationParameterMergerTest extends TestCase
         yield 'put /customer/{userId} - header+query+path+body as reference' => [
             'parameters' => $operation,
             'definitions' => $swagger->getDefinitions(),
-            'expectedResult' => SwaggerFactory::createSchemaDefinition($mergedProperties, $requiredFields),
+            'expectedResult' => FixturesProvider::createSchemaDefinition($mergedProperties, $requiredFields),
         ];
 
         $operation = $swagger->getPaths()->get('/customers/{userId}')->getOperation('patch');
@@ -130,7 +129,7 @@ class OperationParameterMergerTest extends TestCase
         yield 'patch /customer/{userId} - header+query+path+formData' => [
             'parameters' => $operation,
             'definitions' => $swagger->getDefinitions(),
-            'expectedResult' => SwaggerFactory::createSchemaDefinition($mergedProperties, $requiredFields),
+            'expectedResult' => FixturesProvider::createSchemaDefinition($mergedProperties, $requiredFields),
         ];
 
         $operation = $swagger->getPaths()->get('/customers/{userId}')->getOperation('delete');
@@ -143,7 +142,7 @@ class OperationParameterMergerTest extends TestCase
         yield 'delete /customer/{userId} - header+path' => [
             'parameters' => $operation,
             'definitions' => $swagger->getDefinitions(),
-            'expectedResult' => SwaggerFactory::createSchemaDefinition($mergedProperties, $requiredFields),
+            'expectedResult' => FixturesProvider::createSchemaDefinition($mergedProperties, $requiredFields),
         ];
 
         $operation = $swagger->getPaths()->get('/customers/{userId}/password')->getOperation('post');
@@ -157,7 +156,7 @@ class OperationParameterMergerTest extends TestCase
         yield 'post /customers/{userId}/password - header+path+body as scalar' => [
             'parameters' => $operation,
             'definitions' => $swagger->getDefinitions(),
-            'expectedResult' => SwaggerFactory::createSchemaDefinition($mergedProperties, $requiredFields),
+            'expectedResult' => FixturesProvider::createSchemaDefinition($mergedProperties, $requiredFields),
         ];
 
         $operation = $swagger->getPaths()->get('/customers/{userId}/password')->getOperation('put');
@@ -172,7 +171,7 @@ class OperationParameterMergerTest extends TestCase
         yield 'put /customers/{userId}/password - header+path+body as scalar' => [
             'parameters' => $operation,
             'definitions' => $swagger->getDefinitions(),
-            'expectedResult' => SwaggerFactory::createSchemaDefinition($mergedProperties, $requiredFields),
+            'expectedResult' => FixturesProvider::createSchemaDefinition($mergedProperties, $requiredFields),
         ];
     }
 

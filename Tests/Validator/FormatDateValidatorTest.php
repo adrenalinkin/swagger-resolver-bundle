@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Validator;
 
-use Linkin\Bundle\SwaggerResolverBundle\Tests\SwaggerFactory;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\FixturesProvider;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\FormatDateValidator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -40,7 +40,7 @@ class FormatDateValidatorTest extends TestCase
      */
     public function testSupports(string $format, bool $expectedResult): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'format' => $format,
         ]);
 
@@ -68,7 +68,7 @@ class FormatDateValidatorTest extends TestCase
      */
     public function testFailToPassValidation($value): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'format' => self::FORMAT_DATE,
         ]);
 
@@ -98,7 +98,7 @@ class FormatDateValidatorTest extends TestCase
      */
     public function testCanPassValidation($value): void
     {
-        $schemaProperty = SwaggerFactory::createSchemaProperty([
+        $schemaProperty = FixturesProvider::createSchemaProperty([
             'format' => self::FORMAT_DATE,
         ]);
 
