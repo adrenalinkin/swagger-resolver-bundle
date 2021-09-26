@@ -26,7 +26,7 @@ interface MergeStrategyInterface
      * @param array $data
      * @param bool $isRequired
      */
-    public function addParameter(string $parameterSource, string $name, array $data, bool $isRequired);
+    public function addParameter(string $parameterSource, string $name, array $data, bool $isRequired): void;
 
     /**
      * Returns list of collected parameters
@@ -45,5 +45,5 @@ interface MergeStrategyInterface
     /**
      * Clean all collected data
      */
-    public function clean();
+    public function clean(): void;
 }
