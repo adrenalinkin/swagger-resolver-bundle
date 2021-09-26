@@ -157,6 +157,16 @@ class NumberMaximumValidatorTest extends TestCase
     public function canPassValidationDataProvider(): array
     {
         return [
+            'Pass validation null value' => [
+                'isExclusiveMaximum' => true,
+                'maximum' => 10,
+                'value' => null,
+            ],
+            'Pass validation with not numeric value' => [
+                'isExclusiveMaximum' => true,
+                'maximum' => 10,
+                'value' => 'some-string',
+            ],
             'Pass validation with lower than maximal int value and exclusive mode' => [
                 'isExclusiveMaximum' => true,
                 'maximum' => 10,

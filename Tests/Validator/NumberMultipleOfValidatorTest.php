@@ -139,6 +139,14 @@ class NumberMultipleOfValidatorTest extends TestCase
     public function canPassValidationDataProvider(): array
     {
         return [
+            'Pass validation null value' => [
+                'multipleOf' => 13,
+                'value' => null,
+            ],
+            'Pass validation with not numeric value' => [
+                'multipleOf' => 13,
+                'value' => 'some-string',
+            ],
             'Pass validation with multiple of int value' => [
                 'multipleOf' => 13,
                 'value' => 26,

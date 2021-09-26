@@ -131,6 +131,10 @@ class StringMaxLengthValidatorTest extends TestCase
     public function canPassValidationDataProvider(): array
     {
         return [
+            'Pass with null value' => [
+                'maxLength' => 1,
+                'value' => null,
+            ],
             'Pass with boolean equal to allowed' => [
                 'maxLength' => 1,
                 'value' => false,

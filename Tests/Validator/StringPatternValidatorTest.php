@@ -125,6 +125,10 @@ class StringPatternValidatorTest extends TestCase
     public function canPassValidationDataProvider(): array
     {
         return [
+            'Pass validation with null' => [
+                'pattern' => '^[\d]+$',
+                'value' => null,
+            ],
             'Pass validation with boolean' => [
                 'pattern' => '^[\d]+$',
                 'value' => true,

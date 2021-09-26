@@ -157,6 +157,16 @@ class NumberMinimumValidatorTest extends TestCase
     public function canPassValidationDataProvider(): array
     {
         return [
+            'Pass validation null value' => [
+                'isExclusiveMinimum' => true,
+                'minimum' => 10,
+                'value' => null,
+            ],
+            'Pass validation with not numeric value' => [
+                'isExclusiveMinimum' => true,
+                'minimum' => 10,
+                'value' => 'some-string',
+            ],
             'Pass validation with greater than minimal int value and exclusive mode' => [
                 'isExclusiveMinimum' => true,
                 'minimum' => 10,

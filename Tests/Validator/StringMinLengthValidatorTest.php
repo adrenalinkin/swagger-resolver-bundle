@@ -131,15 +131,19 @@ class StringMinLengthValidatorTest extends TestCase
     public function canPassValidationDataProvider(): array
     {
         return [
-            'Fail with boolean equal to allowed' => [
+            'Pass validation with null' => [
+                'maxLength' => 1,
+                'value' => null,
+            ],
+            'Pass with boolean equal to allowed' => [
                 'maxLength' => 1,
                 'value' => true,
             ],
-            'Fail with integer equal to allowed' => [
+            'Pass with integer equal to allowed' => [
                 'maxLength' => 3,
                 'value' => 110,
             ],
-            'Fail with float equal to allowed' => [
+            'Pass with float equal to allowed' => [
                 'maxLength' => 4,
                 'value' => 1.11,
             ],
