@@ -23,7 +23,7 @@ class CombineNameMergeStrategy extends AbstractMergeStrategy
     /**
      * {@inheritdoc}
      */
-    public function addParameter(string $parameterSource, string $name, array $data, bool $isRequired)
+    public function addParameter(string $parameterSource, string $name, array $data, bool $isRequired): void
     {
         $name = $parameterSource . self::DELIMITER . $name;
 

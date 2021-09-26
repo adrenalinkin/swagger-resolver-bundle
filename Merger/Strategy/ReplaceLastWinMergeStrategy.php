@@ -21,10 +21,12 @@ class ReplaceLastWinMergeStrategy extends AbstractMergeStrategy
     /**
      * {@inheritdoc}
      */
-    public function addParameter(string $parameterSource, string $name, array $data, bool $isRequired)
+    public function addParameter(string $parameterSource, string $name, array $data, bool $isRequired): void
     {
         if ($isRequired) {
             $this->required[$name] = $name;
+        } else {
+            unset($this->required[$name]);
         }
 
         $this->parameters[$name] = $data;

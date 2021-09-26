@@ -21,7 +21,7 @@ class ReplaceFirstWinMergeStrategy extends AbstractMergeStrategy
     /**
      * {@inheritdoc}
      */
-    public function addParameter(string $parameterSource, string $name, array $data, bool $isRequired)
+    public function addParameter(string $parameterSource, string $name, array $data, bool $isRequired): void
     {
         if (isset($this->parameters[$name])) {
             return;

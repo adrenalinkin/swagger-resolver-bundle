@@ -33,7 +33,7 @@ abstract class AbstractMergeStrategy implements MergeStrategyInterface
     /**
      * {@inheritdoc}
      */
-    abstract public function addParameter(string $parameterSource, string $name, array $data, bool $isRequired);
+    abstract public function addParameter(string $parameterSource, string $name, array $data, bool $isRequired): void;
 
     /**
      * {@inheritdoc}
@@ -54,7 +54,7 @@ abstract class AbstractMergeStrategy implements MergeStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function clean()
+    public function clean(): void
     {
         $this->parameters = [];
         $this->required = [];

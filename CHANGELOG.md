@@ -10,6 +10,8 @@
 - Fixed error when `SwaggerResolver` without any validator.
 - Fixed incorrect behavior of the `multipleOf` validation when received value and `multipleOf` was a float type.
 - Fixed not worked array validation for the `multi` format.
+- Fixed incorrect behaviour of the `ReplaceLastWinMergeStrategy` when first duplicate item was marked as required
+  and second item marked as not required.
 
 ## [0.4.6] - 2020-04-01
 ### Fixed
