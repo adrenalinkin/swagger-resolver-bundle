@@ -25,6 +25,8 @@ class ReplaceLastWinMergeStrategy extends AbstractMergeStrategy
     {
         if ($isRequired) {
             $this->required[$name] = $name;
+        } else {
+            unset($this->required[$name]);
         }
 
         $this->parameters[$name] = $data;
