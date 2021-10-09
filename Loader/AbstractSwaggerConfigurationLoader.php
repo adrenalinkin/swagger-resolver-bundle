@@ -22,8 +22,10 @@ use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaOperationCollection;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\OperationNotFoundException;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Symfony\Component\Routing\RouterInterface;
+
 use function end;
 use function explode;
+use function is_string;
 use function strtolower;
 
 /**
@@ -179,10 +181,10 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
                 $operationCollection->addSchema($routeName, $method, $schema);
 
                 /** @var Parameter $parameter */
-                foreach ($operation->getParameters()->getIterator() as $name => $parameter) {
+                foreach ($operation->getParameters()->getIterator() as $parameter) {
                     $ref = $parameter->getSchema()->getRef();
 
-                    if (!$ref) {
+                    if (!is_string($ref)) {
                         continue;
                     }
 

@@ -53,20 +53,15 @@ class JsonConfigurationLoaderTest extends TestCase
      */
     private $sut;
 
-    /**
-     * @var Router
-     */
-    private $router;
-
     protected function setUp(): void
     {
         $parameterMerger = new OperationParameterMerger(new ReplaceLastWinMergeStrategy());
-        $this->router = new Router(new YamlFileLoader(new FileLocator(__DIR__ . '/../Fixtures')), 'routing.yaml');
+        $router = new Router(new YamlFileLoader(new FileLocator(__DIR__ . '/../Fixtures')), 'routing.yaml');
 
-        $this->sut = new JsonConfigurationLoader($parameterMerger, $this->router, self::PATH_TO_CONFIG);
+        $this->sut = new JsonConfigurationLoader($parameterMerger, $router, self::PATH_TO_CONFIG);
     }
 
-    public function testCanLoad(): void
+    public function testCanLoadDefinitionCollection(): void
     {
         $swagger = FixturesProvider::loadFromJson();
         $expectedDefinitions = $swagger->getDefinitions();
@@ -77,8 +72,8 @@ class JsonConfigurationLoaderTest extends TestCase
 
         /** @var Schema $expectedSchema */
         foreach ($expectedDefinitions->getIterator() as $name => $expectedSchema) {
-            $loadedSchema = $definitionCollection->getSchema($name);
-            self::assertSame($expectedSchema->toArray(), $loadedSchema->toArray());
+            $loadedDefinitionSchema = $definitionCollection->getSchema($name);
+            self::assertSame($expectedSchema->toArray(), $loadedDefinitionSchema->toArray());
 
             $loadedResources = $definitionCollection->getSchemaResources($name);
             self::assertCount(1, $loadedResources);
@@ -86,9 +81,14 @@ class JsonConfigurationLoaderTest extends TestCase
             $loadedResource = $loadedResources[0];
             self::assertSame($expectedFileResource->getResource(), $loadedResource->getResource());
         }
+    }
 
-        $expectedOperationsCount = 0;
+    public function testCanLoadOperationCollection(): void
+    {
+        $swagger = FixturesProvider::loadFromJson();
+        $expectedFileResource = new FileResource(self::PATH_TO_CONFIG);
         $operationCollection = $this->sut->getSchemaOperationCollection();
+        $expectedOperationsCount = 0;
 
         /**
          * @var string $path
@@ -96,15 +96,17 @@ class JsonConfigurationLoaderTest extends TestCase
          */
         foreach ($swagger->getPaths()->getIterator() as $path => $pathObject) {
             foreach ($pathObject->getOperations() as $method => $operation) {
-                $expectedOperationsCount++;
+                $routerName = self::MAP_ROUTE[$path][$method];
 
-                $operationCollection->getSchema(self::MAP_ROUTE[$path][$method], $method);
+                $operationCollection->getSchema($routerName, $method);
 
-                $loadedResources = $definitionCollection->getSchemaResources($name);
+                $loadedResources = $operationCollection->getSchemaResources($routerName);
                 self::assertCount(1, $loadedResources);
 
                 $loadedResource = $loadedResources[0];
                 self::assertSame($expectedFileResource->getResource(), $loadedResource->getResource());
+
+                $expectedOperationsCount++;
             }
         }
 
