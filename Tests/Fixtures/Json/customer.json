@@ -13,6 +13,7 @@
     "paths": {
         "/customers": {
             "get": {
+                "tags": ["customer"],
                 "description": "Returns all customers",
                 "parameters": [
                     {
@@ -56,6 +57,7 @@
             },
             "post": {
                 "description": "Create new customer",
+                "tags": ["customer"],
                 "parameters": [
                     {
                         "name": "x-auth-token",
@@ -75,7 +77,6 @@
                         "uniqueItems": true,
                         "minItems": 1,
                         "maxItems": 3,
-                        "enum": [100, 500, 1000],
                         "items": {
                             "type": "string",
                             "enum": ["guest", "user", "admin"]
@@ -104,6 +105,7 @@
         "/customers/{userId}": {
             "get": {
                 "description": "Return customer by ID",
+                "tags": ["customer"],
                 "parameters": [
                     {
                         "name": "x-auth-token",
@@ -116,7 +118,7 @@
                     {
                         "name": "userId",
                         "in": "path",
-                        "description": "Customer ID to update",
+                        "description": "Customer ID for retrieve data",
                         "required": true,
                         "type": "integer",
                         "format": "int64",
@@ -135,6 +137,7 @@
             },
             "put": {
                 "description": "Update customer",
+                "tags": ["customer"],
                 "parameters": [
                     {
                         "name": "x-auth-token",
@@ -164,7 +167,6 @@
                         "uniqueItems": true,
                         "minItems": 1,
                         "maxItems": 3,
-                        "enum": [100, 500, 1000],
                         "items": {
                             "type": "string",
                             "enum": ["guest", "user", "admin"]
@@ -188,6 +190,7 @@
             },
             "patch": {
                 "description": "Partial customer update in formData style",
+                "tags": ["customer"],
                 "deprecated": true,
                 "consumes": ["application/x-www-form-urlencoded"],
                 "parameters": [
@@ -219,7 +222,6 @@
                         "uniqueItems": true,
                         "minItems": 1,
                         "maxItems": 3,
-                        "enum": [100, 500, 1000],
                         "items": {
                             "type": "string",
                             "enum": ["guest", "user", "admin"]
@@ -230,10 +232,9 @@
                         "in": "formData",
                         "description": "Name of the Customer",
                         "required": true,
-                        "type": "integer",
-                        "format": "int64",
-                        "minimum": 0,
-                        "exclusiveMinimum": true
+                        "type": "string",
+                        "minLength": 2,
+                        "maxLength": 50
                     },
                     {
                         "name": "discount",
@@ -258,6 +259,7 @@
             },
             "delete": {
                 "description": "Delete customer from the system",
+                "tags": ["customer"],
                 "parameters": [
                     {
                         "name": "x-auth-token",
@@ -272,9 +274,10 @@
                         "in": "path",
                         "description": "Customer ID to delete",
                         "required": true,
-                        "type": "string",
-                        "minLength": 2,
-                        "maxLength": 50
+                        "type": "integer",
+                        "format": "int64",
+                        "minimum": 0,
+                        "exclusiveMinimum": true
                     }
                 ],
                 "responses": {
@@ -287,6 +290,7 @@
         "/customers/{userId}/password": {
             "post": {
                 "description": "Create new password when not even set",
+                "tags": ["password"],
                 "deprecated": true,
                 "parameters": [
                     {
@@ -320,12 +324,13 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "Empty response when updated successfully"
+                        "description": "Empty response when created successfully"
                     }
                 }
             },
             "put": {
-                "description": "Change password",
+                "description": "Reset password",
+                "tags": ["password"],
                 "parameters": [
                     {
                         "name": "x-auth-token",
@@ -348,7 +353,7 @@
                     {
                         "name": "password-reset",
                         "in": "body",
-                        "description": "body to change password",
+                        "description": "Body to change password",
                         "required": true,
                         "schema": {
                             "type": "object",
@@ -368,7 +373,7 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "Empty response when updated successfully"
+                        "description": "Empty response when reset successfully"
                     }
                 }
             }
@@ -403,12 +408,12 @@
                 },
                 "roles": {
                     "type": "array",
+                    "uniqueItems": true,
+                    "minItems": 1,
+                    "maxItems": 2,
                     "items": {
                         "type": "string",
-                        "enum": ["guest", "user", "admin"],
-                        "uniqueItems": true,
-                        "minProperties": 1,
-                        "maxProperties": 2
+                        "enum": ["guest", "user", "admin"]
                     }
                 },
                 "password": {
@@ -463,8 +468,8 @@
                 "roles": {
                     "type": "array",
                     "uniqueItems": true,
-                    "minProperties": 1,
-                    "maxProperties": 2,
+                    "minItems": 1,
+                    "maxItems": 2,
                     "items": {
                         "type": "string",
                         "enum": ["guest", "user", "admin"]

@@ -64,10 +64,6 @@ paths:
                   uniqueItems: true
                   minItems: 1
                   maxItems: 3
-                  enum:
-                      - 100
-                      - 500
-                      - 1000
                   items:
                       type: string
                       enum:
@@ -97,7 +93,7 @@ paths:
                   pattern: ^\w{36}$
                 - name: userId
                   in: path
-                  description: Customer ID to update
+                  description: Customer ID for retrieve data
                   required: true
                   type: integer
                   format: int64
@@ -134,10 +130,6 @@ paths:
                   uniqueItems: true
                   minItems: 1
                   maxItems: 3
-                  enum:
-                      - 100
-                      - 500
-                      - 1000
                   items:
                       type: string
                       enum:
@@ -182,10 +174,6 @@ paths:
                   uniqueItems: true
                   minItems: 1
                   maxItems: 3
-                  enum:
-                      - 100
-                      - 500
-                      - 1000
                   items:
                       type: string
                       enum:
@@ -196,10 +184,9 @@ paths:
                   in: formData
                   description: Name of the Customer
                   required: true
-                  type: integer
-                  format: int64
-                  minimum: 0
-                  exclusiveMinimum: true
+                  type: string
+                  minLength: 2
+                  maxLength: 50
                 - name: discount
                   in: formData
                   description: Size of the Customer's discount in percent
@@ -228,9 +215,10 @@ paths:
                   in: path
                   description: Customer ID to delete
                   required: true
-                  type: string
-                  minLength: 2
-                  maxLength: 50
+                  type: integer
+                  format: int64
+                  minimum: 0
+                  exclusiveMinimum: true
             responses:
                 '204':
                     description: Empty response when removed successfully
@@ -262,9 +250,9 @@ paths:
                       maxLength: 30
             responses:
                 '204':
-                    description: Empty response when updated successfully
+                    description: Empty response when created successfully
         put:
-            description: Change password
+            description: Reset password
             parameters:
                 - name: x-auth-token
                   in: header
@@ -282,7 +270,7 @@ paths:
                   exclusiveMinimum: true
                 - name: password-reset
                   in: body
-                  description: body to change password
+                  description: Body to change password
                   required: true
                   schema:
                       type: object
@@ -298,7 +286,7 @@ paths:
                               maxLength: 30
             responses:
                 '204':
-                    description: Empty response when updated successfully
+                    description: Empty response when reset successfully
 definitions:
     ResponseCreated:
         type: object
@@ -328,15 +316,15 @@ definitions:
                 maxLength: 50
             roles:
                 type: array
+                uniqueItems: true
+                minItems: 1
+                maxItems: 2
                 items:
                     type: string
                     enum:
                         - guest
                         - user
                         - admin
-                    uniqueItems: true
-                    minProperties: 1
-                    maxProperties: 2
             password:
                 type: string
                 maxLength: 30
@@ -384,8 +372,8 @@ definitions:
             roles:
                 type: array
                 uniqueItems: true
-                minProperties: 1
-                maxProperties: 2
+                minItems: 1
+                maxItems: 2
                 items:
                     type: string
                     enum:
