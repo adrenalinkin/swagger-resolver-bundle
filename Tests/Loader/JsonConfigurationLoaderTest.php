@@ -31,22 +31,6 @@ use Symfony\Component\Routing\Router;
 class JsonConfigurationLoaderTest extends TestCase
 {
     private const PATH_TO_CONFIG = __DIR__ . '/../Fixtures/Json/customer.json';
-    private const MAP_ROUTE = [
-        '/customers' => [
-            'get' => 'customers_get',
-            'post' => 'customers_post',
-        ],
-        '/customers/{userId}' => [
-            'get' => 'customers_get_one',
-            'put' => 'customers_update',
-            'patch' => 'customers_patch',
-            'delete' => 'customers_delete',
-        ],
-        '/customers/{userId}/password' => [
-            'post' => 'customers_password_create',
-            'put' => 'customers_password_update',
-        ],
-    ];
 
     /**
      * @var JsonConfigurationLoader
@@ -96,7 +80,7 @@ class JsonConfigurationLoaderTest extends TestCase
          */
         foreach ($swagger->getPaths()->getIterator() as $path => $pathObject) {
             foreach ($pathObject->getOperations() as $method => $operation) {
-                $routerName = self::MAP_ROUTE[$path][$method];
+                $routerName = FixturesProvider::getRouteName($path, $method);
 
                 $operationCollection->getSchema($routerName, $method);
 

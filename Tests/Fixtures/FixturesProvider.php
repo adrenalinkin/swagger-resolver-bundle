@@ -21,10 +21,32 @@ use EXSyst\Component\Swagger\Swagger;
  */
 class FixturesProvider
 {
+    private const MAP_PATH_TO_ROUTE = [
+        '/customers' => [
+            'get' => 'customers_get',
+            'post' => 'customers_post',
+        ],
+        '/customers/{userId}' => [
+            'get' => 'customers_get_one',
+            'put' => 'customers_update',
+            'patch' => 'customers_patch',
+            'delete' => 'customers_delete',
+        ],
+        '/customers/{userId}/password' => [
+            'post' => 'customers_password_create',
+            'put' => 'customers_password_reset',
+        ],
+    ];
+
     /**
      * @var Swagger
      */
     private static $cachedSwagger;
+
+    public static function getRouteName(string $path, string $method): string
+    {
+        return self::MAP_PATH_TO_ROUTE[$path][$method];
+    }
 
     public static function loadFromJson(): Swagger
     {

@@ -36,7 +36,7 @@ customers_password_create:
     methods: POST
     requirements:
         userId: '\d+'
-customers_password_update:
+customers_password_reset:
     path: /customers/{userId}/password
     controller: CustomerController::passwordUpdate
     methods: PUT
