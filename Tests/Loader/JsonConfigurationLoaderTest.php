@@ -15,6 +15,7 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Loader;
 
 use EXSyst\Component\Swagger\Path;
 use EXSyst\Component\Swagger\Schema;
+use Linkin\Bundle\SwaggerResolverBundle\Exception\OperationNotFoundException;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\JsonConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrategy;
@@ -43,6 +44,18 @@ class JsonConfigurationLoaderTest extends TestCase
         $router = new Router(new YamlFileLoader(new FileLocator(__DIR__ . '/../Fixtures')), 'routing.yaml');
 
         $this->sut = new JsonConfigurationLoader($parameterMerger, $router, self::PATH_TO_CONFIG);
+    }
+
+    public function testFailWhenRouteNotFound(): void
+    {
+        $this->expectException(OperationNotFoundException::class);
+
+        $parameterMerger = new OperationParameterMerger(new ReplaceLastWinMergeStrategy());
+        $router = new Router(new YamlFileLoader(new FileLocator(__DIR__ . '/../Fixtures')), 'routing.yaml');
+        $router->getRouteCollection()->remove('customers_get');
+
+        $sut = new JsonConfigurationLoader($parameterMerger, $router, self::PATH_TO_CONFIG);
+        $sut->getSchemaDefinitionCollection();
     }
 
     public function testCanLoadDefinitionCollection(): void

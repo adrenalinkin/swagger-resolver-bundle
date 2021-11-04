@@ -15,6 +15,7 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Loader;
 
 use EXSyst\Component\Swagger\Path;
 use EXSyst\Component\Swagger\Schema;
+use Linkin\Bundle\SwaggerResolverBundle\Exception\OperationNotFoundException;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerPhpConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrategy;
@@ -45,6 +46,23 @@ class SwaggerPhpConfigurationLoaderTest extends TestCase
             [__DIR__ . '/../Fixtures/SwaggerPhp'],
             []
         );
+    }
+
+    public function testFailWhenRouteNotFound(): void
+    {
+        $this->expectException(OperationNotFoundException::class);
+
+        $parameterMerger = new OperationParameterMerger(new ReplaceLastWinMergeStrategy());
+        $router = new Router(new YamlFileLoader(new FileLocator(__DIR__ . '/../Fixtures')), 'routing.yaml');
+        $router->getRouteCollection()->remove('customers_get');
+
+        $sut = new SwaggerPhpConfigurationLoader(
+            $parameterMerger,
+            $router,
+            [__DIR__ . '/../Fixtures/SwaggerPhp'],
+            []
+        );
+        $sut->getSchemaDefinitionCollection();
     }
 
     public function testCanLoadDefinitionCollection(): void
