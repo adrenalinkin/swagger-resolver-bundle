@@ -18,7 +18,7 @@ use Swagger\Annotations as SWG;
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  *
- * @SWG\Definition(definition="ResponseCreated", type="object", required={"id"})
+ * @SWG\Definition(type="object", required={"id"})
  */
 class ResponseCreated
 {

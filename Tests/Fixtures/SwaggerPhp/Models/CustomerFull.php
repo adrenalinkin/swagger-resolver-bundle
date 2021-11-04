@@ -18,7 +18,7 @@ use Swagger\Annotations as SWG;
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  *
- * @SWG\Definition(definition="CustomerFull", type="object", required={"id", "name", "roles", "email", "registeredAt"})
+ * @SWG\Definition(type="object", required={"id", "name", "roles", "email", "registeredAt"})
  */
 class CustomerFull
 {
