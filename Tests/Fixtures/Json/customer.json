@@ -1,34 +1,39 @@
 {
     "swagger": "2.0",
     "info": {
-        "version": "1.0.0",
         "title": "Customer API",
-        "description": "Example API for work with customer"
+        "description": "Example API for work with customer",
+        "version": "1.0.0"
     },
     "host": "localhost",
     "basePath": "/api",
-    "schemes": ["https"],
-    "consumes": ["application/json"],
-    "produces": ["application/json"],
+    "schemes": [
+        "https"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
     "paths": {
         "/customers": {
             "get": {
-                "tags": ["customer"],
                 "description": "Returns all customers",
                 "parameters": [
                     {
                         "name": "x-auth-token",
                         "in": "header",
-                        "description": "Alternative token for the authorization",
                         "required": true,
+                        "description": "Alternative token for the authorization",
                         "type": "string",
                         "pattern": "^\\w{36}$"
                     },
                     {
                         "name": "page",
                         "in": "query",
-                        "description": "Page number",
                         "required": false,
+                        "description": "Page number",
                         "type": "integer",
                         "default": 0,
                         "minimum": 0
@@ -36,57 +41,67 @@
                     {
                         "name": "perPage",
                         "in": "query",
-                        "description": "Items count for the single page",
                         "required": false,
+                        "description": "Items count for the single page",
                         "type": "integer",
-                        "enum": [100, 500, 1000],
-                        "default": 100
+                        "default": 100,
+                        "enum": [
+                            100,
+                            500,
+                            1000
+                        ]
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "A list of customers",
                         "schema": {
-                            "type": "array",
                             "items": {
                                 "$ref": "#/definitions/CustomerFull"
-                            }
+                            },
+                            "type": "array"
                         }
                     }
-                }
+                },
+                "tags": [
+                    "customer"
+                ]
             },
             "post": {
                 "description": "Create new customer",
-                "tags": ["customer"],
                 "parameters": [
                     {
                         "name": "x-auth-token",
                         "in": "header",
-                        "description": "Alternative token for the authorization",
                         "required": true,
+                        "description": "Alternative token for the authorization",
                         "type": "string",
                         "pattern": "^\\w{36}$"
                     },
                     {
                         "name": "roles",
                         "in": "query",
-                        "description": "Deprecated - Old way to set user roles",
                         "required": false,
-                        "type": "array",
-                        "collectionFormat": "csv",
-                        "uniqueItems": true,
-                        "minItems": 1,
-                        "maxItems": 3,
+                        "description": "Deprecated - Old way to set user roles",
                         "items": {
                             "type": "string",
-                            "enum": ["guest", "user", "admin"]
-                        }
+                            "enum": [
+                                "guest",
+                                "user",
+                                "admin"
+                            ]
+                        },
+                        "type": "array",
+                        "collectionFormat": "csv",
+                        "maxItems": 3,
+                        "minItems": 1,
+                        "uniqueItems": true
                     },
                     {
                         "name": "customer",
                         "in": "body",
-                        "description": "Customer to add to the system",
                         "required": true,
+                        "description": "Customer to add to the system",
                         "schema": {
                             "$ref": "#/definitions/CustomerNew"
                         }
@@ -99,27 +114,29 @@
                             "$ref": "#/definitions/ResponseCreated"
                         }
                     }
-                }
+                },
+                "tags": [
+                    "customer"
+                ]
             }
         },
         "/customers/{userId}": {
             "get": {
                 "description": "Return customer by ID",
-                "tags": ["customer"],
                 "parameters": [
                     {
                         "name": "x-auth-token",
                         "in": "header",
-                        "description": "Alternative token for the authorization",
                         "required": true,
+                        "description": "Alternative token for the authorization",
                         "type": "string",
                         "pattern": "^\\w{36}$"
                     },
                     {
                         "name": "userId",
                         "in": "path",
-                        "description": "Customer ID for retrieve data",
                         "required": true,
+                        "description": "Customer ID for retrieve data",
                         "type": "integer",
                         "format": "int64",
                         "minimum": 0,
@@ -133,25 +150,27 @@
                             "$ref": "#/definitions/CustomerFull"
                         }
                     }
-                }
+                },
+                "tags": [
+                    "customer"
+                ]
             },
             "put": {
                 "description": "Update customer",
-                "tags": ["customer"],
                 "parameters": [
                     {
                         "name": "x-auth-token",
                         "in": "header",
-                        "description": "Alternative token for the authorization",
                         "required": true,
+                        "description": "Alternative token for the authorization",
                         "type": "string",
                         "pattern": "^\\w{36}$"
                     },
                     {
                         "name": "userId",
                         "in": "path",
-                        "description": "Customer ID to update",
                         "required": true,
+                        "description": "Customer ID to update",
                         "type": "integer",
                         "format": "int64",
                         "minimum": 0,
@@ -160,23 +179,27 @@
                     {
                         "name": "roles",
                         "in": "query",
-                        "description": "Deprecated - Old way to set user roles",
                         "required": false,
-                        "type": "array",
-                        "collectionFormat": "csv",
-                        "uniqueItems": true,
-                        "minItems": 1,
-                        "maxItems": 3,
+                        "description": "Deprecated - Old way to set user roles",
                         "items": {
                             "type": "string",
-                            "enum": ["guest", "user", "admin"]
-                        }
+                            "enum": [
+                                "guest",
+                                "user",
+                                "admin"
+                            ]
+                        },
+                        "type": "array",
+                        "collectionFormat": "csv",
+                        "maxItems": 3,
+                        "minItems": 1,
+                        "uniqueItems": true
                     },
                     {
                         "name": "customer",
                         "in": "body",
-                        "description": "Customer update",
                         "required": true,
+                        "description": "Customer update",
                         "schema": {
                             "$ref": "#/definitions/CustomerNew"
                         }
@@ -186,27 +209,31 @@
                     "204": {
                         "description": "Empty response when updated successfully"
                     }
-                }
+                },
+                "tags": [
+                    "customer"
+                ]
             },
             "patch": {
                 "description": "Partial customer update in formData style",
-                "tags": ["customer"],
                 "deprecated": true,
-                "consumes": ["application/x-www-form-urlencoded"],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
                 "parameters": [
                     {
                         "name": "x-auth-token",
                         "in": "header",
-                        "description": "Alternative token for the authorization",
                         "required": true,
+                        "description": "Alternative token for the authorization",
                         "type": "string",
                         "pattern": "^\\w{36}$"
                     },
                     {
                         "name": "userId",
                         "in": "path",
-                        "description": "Customer ID to update",
                         "required": true,
+                        "description": "Customer ID to update",
                         "type": "integer",
                         "format": "int64",
                         "minimum": 0,
@@ -215,65 +242,71 @@
                     {
                         "name": "roles",
                         "in": "query",
-                        "description": "Deprecated - Old way to set user roles",
                         "required": false,
-                        "type": "array",
-                        "collectionFormat": "csv",
-                        "uniqueItems": true,
-                        "minItems": 1,
-                        "maxItems": 3,
+                        "description": "Deprecated - Old way to set user roles",
                         "items": {
                             "type": "string",
-                            "enum": ["guest", "user", "admin"]
-                        }
+                            "enum": [
+                                "guest",
+                                "user",
+                                "admin"
+                            ]
+                        },
+                        "type": "array",
+                        "collectionFormat": "csv",
+                        "maxItems": 3,
+                        "minItems": 1,
+                        "uniqueItems": true
                     },
                     {
                         "name": "name",
                         "in": "formData",
-                        "description": "Name of the Customer",
                         "required": true,
+                        "description": "Name of the Customer",
                         "type": "string",
-                        "minLength": 2,
-                        "maxLength": 50
+                        "maxLength": 50,
+                        "minLength": 2
                     },
                     {
                         "name": "discount",
                         "in": "formData",
-                        "description": "Size of the Customer's discount in percent",
                         "required": false,
+                        "description": "Size of the Customer's discount in percent",
                         "type": "integer",
                         "format": "int32",
                         "default": 0,
-                        "multipleOf": 10,
+                        "maximum": 100,
+                        "exclusiveMaximum": true,
                         "minimum": 0,
                         "exclusiveMinimum": false,
-                        "maximum": 100,
-                        "exclusiveMaximum": true
+                        "multipleOf": 10
                     }
                 ],
                 "responses": {
                     "204": {
                         "description": "Empty response when updated successfully"
                     }
-                }
+                },
+                "tags": [
+                    "customer"
+                ]
             },
             "delete": {
                 "description": "Delete customer from the system",
-                "tags": ["customer"],
                 "parameters": [
                     {
                         "name": "x-auth-token",
                         "in": "header",
-                        "description": "Alternative token for the authorization",
                         "required": true,
+                        "description": "Alternative token for the authorization",
                         "type": "string",
                         "pattern": "^\\w{36}$"
                     },
                     {
                         "name": "userId",
                         "in": "path",
-                        "description": "Customer ID to delete",
                         "required": true,
+                        "description": "Customer ID to delete",
                         "type": "integer",
                         "format": "int64",
                         "minimum": 0,
@@ -284,28 +317,30 @@
                     "204": {
                         "description": "Empty response when removed successfully"
                     }
-                }
+                },
+                "tags": [
+                    "customer"
+                ]
             }
         },
         "/customers/{userId}/password": {
             "post": {
                 "description": "Create new password when not even set",
-                "tags": ["password"],
                 "deprecated": true,
                 "parameters": [
                     {
                         "name": "x-auth-token",
                         "in": "header",
-                        "description": "Alternative token for the authorization",
                         "required": true,
+                        "description": "Alternative token for the authorization",
                         "type": "string",
                         "pattern": "^\\w{36}$"
                     },
                     {
                         "name": "userId",
                         "in": "path",
-                        "description": "Customer ID to update",
                         "required": true,
+                        "description": "Customer ID to update",
                         "type": "integer",
                         "format": "int64",
                         "minimum": 0,
@@ -314,8 +349,8 @@
                     {
                         "name": "password",
                         "in": "body",
-                        "description": "New password",
                         "required": true,
+                        "description": "New password",
                         "schema": {
                             "type": "string",
                             "maxLength": 30
@@ -326,25 +361,28 @@
                     "204": {
                         "description": "Empty response when created successfully"
                     }
-                }
+                },
+                "tags": [
+                    "password"
+                ]
             },
             "put": {
                 "description": "Reset password",
-                "tags": ["password"],
+                "deprecated": true,
                 "parameters": [
                     {
                         "name": "x-auth-token",
                         "in": "header",
-                        "description": "Alternative token for the authorization",
                         "required": true,
+                        "description": "Alternative token for the authorization",
                         "type": "string",
                         "pattern": "^\\w{36}$"
                     },
                     {
                         "name": "userId",
                         "in": "path",
-                        "description": "Customer ID to update",
                         "required": true,
+                        "description": "Customer ID to update",
                         "type": "integer",
                         "format": "int64",
                         "minimum": 0,
@@ -353,11 +391,13 @@
                     {
                         "name": "password-reset",
                         "in": "body",
-                        "description": "Body to change password",
                         "required": true,
+                        "description": "Body to change password",
                         "schema": {
-                            "type": "object",
-                            "required": ["oldPassword", "newPassword"],
+                            "required": [
+                                "oldPassword",
+                                "newPassword"
+                            ],
                             "properties": {
                                 "oldPassword": {
                                     "type": "string",
@@ -367,7 +407,8 @@
                                     "type": "string",
                                     "maxLength": 30
                                 }
-                            }
+                            },
+                            "type": "object"
                         }
                     }
                 ],
@@ -375,46 +416,117 @@
                     "204": {
                         "description": "Empty response when reset successfully"
                     }
-                }
+                },
+                "tags": [
+                    "password"
+                ]
             }
         }
     },
     "definitions": {
-        "ResponseCreated": {
-            "type": "object",
-            "required": ["id"],
+        "CustomerFull": {
+            "required": [
+                "id",
+                "name",
+                "roles",
+                "email",
+                "registeredAt"
+            ],
             "properties": {
                 "id": {
                     "type": "integer",
                     "format": "int64",
                     "minimum": 0,
                     "exclusiveMinimum": true
-                }
-            }
-        },
-        "CustomerNew": {
-            "type": "object",
-            "required": ["name", "roles", "email", "password"],
-            "properties": {
+                },
                 "name": {
                     "type": "string",
-                    "minLength": 2,
-                    "maxLength": 50
+                    "maxLength": 50,
+                    "minLength": 2
                 },
                 "secondName": {
                     "type": "string",
-                    "minLength": 2,
-                    "maxLength": 50
+                    "maxLength": 50,
+                    "minLength": 2
                 },
                 "roles": {
-                    "type": "array",
-                    "uniqueItems": true,
-                    "minItems": 1,
-                    "maxItems": 2,
                     "items": {
                         "type": "string",
-                        "enum": ["guest", "user", "admin"]
-                    }
+                        "enum": [
+                            "guest",
+                            "user",
+                            "admin"
+                        ]
+                    },
+                    "type": "array",
+                    "maxItems": 2,
+                    "minItems": 1,
+                    "uniqueItems": true
+                },
+                "email": {
+                    "type": "string",
+                    "pattern": "^[0-9a-z]+\\@crud\\.com$"
+                },
+                "birthday": {
+                    "type": "string",
+                    "format": "date"
+                },
+                "happyHour": {
+                    "type": "string",
+                    "format": "time"
+                },
+                "discount": {
+                    "type": "integer",
+                    "format": "int32",
+                    "default": 0,
+                    "maximum": 100,
+                    "exclusiveMaximum": true,
+                    "minimum": 0,
+                    "exclusiveMinimum": false,
+                    "multipleOf": 10
+                },
+                "registeredAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "lastVisitedAt": {
+                    "type": "string",
+                    "format": "timestamp"
+                }
+            },
+            "type": "object"
+        },
+        "CustomerNew": {
+            "required": [
+                "name",
+                "roles",
+                "email",
+                "password"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "minLength": 2
+                },
+                "secondName": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "minLength": 2
+                },
+                "roles": {
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "guest",
+                            "user",
+                            "admin"
+                        ]
+                    },
+                    "type": "array",
+                    "maxItems": 2,
+                    "minItems": 1,
+                    "uniqueItems": true
                 },
                 "password": {
                     "type": "string",
@@ -437,75 +549,28 @@
                     "type": "integer",
                     "format": "int32",
                     "default": 0,
-                    "multipleOf": 10,
+                    "maximum": 100,
+                    "exclusiveMaximum": true,
                     "minimum": 0,
                     "exclusiveMinimum": false,
-                    "maximum": 100,
-                    "exclusiveMaximum": true
+                    "multipleOf": 10
                 }
-            }
+            },
+            "type": "object"
         },
-        "CustomerFull": {
-            "type": "object",
-            "required": ["id", "name", "roles", "email", "registeredAt"],
+        "ResponseCreated": {
+            "required": [
+                "id"
+            ],
             "properties": {
                 "id": {
                     "type": "integer",
                     "format": "int64",
                     "minimum": 0,
                     "exclusiveMinimum": true
-                },
-                "name": {
-                    "type": "string",
-                    "minLength": 2,
-                    "maxLength": 50
-                },
-                "secondName": {
-                    "type": "string",
-                    "minLength": 2,
-                    "maxLength": 50
-                },
-                "roles": {
-                    "type": "array",
-                    "uniqueItems": true,
-                    "minItems": 1,
-                    "maxItems": 2,
-                    "items": {
-                        "type": "string",
-                        "enum": ["guest", "user", "admin"]
-                    }
-                },
-                "email": {
-                    "type": "string",
-                    "pattern": "^[0-9a-z]+\\@crud\\.com$"
-                },
-                "birthday": {
-                    "type": "string",
-                    "format": "date"
-                },
-                "happyHour": {
-                    "type": "string",
-                    "format": "time"
-                },
-                "discount": {
-                    "type": "integer",
-                    "format": "int32",
-                    "default": 0,
-                    "multipleOf": 10,
-                    "minimum": 0,
-                    "exclusiveMinimum": false,
-                    "maximum": 100,
-                    "exclusiveMaximum": true
-                },
-                "registeredAt": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "lastVisitedAt": {
-                    "type": "string",
-                    "format": "timestamp"
                 }
-            }
+            },
+            "type": "object"
         }
     }
 }

@@ -16,6 +16,7 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Loader;
 use EXSyst\Component\Swagger\Swagger;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Symfony\Component\Routing\RouterInterface;
+
 use function json_decode;
 use function Swagger\scan;
 
@@ -57,8 +58,6 @@ class SwaggerPhpConfigurationLoader extends AbstractAnnotationConfigurationLoade
             'exclude' => $this->exclude,
         ]);
 
-        $swagger = new Swagger(json_decode((string) $swaggerAnnotation, true));
-
-        return $swagger;
+        return new Swagger(json_decode((string) $swaggerAnnotation, true));
     }
 }

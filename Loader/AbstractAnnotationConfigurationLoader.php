@@ -15,12 +15,10 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Loader;
 
 use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaDefinitionCollection;
 use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaOperationCollection;
-use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use ReflectionClass;
 use ReflectionException;
 use Symfony\Component\Config\Resource\FileResource;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\RouterInterface;
+
 use function end;
 use function explode;
 use function get_declared_classes;
@@ -39,12 +37,13 @@ abstract class AbstractAnnotationConfigurationLoader extends AbstractSwaggerConf
         $definitionNames = [];
 
         foreach ($definitionCollection->getIterator() as $definitionName => $definition) {
+            $definitionName = (string) $definitionName;
             $definitionNames[$definitionName] = $definitionName;
         }
 
         foreach (get_declared_classes() as $fullClassName) {
             $explodedClassName = explode('\\', $fullClassName);
-            $className = end($explodedClassName);
+            $className = (string) end($explodedClassName);
 
             if (!isset($definitionNames[$className])) {
                 continue;
@@ -52,6 +51,8 @@ abstract class AbstractAnnotationConfigurationLoader extends AbstractSwaggerConf
 
             $definitionCollection->addSchemaResource($className, $this->getFileResource($fullClassName));
         }
+
+        // TODO: Throw exception when class was never found
     }
 
     /**

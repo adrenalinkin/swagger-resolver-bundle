@@ -21,6 +21,23 @@ use EXSyst\Component\Swagger\Swagger;
  */
 class FixturesProvider
 {
+    private const MAP_DEFINITION_RESOURCE = [
+        'CustomerFull' => __DIR__ . '/SwaggerPhp/Models/CustomerFull.php',
+        'CustomerNew' => __DIR__ . '/SwaggerPhp/Models/CustomerNew.php',
+        'ResponseCreated' => __DIR__ . '/SwaggerPhp/Models/ResponseCreated.php',
+    ];
+
+    private const MAP_ROUTE_RESOURCE = [
+        'customers_get' => __DIR__ . '/SwaggerPhp/Controllers/CustomerController.php',
+        'customers_post' => __DIR__ . '/SwaggerPhp/Controllers/CustomerController.php',
+        'customers_get_one' => __DIR__ . '/SwaggerPhp/Controllers/CustomerController.php',
+        'customers_update' => __DIR__ . '/SwaggerPhp/Controllers/CustomerController.php',
+        'customers_patch' => __DIR__ . '/SwaggerPhp/Controllers/CustomerController.php',
+        'customers_delete' => __DIR__ . '/SwaggerPhp/Controllers/CustomerController.php',
+        'customers_password_create' => __DIR__ . '/SwaggerPhp/Controllers/CustomerPasswordController.php',
+        'customers_password_reset' => __DIR__ . '/SwaggerPhp/Controllers/CustomerPasswordController.php',
+    ];
+
     private const MAP_PATH_TO_ROUTE = [
         '/customers' => [
             'get' => 'customers_get',
@@ -46,6 +63,16 @@ class FixturesProvider
     public static function getRouteName(string $path, string $method): string
     {
         return self::MAP_PATH_TO_ROUTE[$path][$method];
+    }
+
+    public static function getResourceByRouteName(string $routeName): string
+    {
+        return self::MAP_ROUTE_RESOURCE[$routeName];
+    }
+
+    public static function getResourceByDefinition(string $definitionName): string
+    {
+        return self::MAP_DEFINITION_RESOURCE[$definitionName];
     }
 
     public static function loadFromJson(): Swagger
