@@ -90,10 +90,11 @@ class NelmioApiDocConfigurationLoaderTest extends TestCase
                 $operationCollection->getSchema($routerName, $method);
 
                 $loadedResources = $operationCollection->getSchemaResources($routerName);
-                self::assertCount(1, $loadedResources);
+                $expectedResources = FixturesProvider::getResourceByRouteName($routerName);
 
-                $loadedResource = $loadedResources[0];
-                self::assertSame(FixturesProvider::getResourceByRouteName($routerName), $loadedResource->getResource());
+                foreach ($loadedResources as $loadedResource) {
+                    self::assertContains($loadedResource->getResource(), $expectedResources);
+                }
 
                 $expectedOperationsCount++;
             }

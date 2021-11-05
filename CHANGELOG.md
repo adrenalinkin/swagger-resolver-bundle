@@ -3,6 +3,7 @@
 - Changed `datetime` format to `date-time` according to [swagger specification](https://swagger.io/specification/).
 - Applied `time`, `date`, `date-time` format validation
   according to specification [RFC3339](https://xml2rfc.tools.ietf.org/public/rfc/html/rfc3339.html#anchor14).
+- Improved resource registration for the `SwaggerPhp` by avoid `get_declared_classes` usage.
 ### Removed
 - Removed all unnecessary rows from the `.gitignore` according to `.gitignore_global` use instead.
 ### Fixed
@@ -12,6 +13,7 @@
 - Fixed not worked array validation for the `multi` format.
 - Fixed incorrect behaviour of the `ReplaceLastWinMergeStrategy` when first duplicate item was marked as required
   and second item marked as not required.
+- Fixed working with collection by avoid resource duplication.
 
 ## [0.4.6] - 2020-04-01
 ### Fixed

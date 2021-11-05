@@ -81,12 +81,11 @@ class SwaggerPhpConfigurationLoaderTest extends TestCase
             $loadedDefinitionSchema = $definitionCollection->getSchema($name);
             self::assertSame($expectedSchema->toArray(), $loadedDefinitionSchema->toArray());
 
-            // TODO: fix problem with loading resources in tests
-//            $loadedResources = $definitionCollection->getSchemaResources($name);
-//            self::assertCount(1, $loadedResources);
-//
-//            $loadedResource = $loadedResources[0];
-//            self::assertSame(FixturesProvider::getResourceByDefinition($name), $loadedResource->getResource());
+            $loadedResources = $definitionCollection->getSchemaResources($name);
+            self::assertCount(1, $loadedResources);
+
+            $loadedResource = $loadedResources[0];
+            self::assertSame(FixturesProvider::getResourceByDefinition($name), $loadedResource->getResource());
         }
     }
 
@@ -107,10 +106,11 @@ class SwaggerPhpConfigurationLoaderTest extends TestCase
                 $operationCollection->getSchema($routerName, $method);
 
                 $loadedResources = $operationCollection->getSchemaResources($routerName);
-                self::assertCount(1, $loadedResources);
+                $expectedResources = FixturesProvider::getResourceByRouteName($routerName);
 
-                $loadedResource = $loadedResources[0];
-                self::assertSame(FixturesProvider::getResourceByRouteName($routerName), $loadedResource->getResource());
+                foreach ($loadedResources as $loadedResource) {
+                    self::assertContains($loadedResource->getResource(), $expectedResources);
+                }
 
                 $expectedOperationsCount++;
             }

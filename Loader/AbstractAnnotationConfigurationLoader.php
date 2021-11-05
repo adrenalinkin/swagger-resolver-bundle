@@ -13,15 +13,11 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Loader;
 
-use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaDefinitionCollection;
 use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaOperationCollection;
 use ReflectionClass;
-use ReflectionException;
 use Symfony\Component\Config\Resource\FileResource;
 
-use function end;
 use function explode;
-use function get_declared_classes;
 use function reset;
 
 /**
@@ -29,32 +25,6 @@ use function reset;
  */
 abstract class AbstractAnnotationConfigurationLoader extends AbstractSwaggerConfigurationLoader
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function registerDefinitionResources(SchemaDefinitionCollection $definitionCollection): void
-    {
-        $definitionNames = [];
-
-        foreach ($definitionCollection->getIterator() as $definitionName => $definition) {
-            $definitionName = (string) $definitionName;
-            $definitionNames[$definitionName] = $definitionName;
-        }
-
-        foreach (get_declared_classes() as $fullClassName) {
-            $explodedClassName = explode('\\', $fullClassName);
-            $className = (string) end($explodedClassName);
-
-            if (!isset($definitionNames[$className])) {
-                continue;
-            }
-
-            $definitionCollection->addSchemaResource($className, $this->getFileResource($fullClassName));
-        }
-
-        // TODO: Throw exception when class was never found
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -75,14 +45,7 @@ abstract class AbstractAnnotationConfigurationLoader extends AbstractSwaggerConf
         }
     }
 
-    /**
-     * @param string $className
-     *
-     * @return FileResource
-     *
-     * @throws ReflectionException
-     */
-    private function getFileResource(string $className)
+    protected function getFileResource(string $className): FileResource
     {
         $class = new ReflectionClass($className);
 
