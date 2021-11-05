@@ -1,0 +1,48 @@
+customers_get:
+    path: /customers
+    controller: Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\SwaggerPhp\Controllers\CustomerController::getAll
+    methods: GET
+customers_post:
+    path: /customers
+    controller: Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\SwaggerPhp\Controllers\CustomerController::create
+    methods: POST
+customers_get_one:
+    path: /customers/{userId}
+    controller: Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\SwaggerPhp\Controllers\CustomerController::getOne
+    methods: GET
+    requirements:
+        userId: '\d+'
+customers_update:
+    path: /customers/{userId}
+    controller: Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\SwaggerPhp\Controllers\CustomerController::update
+    methods: PUT
+    requirements:
+        userId: '\d+'
+customers_patch:
+    path: /customers/{userId}
+    controller:
+        Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\SwaggerPhp\Controllers\CustomerController::updatePartial
+    methods: PATCH
+    requirements:
+        userId: '\d+'
+customers_delete:
+    path: /customers/{userId}
+    controller:
+        Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\SwaggerPhp\Controllers\CustomerController::delete
+    methods: DELETE
+    requirements:
+        userId: '\d+'
+customers_password_create:
+    path: /customers/{userId}/password
+    controller:
+        Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\SwaggerPhp\Controllers\CustomerPasswordController::create
+    methods: POST
+    requirements:
+        userId: '\d+'
+customers_password_reset:
+    path: /customers/{userId}/password
+    controller:
+        Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\SwaggerPhp\Controllers\CustomerPasswordController::reset
+    methods: PUT
+    requirements:
+        userId: '\d+'

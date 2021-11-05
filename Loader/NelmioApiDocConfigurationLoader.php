@@ -14,9 +14,14 @@ declare(strict_types=1);
 namespace Linkin\Bundle\SwaggerResolverBundle\Loader;
 
 use EXSyst\Component\Swagger\Swagger;
+use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaDefinitionCollection;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Nelmio\ApiDocBundle\ApiDocGenerator;
 use Symfony\Component\Routing\RouterInterface;
+
+use function end;
+use function explode;
+use function get_declared_classes;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -48,5 +53,31 @@ class NelmioApiDocConfigurationLoader extends AbstractAnnotationConfigurationLoa
     protected function loadConfiguration(): Swagger
     {
         return $this->apiDocGenerator->generate();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function registerDefinitionResources(SchemaDefinitionCollection $definitionCollection): void
+    {
+        $definitionNames = [];
+
+        foreach ($definitionCollection->getIterator() as $definitionName => $definition) {
+            $definitionName = (string) $definitionName;
+            $definitionNames[$definitionName] = $definitionName;
+        }
+
+        foreach (get_declared_classes() as $fullClassName) {
+            $explodedClassName = explode('\\', $fullClassName);
+            $className = (string) end($explodedClassName);
+
+            if (!isset($definitionNames[$className])) {
+                continue;
+            }
+
+            $definitionCollection->addSchemaResource($className, $this->getFileResource($fullClassName));
+        }
+
+        // TODO: Throw exception when class was never found
     }
 }

@@ -19,6 +19,8 @@ use IteratorAggregate;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\DefinitionNotFoundException;
 use Symfony\Component\Config\Resource\FileResource;
 
+use function array_values;
+
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
@@ -79,7 +81,7 @@ class SchemaDefinitionCollection implements IteratorAggregate
      */
     public function addSchemaResource(string $definitionName, FileResource $resource): self
     {
-        $this->resourceCollection[$definitionName][] = $resource;
+        $this->resourceCollection[$definitionName][(string) $resource->getResource()] = $resource;
 
         return $this;
     }
@@ -91,6 +93,6 @@ class SchemaDefinitionCollection implements IteratorAggregate
      */
     public function getSchemaResources(string $definitionName): array
     {
-        return $this->resourceCollection[$definitionName] ?? [];
+        return array_values($this->resourceCollection[$definitionName] ?? []);
     }
 }

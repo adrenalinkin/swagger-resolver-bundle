@@ -18,6 +18,8 @@ use EXSyst\Component\Swagger\Schema;
 use IteratorAggregate;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\OperationNotFoundException;
 use Symfony\Component\Config\Resource\FileResource;
+
+use function array_values;
 use function strtolower;
 
 /**
@@ -86,7 +88,7 @@ class SchemaOperationCollection implements IteratorAggregate
      */
     public function addSchemaResource(string $routeName, FileResource $resource): self
     {
-        $this->resourceCollection[$routeName][] = $resource;
+        $this->resourceCollection[$routeName][(string) $resource->getResource()] = $resource;
 
         return $this;
     }
@@ -98,7 +100,7 @@ class SchemaOperationCollection implements IteratorAggregate
      */
     public function getSchemaResources(string $routeName): array
     {
-        return $this->resourceCollection[$routeName] ?? [];
+        return array_values($this->resourceCollection[$routeName] ?? []);
     }
 
     /**

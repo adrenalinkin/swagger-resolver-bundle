@@ -14,8 +14,12 @@ declare(strict_types=1);
 namespace Linkin\Bundle\SwaggerResolverBundle\Loader;
 
 use EXSyst\Component\Swagger\Swagger;
+use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaDefinitionCollection;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
+use Swagger\Annotations\Swagger as SwaggerZircote;
+use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Routing\RouterInterface;
+
 use function json_decode;
 use function Swagger\scan;
 
@@ -33,6 +37,11 @@ class SwaggerPhpConfigurationLoader extends AbstractAnnotationConfigurationLoade
      * @var array
      */
     private $scan;
+
+    /**
+     * @var SwaggerZircote
+     */
+    private $swaggerAnnotation;
 
     /**
      * @param OperationParameterMerger $merger
@@ -53,12 +62,20 @@ class SwaggerPhpConfigurationLoader extends AbstractAnnotationConfigurationLoade
      */
     protected function loadConfiguration(): Swagger
     {
-        $swaggerAnnotation = scan($this->scan, [
+        $this->swaggerAnnotation = scan($this->scan, [
             'exclude' => $this->exclude,
         ]);
 
-        $swagger = new Swagger(json_decode((string) $swaggerAnnotation, true));
+        return new Swagger(json_decode((string) $this->swaggerAnnotation, true));
+    }
 
-        return $swagger;
+    protected function registerDefinitionResources(SchemaDefinitionCollection $definitionCollection): void
+    {
+        foreach ($this->swaggerAnnotation->definitions as $zircoteDefinition) {
+            $definitionCollection->addSchemaResource(
+                $zircoteDefinition->definition,
+                new FileResource($zircoteDefinition->_context->filename)
+            );
+        }
     }
 }
