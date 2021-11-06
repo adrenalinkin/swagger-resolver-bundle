@@ -430,6 +430,7 @@
                 "name",
                 "roles",
                 "email",
+                "isEmailConfirmed",
                 "registeredAt"
             ],
             "properties": {
@@ -467,6 +468,9 @@
                     "type": "string",
                     "pattern": "^[0-9a-z]+\\@crud\\.com$"
                 },
+                "isEmailConfirmed":{
+                    "type": "boolean"
+                },
                 "birthday": {
                     "type": "string",
                     "format": "date"
@@ -484,6 +488,15 @@
                     "minimum": 0,
                     "exclusiveMinimum": false,
                     "multipleOf": 10
+                },
+                "rating": {
+                    "type": "number",
+                    "format": "float",
+                    "default": 0.1,
+                    "maximum": 5.1,
+                    "exclusiveMaximum": true,
+                    "minimum": 0.1,
+                    "exclusiveMinimum": false
                 },
                 "registeredAt": {
                     "type": "string",

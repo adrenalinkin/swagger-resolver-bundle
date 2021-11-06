@@ -18,7 +18,7 @@ use Swagger\Annotations as SWG;
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  *
- * @SWG\Definition(type="object", required={"id", "name", "roles", "email", "registeredAt"})
+ * @SWG\Definition(type="object", required={"id", "name", "roles", "email", "isEmailConfirmed", "registeredAt"})
  */
 class CustomerFull
 {
@@ -66,6 +66,13 @@ class CustomerFull
     public $email;
 
     /**
+     * @var bool
+     *
+     * @SWG\Property()
+     */
+    public $isEmailConfirmed;
+
+    /**
      * @var string
      *
      * @SWG\Property(format="date")
@@ -85,14 +92,27 @@ class CustomerFull
      * @SWG\Property(
      *      format="int32",
      *      default=0,
-     *      multipleOf=10,
-     *      minimum=0,
-     *      exclusiveMinimum=false,
      *      maximum=100,
      *      exclusiveMaximum=true,
+     *      minimum=0,
+     *      exclusiveMinimum=false,
+     *      multipleOf=10,
      * )
      */
     public $discount;
+
+    /**
+     * @var float
+     *
+     * @SWG\Property(
+     *      default=0.1,
+     *      maximum=5.1,
+     *      exclusiveMaximum=true,
+     *      minimum=0.1,
+     *      exclusiveMinimum=false,
+     * )
+     */
+    public $rating;
 
     /**
      * @var string
