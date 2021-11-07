@@ -201,14 +201,40 @@ class SwaggerResolverBuilderTest extends TestCase
         $dataWithIncorrectEnum['role'] = '__UNDEFINED__';
         yield [$schemaOperation, 'isPassed' => false, 'data' => $dataWithIncorrectEnum];
 
-        $schemaDefinition = $configurationLoader->getSchemaDefinitionCollection()->getSchema('CustomerFull');
-        yield [$schemaDefinition, 'isPassed' => true, 'data' => [
+        $schemaCustomerDefinition = $configurationLoader->getSchemaDefinitionCollection()->getSchema('CustomerFull');
+        yield [$schemaCustomerDefinition, 'isPassed' => true, 'data' => [
             'id' => 1,
             'name' => 'Homer',
             'roles' => ['guest'],
             'email' => 'homer@gmail.com',
             'isEmailConfirmed' => true,
             'registeredAt' => '2000-10-11 19:57:31',
+        ]];
+
+        $schemaCartDefinition = $configurationLoader->getSchemaDefinitionCollection()->getSchema('Cart');
+        yield [$schemaCartDefinition, 'isPassed' => true, 'data' => [
+            'totalPrice' => 1002.4,
+            'promo' => [
+                'code' => 'd30',
+                'captcha' => 'abc1234',
+            ],
+            'itemList' => [
+                [
+                    'vendorCode' => '100000000001',
+                    'count' => 3,
+                    'price' => 100.5
+                ],
+                [
+                    'vendorCode' => '100000000002',
+                    'count' => 1,
+                    'price' => 700.9
+                ]
+            ],
+            'lastAddedItem' => [
+                'vendorCode' => '100000000002',
+                'count' => 1,
+                'price' => 700.9
+            ],
         ]];
     }
 
