@@ -17,6 +17,65 @@
         "application/json"
     ],
     "paths": {
+        "/cart": {
+            "get": {
+                "description": "Returns all items from the cart",
+                "parameters": [
+                    {
+                        "name": "x-auth-token",
+                        "in": "header",
+                        "required": true,
+                        "description": "Alternative token for the authorization",
+                        "type": "string",
+                        "pattern": "^\\w{36}$"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cart data",
+                        "schema": {
+                            "$ref": "#/definitions/Cart"
+                        }
+                    }
+                },
+                "tags": [
+                    "cart"
+                ]
+            },
+            "put": {
+                "description": "Add new item into cart or increase count of existed",
+                "parameters": [
+                    {
+                        "name": "x-auth-token",
+                        "in": "header",
+                        "required": true,
+                        "description": "Alternative token for the authorization",
+                        "type": "string",
+                        "pattern": "^\\w{36}$"
+                    },
+                    {
+                        "name": "cart",
+                        "in": "body",
+                        "required": true,
+                        "description": "Item data to add to the cart",
+                        "schema": {
+                            "$ref": "#/definitions/CartItem"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "New item into cart ID",
+                        "schema": {
+                            "$ref": "#/definitions/ResponseCreated"
+                        }
+                    }
+                },
+                "tags": [
+                    "cart"
+                ]
+            }
+        },
         "/customers": {
             "get": {
                 "description": "Returns all customers",
@@ -424,12 +483,89 @@
         }
     },
     "definitions": {
+        "Cart": {
+            "required": [
+                "totalPrice",
+                "itemList"
+            ],
+            "properties": {
+                "totalPrice": {
+                    "type": "number",
+                    "format": "float",
+                    "default": 0.1,
+                    "minimum": 0.1,
+                    "exclusiveMinimum": false
+                },
+                "itemList": {
+                    "items": {
+                        "$ref": "#/definitions/CartItem"
+                    },
+                    "type": "array",
+                    "maxItems": 5,
+                    "minItems": 0
+                },
+                "lastAddedItem": {
+                    "$ref": "#/definitions/CartItem"
+                },
+                "promo": {
+                    "required": [
+                        "code",
+                        "captcha"
+                    ],
+                    "properties": {
+                        "code": {
+                            "type": "string",
+                            "maxLength": 15,
+                            "minLength": 5
+                        },
+                        "captcha": {
+                            "type": "string",
+                            "maxLength": 7,
+                            "minLength": 7
+                        }
+                    },
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
+        "CartItem": {
+            "required": [
+                "vendorCode",
+                "count",
+                "price"
+            ],
+            "properties": {
+                "vendorCode": {
+                    "type": "string",
+                    "pattern": "^[0-9]{12}$"
+                },
+                "count": {
+                    "type": "integer",
+                    "default": 1,
+                    "maximum": 10,
+                    "exclusiveMaximum": false,
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "multipleOf": 1
+                },
+                "price": {
+                    "type": "number",
+                    "format": "float",
+                    "default": 0.1,
+                    "minimum": 0.1,
+                    "exclusiveMinimum": false
+                }
+            },
+            "type": "object"
+        },
         "CustomerFull": {
             "required": [
                 "id",
                 "name",
                 "roles",
                 "email",
+                "isEmailConfirmed",
                 "registeredAt"
             ],
             "properties": {
@@ -467,6 +603,9 @@
                     "type": "string",
                     "pattern": "^[0-9a-z]+\\@crud\\.com$"
                 },
+                "isEmailConfirmed": {
+                    "type": "boolean"
+                },
                 "birthday": {
                     "type": "string",
                     "format": "date"
@@ -484,6 +623,15 @@
                     "minimum": 0,
                     "exclusiveMinimum": false,
                     "multipleOf": 10
+                },
+                "rating": {
+                    "type": "number",
+                    "format": "float",
+                    "default": 0.1,
+                    "maximum": 5.1,
+                    "exclusiveMaximum": true,
+                    "minimum": 0.1,
+                    "exclusiveMinimum": false
                 },
                 "registeredAt": {
                     "type": "string",

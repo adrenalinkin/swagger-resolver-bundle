@@ -1,3 +1,11 @@
+cart_get:
+    path: /cart
+    controller: Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\SwaggerPhp\Controllers\CartController::getCartData
+    methods: GET
+cart_add_item:
+    path: /cart
+    controller: Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\SwaggerPhp\Controllers\CartController::addItem
+    methods: PUT
 customers_get:
     path: /customers
     controller: Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\SwaggerPhp\Controllers\CustomerController::getAll

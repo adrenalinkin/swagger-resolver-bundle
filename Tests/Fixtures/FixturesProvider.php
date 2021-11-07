@@ -22,12 +22,21 @@ use EXSyst\Component\Swagger\Swagger;
 class FixturesProvider
 {
     private const MAP_DEFINITION_RESOURCE = [
+        'Cart' => __DIR__ . '/SwaggerPhp/Models/Cart.php',
+        'CartItem' => __DIR__ . '/SwaggerPhp/Models/CartItem.php',
         'CustomerFull' => __DIR__ . '/SwaggerPhp/Models/CustomerFull.php',
         'CustomerNew' => __DIR__ . '/SwaggerPhp/Models/CustomerNew.php',
         'ResponseCreated' => __DIR__ . '/SwaggerPhp/Models/ResponseCreated.php',
     ];
 
     private const MAP_ROUTE_RESOURCE = [
+        'cart_add_item' => [
+            __DIR__ . '/SwaggerPhp/Models/CartItem.php',
+            __DIR__ . '/SwaggerPhp/Controllers/CartController.php',
+        ],
+        'cart_get' => [
+            __DIR__ . '/SwaggerPhp/Controllers/CartController.php',
+        ],
         'customers_get' => [
             __DIR__ . '/SwaggerPhp/Controllers/CustomerController.php',
         ],
@@ -57,6 +66,10 @@ class FixturesProvider
     ];
 
     private const MAP_PATH_TO_ROUTE = [
+        '/cart' => [
+            'get' => 'customers_get',
+            'put' => 'cart_add_item',
+        ],
         '/customers' => [
             'get' => 'customers_get',
             'post' => 'customers_post',
