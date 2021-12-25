@@ -46,7 +46,6 @@
 
     "suggest": {
         "nelmio/api-doc-bundle": "Generates documentation for your REST API from annotations",
-        "symfony/symfony": "Allows more advanced functionality with full Symfony package",
         "zircote/swagger-php": "Allows to generate Swagger configuration by php annotations"
     },
 
