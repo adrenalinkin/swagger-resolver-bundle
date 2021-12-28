@@ -1,0 +1,30 @@
+framework:
+    secret: test
+    test: ~
+    router:
+        resource: "%kernel.root_dir%/config/routing.yaml"
+
+nelmio_api_doc:
+    documentation:
+        swagger: 2.0
+        host: localhost
+        schemes:
+            - https
+        info:
+            version: 1.0.0
+            title: Customer API
+            description: Example API for work with customer
+        consumes:
+            - application/json
+        produces:
+            - application/json
+
+    # TODO: project should work without areas definition
+    areas:
+        default:
+            host_patterns:
+                - '^api\.'
+
+services:
+    logger:
+        class: Psr\Log\NullLogger
