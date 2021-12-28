@@ -12,7 +12,8 @@ COMMENT;
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__)
     ->exclude('Resources/config')
-    ->exclude('var');
+    ->exclude('var')
+    ->notPath('Tests/Fixtures/SwaggerPhp/swagger.php'); // PHPCS-Fixer does not recognising the DocBlock inside swagger.php.
 
 return (new PhpCsFixer\Config())
     ->setRules([

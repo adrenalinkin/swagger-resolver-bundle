@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 use Swagger\Annotations as SWG;
 
-/*
+/**
  * @SWG\Swagger(
  *     swagger="2.0",
  *     @SWG\Info(
