@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Collection;
 
-use function array_values;
 use ArrayIterator;
 use EXSyst\Component\Swagger\Schema;
 use IteratorAggregate;

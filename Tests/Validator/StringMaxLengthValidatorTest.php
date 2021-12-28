@@ -16,7 +16,6 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Validator;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\FixturesProvider;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\StringMaxLengthValidator;
 use PHPUnit\Framework\TestCase;
-use function str_repeat;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
 /**

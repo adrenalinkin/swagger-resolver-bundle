@@ -13,10 +13,7 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Loader;
 
-use function end;
-use function explode;
 use EXSyst\Component\Swagger\Swagger;
-use function get_declared_classes;
 use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaDefinitionCollection;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Nelmio\ApiDocBundle\ApiDocGenerator;

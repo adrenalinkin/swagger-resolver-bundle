@@ -13,9 +13,7 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Validator;
 
-use function array_unique;
 use EXSyst\Component\Swagger\Schema;
-use function sprintf;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
 /**

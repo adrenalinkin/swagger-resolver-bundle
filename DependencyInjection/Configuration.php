@@ -14,13 +14,10 @@ declare(strict_types=1);
 namespace Linkin\Bundle\SwaggerResolverBundle\DependencyInjection;
 
 use Closure;
-use function is_subclass_of;
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterLocationEnum;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerConfigurationLoaderInterface;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\MergeStrategyInterface;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\StrictMergeStrategy;
-use function method_exists;
-use function sprintf;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;

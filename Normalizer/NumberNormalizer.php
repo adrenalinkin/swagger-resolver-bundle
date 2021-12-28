@@ -15,7 +15,6 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Normalizer;
 
 use Closure;
 use EXSyst\Component\Swagger\Schema;
-use function is_numeric;
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterTypeEnum;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\NormalizationFailedException;
 use Symfony\Component\OptionsResolver\Options;

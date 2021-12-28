@@ -6,8 +6,3 @@
 /phpunit.xml
 /.php-cs-fixer.php
 /.php-cs-fixer.cache
-
-# IDEs
-/.idea
-*.iml
-*~

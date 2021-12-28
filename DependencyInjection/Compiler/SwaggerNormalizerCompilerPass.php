@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\DependencyInjection\Compiler;
 
-use function iterator_to_array;
 use Linkin\Bundle\SwaggerResolverBundle\Builder\SwaggerResolverBuilder;
 use SplPriorityQueue;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;

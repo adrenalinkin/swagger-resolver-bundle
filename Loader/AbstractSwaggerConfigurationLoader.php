@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Loader;
 
-use function end;
-use function explode;
 use EXSyst\Component\Swagger\Operation;
 use EXSyst\Component\Swagger\Parameter;
 use EXSyst\Component\Swagger\Path;
@@ -23,7 +21,6 @@ use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaDefinitionCollection;
 use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaOperationCollection;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\OperationNotFoundException;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
-use function strtolower;
 use Symfony\Component\Routing\RouterInterface;
 
 /**

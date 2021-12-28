@@ -13,10 +13,6 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\DependencyInjection;
 
-use function array_merge_recursive;
-use function class_exists;
-use function end;
-use function explode;
 use Linkin\Bundle\SwaggerResolverBundle\DependencyInjection\Compiler\SwaggerNormalizerCompilerPass;
 use Linkin\Bundle\SwaggerResolverBundle\DependencyInjection\Compiler\SwaggerValidatorCompilerPass;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\JsonConfigurationLoader;
@@ -28,8 +24,6 @@ use Linkin\Bundle\SwaggerResolverBundle\Merger\MergeStrategyInterface;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Linkin\Bundle\SwaggerResolverBundle\Normalizer\SwaggerNormalizerInterface;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\SwaggerValidatorInterface;
-use function md5;
-use function sprintf;
 use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -39,8 +33,6 @@ use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Routing\RouterInterface;
-use function time;
-use function uniqid;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>

@@ -13,12 +13,10 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Collection;
 
-use function array_values;
 use ArrayIterator;
 use EXSyst\Component\Swagger\Schema;
 use IteratorAggregate;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\OperationNotFoundException;
-use function strtolower;
 use Symfony\Component\Config\Resource\FileResource;
 
 /**

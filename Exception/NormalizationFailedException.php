@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Exception;
 
-use function sprintf;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
 /**

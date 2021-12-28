@@ -15,8 +15,6 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Validator;
 
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterTypeEnum;
-use function mb_strlen;
-use function sprintf;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
 /**

@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Factory;
 
-use function end;
-use function explode;
 use Linkin\Bundle\SwaggerResolverBundle\Builder\SwaggerResolverBuilder;
 use Linkin\Bundle\SwaggerResolverBundle\Configuration\SwaggerConfigurationInterface;
 use Linkin\Bundle\SwaggerResolverBundle\Resolver\SwaggerResolver;

@@ -15,7 +15,6 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Validator;
 
 use DateTime;
 use EXSyst\Component\Swagger\Schema;
-use function sprintf;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
 /**

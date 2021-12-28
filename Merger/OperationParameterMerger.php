@@ -13,9 +13,6 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Merger;
 
-use function array_flip;
-use function end;
-use function explode;
 use EXSyst\Component\Swagger\Collections\Definitions;
 use EXSyst\Component\Swagger\Operation;
 use EXSyst\Component\Swagger\Parameter;

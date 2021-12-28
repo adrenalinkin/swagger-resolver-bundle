@@ -15,10 +15,7 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Validator;
 
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterTypeEnum;
-use function preg_match;
-use function sprintf;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use function trim;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>

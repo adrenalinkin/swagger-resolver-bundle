@@ -12,8 +12,7 @@ COMMENT;
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__)
     ->exclude('Resources/config')
-    ->exclude('var')
-;
+    ->exclude('var');
 
 return (new PhpCsFixer\Config())
     ->setRules([
@@ -23,5 +22,4 @@ return (new PhpCsFixer\Config())
         'header_comment' => ['header' => $fileHeaderComment, 'separate' => 'both'],
     ])
     ->setRiskyAllowed(true)
-    ->setFinder($finder)
-    ;
+    ->setFinder($finder);

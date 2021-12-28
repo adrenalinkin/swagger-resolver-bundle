@@ -13,10 +13,8 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Loader;
 
-use function explode;
 use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaOperationCollection;
 use ReflectionClass;
-use function reset;
 use Symfony\Component\Config\Resource\FileResource;
 
 /**

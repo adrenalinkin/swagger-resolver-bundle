@@ -13,11 +13,9 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Validator;
 
-use function explode;
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterCollectionFormatEnum;
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterTypeEnum;
-use function sprintf;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
 /**

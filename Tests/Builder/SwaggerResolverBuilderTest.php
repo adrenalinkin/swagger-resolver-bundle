@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Builder;
 
-use function array_values;
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Builder\SwaggerResolverBuilder;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\UndefinedPropertyTypeException;

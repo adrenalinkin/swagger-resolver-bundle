@@ -15,12 +15,8 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Configuration;
 
 use EXSyst\Component\Swagger\Path;
 use EXSyst\Component\Swagger\Schema;
-use function json_decode;
-use function json_encode;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerConfigurationLoaderInterface;
-use function md5;
 use const PHP_SAPI;
-use function sprintf;
 use Symfony\Component\Config\ConfigCacheFactory;
 use Symfony\Component\Config\ConfigCacheFactoryInterface;
 use Symfony\Component\Config\ConfigCacheInterface;
