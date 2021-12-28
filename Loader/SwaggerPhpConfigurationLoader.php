@@ -17,6 +17,7 @@ use EXSyst\Component\Swagger\Swagger;
 use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaDefinitionCollection;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Swagger\Annotations\Swagger as SwaggerZircote;
+use function Swagger\scan;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Routing\RouterInterface;
 
