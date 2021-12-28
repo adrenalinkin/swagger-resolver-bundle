@@ -55,6 +55,8 @@ class SwaggerResolver extends OptionsResolver
 
     /**
      * {@inheritdoc}
+     *
+     * @return mixed
      */
     public function offsetGet($option, bool $triggerDeprecation = true)
     {
