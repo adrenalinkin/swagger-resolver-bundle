@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the SwaggerResolverBundle package.
- *
  * (c) Viktor Linkin <adrenalinkin@gmail.com>
- *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -27,19 +25,11 @@ class ParameterCollectionFormatEnum
     public const PIPES = 'pipes';
     public const MULTI = 'multi';
 
-    /**
-     * @return array
-     */
     public static function getAll(): array
     {
         return [self::CSV, self::SSV, self::TSV, self::PIPES, self::MULTI];
     }
 
-    /**
-     * @param string $collectionFormat
-     *
-     * @return string
-     */
     public static function getDelimiter(string $collectionFormat): string
     {
         switch ($collectionFormat) {

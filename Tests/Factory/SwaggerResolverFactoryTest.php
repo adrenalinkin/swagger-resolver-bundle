@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the SwaggerResolverBundle package.
- *
  * (c) Viktor Linkin <adrenalinkin@gmail.com>
- *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -76,12 +74,12 @@ class SwaggerResolverFactoryTest extends TestCase
     {
         $parameterMerger = new OperationParameterMerger(new ReplaceLastWinMergeStrategy());
         $router = new Router(
-            new YamlFileLoader(new FileLocator(__DIR__ . '/../Fixtures')),
+            new YamlFileLoader(new FileLocator(__DIR__.'/../Fixtures')),
             'routing.yaml',
             [],
             $context
         );
-        $loader = new JsonConfigurationLoader($parameterMerger, $router, __DIR__ . '/../Fixtures/Json/customer.json');
+        $loader = new JsonConfigurationLoader($parameterMerger, $router, __DIR__.'/../Fixtures/Json/customer.json');
         $configuration = new SwaggerConfiguration($loader);
         $builder = new SwaggerResolverBuilder([], [], []);
 

@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the SwaggerResolverBundle package.
- *
  * (c) Viktor Linkin <adrenalinkin@gmail.com>
- *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -25,11 +23,7 @@ use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 interface SwaggerConfigurationInterface
 {
     /**
-     * Return swagger definition schema object
-     *
-     * @param string $definitionName
-     *
-     * @return Schema
+     * Return swagger definition schema object.
      *
      * @throws DefinitionNotFoundException When swagger definition was not found
      */
@@ -37,12 +31,7 @@ interface SwaggerConfigurationInterface
 
     /**
      * Returns merged swagger path operation by @see OperationParameterMerger
-     * according to specific @see MergeStrategyInterface
-     *
-     * @param string $routeName
-     * @param string $method
-     *
-     * @return Schema
+     * according to specific @see MergeStrategyInterface.
      *
      * @throws OperationNotFoundException When swagger operation was not found
      */

@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the SwaggerResolverBundle package.
- *
  * (c) Viktor Linkin <adrenalinkin@gmail.com>
- *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -17,15 +15,13 @@ use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\SwaggerValidatorInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-use function get_class;
-
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
 class SwaggerResolver extends OptionsResolver
 {
     /**
-     * Definition schema
+     * Definition schema.
      *
      * @var Schema
      */
@@ -38,9 +34,6 @@ class SwaggerResolver extends OptionsResolver
      */
     private $validators = [];
 
-    /**
-     * @param Schema $schema
-     */
     public function __construct(Schema $schema)
     {
         $this->schema = $schema;
@@ -51,11 +44,11 @@ class SwaggerResolver extends OptionsResolver
      */
     public function clear(): self
     {
-         parent::clear();
+        parent::clear();
 
-         $this->validators = [];
+        $this->validators = [];
 
-         return $this;
+        return $this;
     }
 
     /**
@@ -84,26 +77,17 @@ class SwaggerResolver extends OptionsResolver
     }
 
     /**
-     * Adds property validator
-     *
-     * @param SwaggerValidatorInterface $validator
-     *
-     * @return self
+     * Adds property validator.
      */
     public function addValidator(SwaggerValidatorInterface $validator): self
     {
-        $className = get_class($validator);
+        $className = \get_class($validator);
 
         $this->validators[$className] = $validator;
 
         return $this;
     }
 
-    /**
-     * @param string $className
-     *
-     * @return self
-     */
     public function removeValidator(string $className): self
     {
         unset($this->validators[$className]);
@@ -111,13 +95,8 @@ class SwaggerResolver extends OptionsResolver
         return $this;
     }
 
-    /**
-     * @param SwaggerValidatorInterface $validator
-     *
-     * @return self
-     */
     public function removeValidatorByObject(SwaggerValidatorInterface $validator): self
     {
-        return $this->removeValidator(get_class($validator));
+        return $this->removeValidator(\get_class($validator));
     }
 }

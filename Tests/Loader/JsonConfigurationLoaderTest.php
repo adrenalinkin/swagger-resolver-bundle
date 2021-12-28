@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the SwaggerResolverBundle package.
- *
  * (c) Viktor Linkin <adrenalinkin@gmail.com>
- *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -31,7 +29,7 @@ use Symfony\Component\Routing\Router;
  */
 class JsonConfigurationLoaderTest extends TestCase
 {
-    private const PATH_TO_CONFIG = __DIR__ . '/../Fixtures/Json/customer.json';
+    private const PATH_TO_CONFIG = __DIR__.'/../Fixtures/Json/customer.json';
 
     /**
      * @var JsonConfigurationLoader
@@ -41,7 +39,7 @@ class JsonConfigurationLoaderTest extends TestCase
     protected function setUp(): void
     {
         $parameterMerger = new OperationParameterMerger(new ReplaceLastWinMergeStrategy());
-        $router = new Router(new YamlFileLoader(new FileLocator(__DIR__ . '/../Fixtures')), 'routing.yaml');
+        $router = new Router(new YamlFileLoader(new FileLocator(__DIR__.'/../Fixtures')), 'routing.yaml');
 
         $this->sut = new JsonConfigurationLoader($parameterMerger, $router, self::PATH_TO_CONFIG);
     }
@@ -51,7 +49,7 @@ class JsonConfigurationLoaderTest extends TestCase
         $this->expectException(OperationNotFoundException::class);
 
         $parameterMerger = new OperationParameterMerger(new ReplaceLastWinMergeStrategy());
-        $router = new Router(new YamlFileLoader(new FileLocator(__DIR__ . '/../Fixtures')), 'routing.yaml');
+        $router = new Router(new YamlFileLoader(new FileLocator(__DIR__.'/../Fixtures')), 'routing.yaml');
         $router->getRouteCollection()->remove('customers_get');
 
         $sut = new JsonConfigurationLoader($parameterMerger, $router, self::PATH_TO_CONFIG);
@@ -89,7 +87,7 @@ class JsonConfigurationLoaderTest extends TestCase
 
         /**
          * @var string $path
-         * @var Path $pathObject
+         * @var Path   $pathObject
          */
         foreach ($swagger->getPaths()->getIterator() as $path => $pathObject) {
             foreach ($pathObject->getOperations() as $method => $operation) {
@@ -103,7 +101,7 @@ class JsonConfigurationLoaderTest extends TestCase
                 $loadedResource = $loadedResources[0];
                 self::assertSame($expectedFileResource->getResource(), $loadedResource->getResource());
 
-                $expectedOperationsCount++;
+                ++$expectedOperationsCount;
             }
         }
 

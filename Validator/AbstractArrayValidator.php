@@ -4,22 +4,19 @@ declare(strict_types=1);
 
 /*
  * This file is part of the SwaggerResolverBundle package.
- *
  * (c) Viktor Linkin <adrenalinkin@gmail.com>
- *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Validator;
 
+use function explode;
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterCollectionFormatEnum;
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterTypeEnum;
-use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use function explode;
-use function is_array;
 use function sprintf;
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -41,13 +38,9 @@ abstract class AbstractArrayValidator implements SwaggerValidatorInterface
 
     /**
      * TODO: Move into new ArrayNormalizer
-     *       https://github.com/adrenalinkin/swagger-resolver-bundle/issues/55
+     *       https://github.com/adrenalinkin/swagger-resolver-bundle/issues/55.
      *
-     * @param string      $propertyName
-     * @param mixed       $value
-     * @param string|null $collectionFormat
-     *
-     * @return array
+     * @param mixed $value
      */
     protected function convertValueToArray(string $propertyName, $value, ?string $collectionFormat): array
     {
@@ -56,14 +49,14 @@ abstract class AbstractArrayValidator implements SwaggerValidatorInterface
         }
 
         if (null === $collectionFormat) {
-            if (is_array($value)) {
+            if (\is_array($value)) {
                 return $value;
             }
 
             throw new InvalidOptionsException(sprintf('Property "%s" should contain valid json array', $propertyName));
         }
 
-        if (is_array($value)) {
+        if (\is_array($value)) {
             $message = sprintf('Property "%s" should contain valid "%s" string', $propertyName, $collectionFormat);
 
             throw new InvalidOptionsException($message);
@@ -87,7 +80,7 @@ abstract class AbstractArrayValidator implements SwaggerValidatorInterface
             $exploded = (array) explode('=', $item);
             $itemValue = $exploded[1] ?? null;
 
-            if ($itemValue !== null) {
+            if (null !== $itemValue) {
                 $result[] = $itemValue;
 
                 continue;

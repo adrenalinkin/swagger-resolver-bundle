@@ -4,24 +4,21 @@ declare(strict_types=1);
 
 /*
  * This file is part of the SwaggerResolverBundle package.
- *
  * (c) Viktor Linkin <adrenalinkin@gmail.com>
- *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Loader;
 
+use function end;
+use function explode;
 use EXSyst\Component\Swagger\Swagger;
+use function get_declared_classes;
 use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaDefinitionCollection;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Nelmio\ApiDocBundle\ApiDocGenerator;
 use Symfony\Component\Routing\RouterInterface;
-
-use function end;
-use function explode;
-use function get_declared_classes;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -29,17 +26,12 @@ use function get_declared_classes;
 class NelmioApiDocConfigurationLoader extends AbstractAnnotationConfigurationLoader
 {
     /**
-     * Instance of nelmio Api configuration generator
+     * Instance of nelmio Api configuration generator.
      *
      * @var ApiDocGenerator
      */
     private $apiDocGenerator;
 
-    /**
-     * @param OperationParameterMerger $merger
-     * @param RouterInterface $router
-     * @param ApiDocGenerator $generator
-     */
     public function __construct(OperationParameterMerger $merger, RouterInterface $router, ApiDocGenerator $generator)
     {
         parent::__construct($merger, $router);

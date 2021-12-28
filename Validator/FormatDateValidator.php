@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the SwaggerResolverBundle package.
- *
  * (c) Viktor Linkin <adrenalinkin@gmail.com>
- *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -14,13 +12,12 @@ declare(strict_types=1);
 namespace Linkin\Bundle\SwaggerResolverBundle\Validator;
 
 use EXSyst\Component\Swagger\Schema;
-use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-
 use function preg_match;
 use function sprintf;
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
 /**
- * This validation based on rfc3339 {@see https://xml2rfc.tools.ietf.org/public/rfc/html/rfc3339.html#anchor14}
+ * This validation based on rfc3339 {@see https://xml2rfc.tools.ietf.org/public/rfc/html/rfc3339.html#anchor14}.
  *
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */

@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the SwaggerResolverBundle package.
- *
  * (c) Viktor Linkin <adrenalinkin@gmail.com>
- *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -29,7 +27,7 @@ class BooleanNormalizer implements SwaggerNormalizerInterface
      */
     public function supports(Schema $propertySchema, string $propertyName, bool $isRequired, array $context = []): bool
     {
-        return $propertySchema->getType() === ParameterTypeEnum::BOOLEAN;
+        return ParameterTypeEnum::BOOLEAN === $propertySchema->getType();
     }
 
     /**
@@ -38,15 +36,15 @@ class BooleanNormalizer implements SwaggerNormalizerInterface
     public function getNormalizer(Schema $propertySchema, string $propertyName, bool $isRequired): Closure
     {
         return static function (Options $options, $value) use ($isRequired, $propertyName) {
-            if ($value === 'true' || $value === '1' || $value === 1 || $value === true) {
+            if ('true' === $value || '1' === $value || 1 === $value || true === $value) {
                 return true;
             }
 
-            if ($value === 'false' || $value === '0' || $value === 0 || $value === false) {
+            if ('false' === $value || '0' === $value || 0 === $value || false === $value) {
                 return false;
             }
 
-            if (!$isRequired && $value === null) {
+            if (!$isRequired && null === $value) {
                 return null;
             }
 

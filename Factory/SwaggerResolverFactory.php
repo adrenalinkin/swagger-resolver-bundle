@@ -4,22 +4,20 @@ declare(strict_types=1);
 
 /*
  * This file is part of the SwaggerResolverBundle package.
- *
  * (c) Viktor Linkin <adrenalinkin@gmail.com>
- *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Factory;
 
+use function end;
+use function explode;
 use Linkin\Bundle\SwaggerResolverBundle\Builder\SwaggerResolverBuilder;
 use Linkin\Bundle\SwaggerResolverBundle\Configuration\SwaggerConfigurationInterface;
 use Linkin\Bundle\SwaggerResolverBundle\Resolver\SwaggerResolver;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
-use function end;
-use function explode;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -41,11 +39,6 @@ class SwaggerResolverFactory
      */
     private $swaggerConfiguration;
 
-    /**
-     * @param SwaggerResolverBuilder $builder
-     * @param SwaggerConfigurationInterface $configuration
-     * @param RouterInterface $router
-     */
     public function __construct(
         SwaggerResolverBuilder $builder,
         SwaggerConfigurationInterface $configuration,
@@ -56,11 +49,6 @@ class SwaggerResolverFactory
         $this->router = $router;
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return SwaggerResolver
-     */
     public function createForRequest(Request $request): SwaggerResolver
     {
         $pathInfo = $this->router->match($request->getPathInfo());
@@ -71,11 +59,6 @@ class SwaggerResolverFactory
         return $this->builder->build($mergedSchema, $routeName);
     }
 
-    /**
-     * @param string $definitionName
-     *
-     * @return SwaggerResolver
-     */
     public function createForDefinition(string $definitionName): SwaggerResolver
     {
         $explodedName = explode('\\', $definitionName);

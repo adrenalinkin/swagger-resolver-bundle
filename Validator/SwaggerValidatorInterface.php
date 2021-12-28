@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the SwaggerResolverBundle package.
- *
  * (c) Viktor Linkin <adrenalinkin@gmail.com>
- *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -22,21 +20,14 @@ use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 interface SwaggerValidatorInterface
 {
     /**
-     * Check is this validator supports received property
-     *
-     * @param Schema $propertySchema
-     * @param array  $context
-     *
-     * @return bool
+     * Check is this validator supports received property.
      */
     public function supports(Schema $propertySchema, array $context = []): bool;
 
     /**
-     * Validate received property value according to property schema configuration
+     * Validate received property value according to property schema configuration.
      *
-     * @param Schema $propertySchema
-     * @param string $propertyName
-     * @param mixed  $value
+     * @param mixed $value
      *
      * @throws InvalidOptionsException If the option doesn't fulfill the specified validation rules
      */

@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the SwaggerResolverBundle package.
- *
  * (c) Viktor Linkin <adrenalinkin@gmail.com>
- *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -14,12 +12,10 @@ declare(strict_types=1);
 namespace Linkin\Bundle\SwaggerResolverBundle\Validator;
 
 use EXSyst\Component\Swagger\Schema;
-use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterTypeEnum;
-use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-
-use function in_array;
 use function is_numeric;
+use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterTypeEnum;
 use function sprintf;
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -31,7 +27,7 @@ class NumberMultipleOfValidator implements SwaggerValidatorInterface
      */
     public function supports(Schema $propertySchema, array $context = []): bool
     {
-        return in_array($propertySchema->getType(), [ParameterTypeEnum::NUMBER, ParameterTypeEnum::INTEGER], true)
+        return \in_array($propertySchema->getType(), [ParameterTypeEnum::NUMBER, ParameterTypeEnum::INTEGER], true)
             && null !== $propertySchema->getMultipleOf()
         ;
     }
@@ -47,7 +43,7 @@ class NumberMultipleOfValidator implements SwaggerValidatorInterface
 
         $divisionResult = $value % $propertySchema->getMultipleOf();
 
-        if ($divisionResult !== 0) {
+        if (0 !== $divisionResult) {
             $message = sprintf(
                 'Property "%s" should be a multiple of %s',
                 $propertyName,

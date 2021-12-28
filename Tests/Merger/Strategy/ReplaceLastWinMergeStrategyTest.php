@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the SwaggerResolverBundle package.
- *
  * (c) Viktor Linkin <adrenalinkin@gmail.com>
- *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -39,7 +37,7 @@ class ReplaceLastWinMergeStrategyTest extends TestCase
             'x-auth-token' => ['type' => 'string'],
             'page' => ['type' => 'integer'],
             'discount' => ['type' => 'float'],
-            'rememberMe' =>  ['type' => 'boolean'],
+            'rememberMe' => ['type' => 'boolean'],
         ];
 
         $this->sut->addParameter('path', 'name', ['type' => 'string'], true);
@@ -66,7 +64,7 @@ class ReplaceLastWinMergeStrategyTest extends TestCase
             'x-auth-token' => ['type' => 'string'],
             'page' => ['type' => 'integer'],
             'discount' => ['type' => 'float'],
-            'rememberMe' =>  ['type' => 'boolean'],
+            'rememberMe' => ['type' => 'boolean'],
         ];
 
         $this->sut->addParameter('path', 'name', ['type' => 'string'], true);

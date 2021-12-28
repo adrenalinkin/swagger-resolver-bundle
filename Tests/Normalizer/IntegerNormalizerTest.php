@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the SwaggerResolverBundle package.
- *
  * (c) Viktor Linkin <adrenalinkin@gmail.com>
- *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -44,7 +42,7 @@ class IntegerNormalizerTest extends TestCase
     {
         $fieldName = 'clickCount';
         $schemaDefinition = $this->createSchemaDefinition($fieldName, $type);
-        $schemaProperty =  $schemaDefinition->getProperties()->get($fieldName);
+        $schemaProperty = $schemaDefinition->getProperties()->get($fieldName);
 
         $isSupported = $this->sut->supports($schemaProperty, $fieldName, true);
 
@@ -74,7 +72,7 @@ class IntegerNormalizerTest extends TestCase
         $isRequired = true;
 
         $schemaDefinition = $this->createSchemaDefinition($fieldName);
-        $schemaProperty =  $schemaDefinition->getProperties()->get($fieldName);
+        $schemaProperty = $schemaDefinition->getProperties()->get($fieldName);
 
         $closure = $this->sut->getNormalizer($schemaProperty, $fieldName, $isRequired);
 
@@ -105,7 +103,7 @@ class IntegerNormalizerTest extends TestCase
         $originValue = null;
 
         $schemaDefinition = $this->createSchemaDefinition($fieldName);
-        $schemaProperty =  $schemaDefinition->getProperties()->get($fieldName);
+        $schemaProperty = $schemaDefinition->getProperties()->get($fieldName);
 
         $closure = $this->sut->getNormalizer($schemaProperty, $fieldName, $isRequired);
 
@@ -126,7 +124,7 @@ class IntegerNormalizerTest extends TestCase
         $fieldName = 'clickCount';
         $isRequired = true;
         $schemaDefinition = $this->createSchemaDefinition($fieldName);
-        $schemaProperty =  $schemaDefinition->getProperties()->get($fieldName);
+        $schemaProperty = $schemaDefinition->getProperties()->get($fieldName);
 
         $closure = $this->sut->getNormalizer($schemaProperty, $fieldName, $isRequired);
 
@@ -165,8 +163,8 @@ class IntegerNormalizerTest extends TestCase
     {
         return FixturesProvider::createSchemaDefinition([
             $fieldName => [
-                'type' => $type
-            ]
+                'type' => $type,
+            ],
         ]);
     }
 }

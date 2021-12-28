@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the SwaggerResolverBundle package.
- *
  * (c) Viktor Linkin <adrenalinkin@gmail.com>
- *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -22,46 +20,46 @@ use EXSyst\Component\Swagger\Swagger;
 class FixturesProvider
 {
     private const MAP_DEFINITION_RESOURCE = [
-        'Cart' => __DIR__ . '/SwaggerPhp/Models/Cart.php',
-        'CartItem' => __DIR__ . '/SwaggerPhp/Models/CartItem.php',
-        'CustomerFull' => __DIR__ . '/SwaggerPhp/Models/CustomerFull.php',
-        'CustomerNew' => __DIR__ . '/SwaggerPhp/Models/CustomerNew.php',
-        'ResponseCreated' => __DIR__ . '/SwaggerPhp/Models/ResponseCreated.php',
+        'Cart' => __DIR__.'/SwaggerPhp/Models/Cart.php',
+        'CartItem' => __DIR__.'/SwaggerPhp/Models/CartItem.php',
+        'CustomerFull' => __DIR__.'/SwaggerPhp/Models/CustomerFull.php',
+        'CustomerNew' => __DIR__.'/SwaggerPhp/Models/CustomerNew.php',
+        'ResponseCreated' => __DIR__.'/SwaggerPhp/Models/ResponseCreated.php',
     ];
 
     private const MAP_ROUTE_RESOURCE = [
         'cart_add_item' => [
-            __DIR__ . '/SwaggerPhp/Models/CartItem.php',
-            __DIR__ . '/SwaggerPhp/Controllers/CartController.php',
+            __DIR__.'/SwaggerPhp/Models/CartItem.php',
+            __DIR__.'/SwaggerPhp/Controllers/CartController.php',
         ],
         'cart_get' => [
-            __DIR__ . '/SwaggerPhp/Controllers/CartController.php',
+            __DIR__.'/SwaggerPhp/Controllers/CartController.php',
         ],
         'customers_get' => [
-            __DIR__ . '/SwaggerPhp/Controllers/CustomerController.php',
+            __DIR__.'/SwaggerPhp/Controllers/CustomerController.php',
         ],
         'customers_post' => [
-            __DIR__ . '/SwaggerPhp/Models/CustomerNew.php',
-            __DIR__ . '/SwaggerPhp/Controllers/CustomerController.php',
+            __DIR__.'/SwaggerPhp/Models/CustomerNew.php',
+            __DIR__.'/SwaggerPhp/Controllers/CustomerController.php',
         ],
         'customers_get_one' => [
-            __DIR__ . '/SwaggerPhp/Controllers/CustomerController.php',
+            __DIR__.'/SwaggerPhp/Controllers/CustomerController.php',
         ],
         'customers_update' => [
-            __DIR__ . '/SwaggerPhp/Models/CustomerNew.php',
-            __DIR__ . '/SwaggerPhp/Controllers/CustomerController.php',
+            __DIR__.'/SwaggerPhp/Models/CustomerNew.php',
+            __DIR__.'/SwaggerPhp/Controllers/CustomerController.php',
         ],
         'customers_patch' => [
-            __DIR__ . '/SwaggerPhp/Controllers/CustomerController.php',
+            __DIR__.'/SwaggerPhp/Controllers/CustomerController.php',
         ],
         'customers_delete' => [
-            __DIR__ . '/SwaggerPhp/Controllers/CustomerController.php',
+            __DIR__.'/SwaggerPhp/Controllers/CustomerController.php',
         ],
         'customers_password_create' => [
-            __DIR__ . '/SwaggerPhp/Controllers/CustomerPasswordController.php',
+            __DIR__.'/SwaggerPhp/Controllers/CustomerPasswordController.php',
             ],
         'customers_password_reset' => [
-            __DIR__ . '/SwaggerPhp/Controllers/CustomerPasswordController.php',
+            __DIR__.'/SwaggerPhp/Controllers/CustomerPasswordController.php',
         ],
     ];
 
@@ -108,17 +106,14 @@ class FixturesProvider
 
     public static function loadFromJson(): Swagger
     {
-        if (self::$cachedSwagger === null) {
-            self::$cachedSwagger = Swagger::fromFile(__DIR__ . '/Json/customer.json');
+        if (null === self::$cachedSwagger) {
+            self::$cachedSwagger = Swagger::fromFile(__DIR__.'/Json/customer.json');
         }
 
         return self::$cachedSwagger;
     }
 
     /**
-     * @param array $properties
-     * @param array $required
-     *
      * @example [
      *      'firstPropertyName' => [
      *          'type' => 'boolean',
@@ -127,8 +122,6 @@ class FixturesProvider
      *          'type' => 'integer',
      *      ]
      *  ]
-     *
-     * @return Schema
      */
     public static function createSchemaDefinition(array $properties, array $required = []): Schema
     {
@@ -140,14 +133,10 @@ class FixturesProvider
     }
 
     /**
-     * @param array $data
-     *
      * @example [
      *      'type' => 'integer',
      *      'minimum' => 10,
      *  ]
-     *
-     * @return Schema
      */
     public static function createSchemaProperty(array $data): Schema
     {

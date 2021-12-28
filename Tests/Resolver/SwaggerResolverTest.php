@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the SwaggerResolverBundle package.
- *
  * (c) Viktor Linkin <adrenalinkin@gmail.com>
- *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -21,8 +19,6 @@ use Linkin\Bundle\SwaggerResolverBundle\Validator\SwaggerValidatorInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-
-use function get_class;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -50,7 +46,7 @@ class SwaggerResolverTest extends TestCase
         $schemaDefinition = FixturesProvider::createSchemaDefinition([
             $fieldNameMain => [
                 'type' => ParameterTypeEnum::STRING,
-            ]
+            ],
         ]);
 
         $schemaProperty = $schemaDefinition->getProperties()->get($fieldNameMain);
@@ -72,7 +68,7 @@ class SwaggerResolverTest extends TestCase
         $schemaDefinition = FixturesProvider::createSchemaDefinition([
             $fieldName => [
                 'type' => ParameterTypeEnum::STRING,
-            ]
+            ],
         ]);
 
         $schemaProperty = $schemaDefinition->getProperties()->get($fieldName);
@@ -93,7 +89,7 @@ class SwaggerResolverTest extends TestCase
         $schemaDefinition = FixturesProvider::createSchemaDefinition([
             $fieldName => [
                 'type' => ParameterTypeEnum::STRING,
-            ]
+            ],
         ]);
 
         $schemaProperty = $schemaDefinition->getProperties()->get($fieldName);
@@ -143,11 +139,11 @@ class SwaggerResolverTest extends TestCase
 
         self::assertCount(2, $sut->getValidators());
 
-        $sut->removeValidator(get_class($validatorMock));
+        $sut->removeValidator(\get_class($validatorMock));
 
         self::assertCount(1, $sut->getValidators());
 
-        $sut->removeValidator(get_class($validatorAnonymous));
+        $sut->removeValidator(\get_class($validatorAnonymous));
 
         self::assertCount(0, $sut->getValidators());
     }
@@ -182,7 +178,7 @@ class SwaggerResolverTest extends TestCase
             ->expects(self::once())
             ->method('supports')
             ->willReturnCallback(
-                static function(Schema $property) use ($expectedSchemaProperty) {
+                static function (Schema $property) use ($expectedSchemaProperty) {
                     return $property->getTitle() === $expectedSchemaProperty->getTitle()
                         && $property->getType() === $expectedSchemaProperty->getType();
                 }

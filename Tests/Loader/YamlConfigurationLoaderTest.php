@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the SwaggerResolverBundle package.
- *
  * (c) Viktor Linkin <adrenalinkin@gmail.com>
- *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -30,7 +28,7 @@ use Symfony\Component\Routing\Router;
  */
 class YamlConfigurationLoaderTest extends TestCase
 {
-    private const PATH_TO_CONFIG = __DIR__ . '/../Fixtures/Yaml/customer.yaml';
+    private const PATH_TO_CONFIG = __DIR__.'/../Fixtures/Yaml/customer.yaml';
 
     /**
      * @var YamlConfigurationLoader
@@ -40,7 +38,7 @@ class YamlConfigurationLoaderTest extends TestCase
     protected function setUp(): void
     {
         $parameterMerger = new OperationParameterMerger(new ReplaceLastWinMergeStrategy());
-        $router = new Router(new YamlFileLoader(new FileLocator(__DIR__ . '/../Fixtures')), 'routing.yaml');
+        $router = new Router(new YamlFileLoader(new FileLocator(__DIR__.'/../Fixtures')), 'routing.yaml');
 
         $this->sut = new YamlConfigurationLoader($parameterMerger, $router, self::PATH_TO_CONFIG);
     }
@@ -76,7 +74,7 @@ class YamlConfigurationLoaderTest extends TestCase
 
         /**
          * @var string $path
-         * @var Path $pathObject
+         * @var Path   $pathObject
          */
         foreach ($swagger->getPaths()->getIterator() as $path => $pathObject) {
             foreach ($pathObject->getOperations() as $method => $operation) {
@@ -90,7 +88,7 @@ class YamlConfigurationLoaderTest extends TestCase
                 $loadedResource = $loadedResources[0];
                 self::assertSame($expectedFileResource->getResource(), $loadedResource->getResource());
 
-                $expectedOperationsCount++;
+                ++$expectedOperationsCount;
             }
         }
 

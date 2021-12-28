@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the SwaggerResolverBundle package.
- *
  * (c) Viktor Linkin <adrenalinkin@gmail.com>
- *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -14,16 +12,16 @@ declare(strict_types=1);
 namespace Linkin\Bundle\SwaggerResolverBundle\DependencyInjection;
 
 use Closure;
+use function is_subclass_of;
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterLocationEnum;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerConfigurationLoaderInterface;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\MergeStrategyInterface;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\StrictMergeStrategy;
+use function method_exists;
+use function sprintf;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
-use function is_subclass_of;
-use function sprintf;
-use function method_exists;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -83,9 +81,6 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    /**
-     * @return Closure
-     */
     private function validationForConfigurationLoader(): Closure
     {
         return static function ($className) {
@@ -94,27 +89,18 @@ class Configuration implements ConfigurationInterface
             }
 
             if (!is_subclass_of($className, SwaggerConfigurationLoaderInterface::class)) {
-                throw new InvalidConfigurationException(sprintf(
-                    'Parameter "configuration_loader_service" should contain class which implements "%s"',
-                    SwaggerConfigurationLoaderInterface::class
-                ));
+                throw new InvalidConfigurationException(sprintf('Parameter "configuration_loader_service" should contain class which implements "%s"', SwaggerConfigurationLoaderInterface::class));
             }
 
             return $className;
         };
     }
 
-    /**
-     * @return Closure
-     */
     private function validationForPathMergeStrategy(): Closure
     {
         return static function ($className) {
             if (!is_subclass_of($className, MergeStrategyInterface::class)) {
-                throw new InvalidConfigurationException(sprintf(
-                    'Parameter "path_merge_strategy" should contain class which implements "%s"',
-                    MergeStrategyInterface::class
-                ));
+                throw new InvalidConfigurationException(sprintf('Parameter "path_merge_strategy" should contain class which implements "%s"', MergeStrategyInterface::class));
             }
 
             return $className;

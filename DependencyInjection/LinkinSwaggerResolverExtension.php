@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 /*
  * This file is part of the SwaggerResolverBundle package.
- *
  * (c) Viktor Linkin <adrenalinkin@gmail.com>
- *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
 namespace Linkin\Bundle\SwaggerResolverBundle\DependencyInjection;
 
+use function array_merge_recursive;
+use function class_exists;
+use function end;
+use function explode;
 use Linkin\Bundle\SwaggerResolverBundle\DependencyInjection\Compiler\SwaggerNormalizerCompilerPass;
 use Linkin\Bundle\SwaggerResolverBundle\DependencyInjection\Compiler\SwaggerValidatorCompilerPass;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\JsonConfigurationLoader;
@@ -24,6 +26,8 @@ use Linkin\Bundle\SwaggerResolverBundle\Merger\MergeStrategyInterface;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Linkin\Bundle\SwaggerResolverBundle\Normalizer\SwaggerNormalizerInterface;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\SwaggerValidatorInterface;
+use function md5;
+use function sprintf;
 use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -33,12 +37,6 @@ use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Routing\RouterInterface;
-use function array_merge_recursive;
-use function class_exists;
-use function end;
-use function explode;
-use function md5;
-use function sprintf;
 use function time;
 use function uniqid;
 
@@ -109,10 +107,6 @@ class LinkinSwaggerResolverExtension extends Extension implements PrependExtensi
         $container->prependExtensionConfig('nelmio_api_doc', ['areas' => [$this->globalAreaName => $globalArea]]);
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param array $config
-     */
     private function registerConfigurationLoader(ContainerBuilder $container, array $config): void
     {
         if (!empty($config['configuration_loader_service'])) {
@@ -127,12 +121,6 @@ class LinkinSwaggerResolverExtension extends Extension implements PrependExtensi
         $container->setAlias(SwaggerConfigurationLoaderInterface::class, $loaderDefinition->getClass());
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param array $config
-     *
-     * @return Definition
-     */
     private function getConfigurationLoaderDefinition(ContainerBuilder $container, array $config): Definition
     {
         $loaderDefinition = new Definition();

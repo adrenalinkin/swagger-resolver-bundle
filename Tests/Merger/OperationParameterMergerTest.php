@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the SwaggerResolverBundle package.
- *
  * (c) Viktor Linkin <adrenalinkin@gmail.com>
- *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -20,8 +18,6 @@ use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrategy;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\FixturesProvider;
 use PHPUnit\Framework\TestCase;
-
-use function count;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -46,7 +42,7 @@ class OperationParameterMergerTest extends TestCase
         $mergedSchema = $this->sut->merge($operation, $definitions);
         $mergedSchemaProperties = $mergedSchema->getProperties();
 
-        self::assertCount(count($expectedResult->getRequired()), $mergedSchema->getRequired());
+        self::assertCount(\count($expectedResult->getRequired()), $mergedSchema->getRequired());
 
         foreach ($expectedResult->getRequired() as $expectedRequired) {
             self::assertArrayHasKey($expectedRequired, $mergedSchema->getRequired());
