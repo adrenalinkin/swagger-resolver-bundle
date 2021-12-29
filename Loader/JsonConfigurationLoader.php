@@ -27,11 +27,6 @@ class JsonConfigurationLoader extends AbstractFileConfigurationLoader
      */
     private $pathToFile;
 
-    /**
-     * @param OperationParameterMerger $parameterMerger
-     * @param RouterInterface $router
-     * @param string $pathToFile
-     */
     public function __construct(OperationParameterMerger $parameterMerger, RouterInterface $router, string $pathToFile)
     {
         parent::__construct($parameterMerger, $router, $pathToFile);

@@ -44,7 +44,7 @@ class BooleanNormalizerTest extends TestCase
     {
         $fieldName = 'rememberMe';
         $schemaDefinition = $this->createSchemaDefinition($fieldName, $type);
-        $schemaProperty =  $schemaDefinition->getProperties()->get($fieldName);
+        $schemaProperty = $schemaDefinition->getProperties()->get($fieldName);
 
         $isSupported = $this->sut->supports($schemaProperty, $fieldName, true);
 
@@ -71,7 +71,7 @@ class BooleanNormalizerTest extends TestCase
         $isRequired = true;
 
         $schemaDefinition = $this->createSchemaDefinition($fieldName);
-        $schemaProperty =  $schemaDefinition->getProperties()->get($fieldName);
+        $schemaProperty = $schemaDefinition->getProperties()->get($fieldName);
 
         $closure = $this->sut->getNormalizer($schemaProperty, $fieldName, $isRequired);
 
@@ -91,7 +91,7 @@ class BooleanNormalizerTest extends TestCase
         $originValue = null;
 
         $schemaDefinition = $this->createSchemaDefinition($fieldName);
-        $schemaProperty =  $schemaDefinition->getProperties()->get($fieldName);
+        $schemaProperty = $schemaDefinition->getProperties()->get($fieldName);
 
         $closure = $this->sut->getNormalizer($schemaProperty, $fieldName, $isRequired);
 
@@ -112,7 +112,7 @@ class BooleanNormalizerTest extends TestCase
         $fieldName = 'rememberMe';
         $isRequired = true;
         $schemaDefinition = $this->createSchemaDefinition($fieldName);
-        $schemaProperty =  $schemaDefinition->getProperties()->get($fieldName);
+        $schemaProperty = $schemaDefinition->getProperties()->get($fieldName);
 
         $closure = $this->sut->getNormalizer($schemaProperty, $fieldName, $isRequired);
 
@@ -159,8 +159,8 @@ class BooleanNormalizerTest extends TestCase
     {
         return FixturesProvider::createSchemaDefinition([
             $fieldName => [
-                'type' => $type
-            ]
+                'type' => $type,
+            ],
         ]);
     }
 }

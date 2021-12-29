@@ -17,10 +17,8 @@ use DateTime;
 use EXSyst\Component\Swagger\Schema;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
-use function sprintf;
-
 /**
- * This validation based on rfc3339 {@see https://xml2rfc.tools.ietf.org/public/rfc/html/rfc3339.html#anchor14}
+ * This validation based on rfc3339 {@see https://xml2rfc.tools.ietf.org/public/rfc/html/rfc3339.html#anchor14}.
  *
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
@@ -41,11 +39,11 @@ class FormatDateTimeValidator implements SwaggerValidatorInterface
 
         $value = (string) $value;
 
-        DateTime::createFromFormat(DATE_ATOM, $value);
+        DateTime::createFromFormat(\DATE_ATOM, $value);
 
         $errors = DateTime::getLastErrors();
 
-        if ($errors !== false && 0 < $errors['error_count']) {
+        if (false !== $errors && 0 < $errors['error_count']) {
             $message = sprintf('Property "%s" contains invalid date-time format', $propertyName);
 
             throw new InvalidOptionsException($message);

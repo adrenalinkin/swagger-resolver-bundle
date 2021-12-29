@@ -24,9 +24,6 @@ class ParameterLocationEnum
     public const IN_PATH = 'path';
     public const IN_QUERY = 'query';
 
-    /**
-     * @return array
-     */
     public static function getAll(): array
     {
         return [self::IN_BODY, self::IN_FORM_DATA, self::IN_HEADER, self::IN_PATH, self::IN_QUERY];

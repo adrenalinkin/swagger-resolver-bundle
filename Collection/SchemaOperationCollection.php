@@ -19,9 +19,6 @@ use IteratorAggregate;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\OperationNotFoundException;
 use Symfony\Component\Config\Resource\FileResource;
 
-use function array_values;
-use function strtolower;
-
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
@@ -45,13 +42,6 @@ class SchemaOperationCollection implements IteratorAggregate
         return new ArrayIterator($this->schemaCollection);
     }
 
-    /**
-     * @param string $routeName
-     * @param string $method
-     * @param Schema $schema
-     *
-     * @return self
-     */
     public function addSchema(string $routeName, string $method, Schema $schema): self
     {
         $method = $this->normalizeMethod($method);
@@ -61,11 +51,6 @@ class SchemaOperationCollection implements IteratorAggregate
     }
 
     /**
-     * @param string $routeName
-     * @param string $method
-     *
-     * @return Schema
-     *
      * @throws OperationNotFoundException
      */
     public function getSchema(string $routeName, string $method): Schema
@@ -80,12 +65,6 @@ class SchemaOperationCollection implements IteratorAggregate
         return $schema;
     }
 
-    /**
-     * @param string $routeName
-     * @param FileResource $resource
-     *
-     * @return self
-     */
     public function addSchemaResource(string $routeName, FileResource $resource): self
     {
         $this->resourceCollection[$routeName][(string) $resource->getResource()] = $resource;
@@ -94,8 +73,6 @@ class SchemaOperationCollection implements IteratorAggregate
     }
 
     /**
-     * @param string $routeName
-     *
      * @return FileResource[]
      */
     public function getSchemaResources(string $routeName): array
@@ -103,11 +80,6 @@ class SchemaOperationCollection implements IteratorAggregate
         return array_values($this->resourceCollection[$routeName] ?? []);
     }
 
-    /**
-     * @param string $method
-     *
-     * @return string
-     */
     private function normalizeMethod(string $method): string
     {
         return strtolower($method);

@@ -40,7 +40,7 @@ class CombineNamMergeStrategyTest extends TestCase
             'query_page' => ['type' => 'integer'],
             'query_discount' => ['type' => 'integer'],
             'formData_discount' => ['type' => 'float'],
-            'body_rememberMe' =>  ['type' => 'boolean'],
+            'body_rememberMe' => ['type' => 'boolean'],
         ];
 
         $this->sut->addParameter('path', 'name', ['type' => 'string'], true);

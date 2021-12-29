@@ -15,9 +15,6 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Validator;
 
 use EXSyst\Component\Swagger\Schema;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use function array_unique;
-use function count;
-use function sprintf;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -41,7 +38,7 @@ class ArrayUniqueItemsValidator extends AbstractArrayValidator
 
         $itemsUnique = array_unique($value);
 
-        if (count($itemsUnique) !== count($value)) {
+        if (\count($itemsUnique) !== \count($value)) {
             throw new InvalidOptionsException(sprintf('Property "%s" should contains unique items', $propertyName));
         }
     }

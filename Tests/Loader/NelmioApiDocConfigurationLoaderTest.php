@@ -41,7 +41,7 @@ class NelmioApiDocConfigurationLoaderTest extends TestCase
         BypassFinals::enable();
 
         $parameterMerger = new OperationParameterMerger(new ReplaceLastWinMergeStrategy());
-        $router = new Router(new YamlFileLoader(new FileLocator(__DIR__ . '/../Fixtures')), 'routing.yaml');
+        $router = new Router(new YamlFileLoader(new FileLocator(__DIR__.'/../Fixtures')), 'routing.yaml');
         $apiDocGenerator = $this->createMock(ApiDocGenerator::class);
         $apiDocGenerator->method('generate')->willReturn(FixturesProvider::loadFromJson());
 
@@ -81,7 +81,7 @@ class NelmioApiDocConfigurationLoaderTest extends TestCase
 
         /**
          * @var string $path
-         * @var Path $pathObject
+         * @var Path   $pathObject
          */
         foreach ($swagger->getPaths()->getIterator() as $path => $pathObject) {
             foreach ($pathObject->getOperations() as $method => $operation) {
@@ -96,7 +96,7 @@ class NelmioApiDocConfigurationLoaderTest extends TestCase
                     self::assertContains($loadedResource->getResource(), $expectedResources);
                 }
 
-                $expectedOperationsCount++;
+                ++$expectedOperationsCount;
             }
         }
 

@@ -17,9 +17,6 @@ use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaOperationCollection;
 use ReflectionClass;
 use Symfony\Component\Config\Resource\FileResource;
 
-use function explode;
-use function reset;
-
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
@@ -33,7 +30,7 @@ abstract class AbstractAnnotationConfigurationLoader extends AbstractSwaggerConf
         foreach ($operationCollection->getIterator() as $routeName => $methodList) {
             $route = $this->getRouter()->getRouteCollection()->get($routeName);
 
-            if ($route === null) {
+            if (null === $route) {
                 continue;
             }
 

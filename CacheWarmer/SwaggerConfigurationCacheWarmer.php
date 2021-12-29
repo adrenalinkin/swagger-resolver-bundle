@@ -27,9 +27,6 @@ class SwaggerConfigurationCacheWarmer implements CacheWarmerInterface
      */
     private $configuration;
 
-    /**
-     * @param SwaggerConfigurationInterface $configurationLoader
-     */
     public function __construct(SwaggerConfigurationInterface $configurationLoader)
     {
         $this->configuration = $configurationLoader;

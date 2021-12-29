@@ -39,7 +39,7 @@ class ReplaceLastWinMergeStrategyTest extends TestCase
             'x-auth-token' => ['type' => 'string'],
             'page' => ['type' => 'integer'],
             'discount' => ['type' => 'float'],
-            'rememberMe' =>  ['type' => 'boolean'],
+            'rememberMe' => ['type' => 'boolean'],
         ];
 
         $this->sut->addParameter('path', 'name', ['type' => 'string'], true);
@@ -66,7 +66,7 @@ class ReplaceLastWinMergeStrategyTest extends TestCase
             'x-auth-token' => ['type' => 'string'],
             'page' => ['type' => 'integer'],
             'discount' => ['type' => 'float'],
-            'rememberMe' =>  ['type' => 'boolean'],
+            'rememberMe' => ['type' => 'boolean'],
         ];
 
         $this->sut->addParameter('path', 'name', ['type' => 'string'], true);

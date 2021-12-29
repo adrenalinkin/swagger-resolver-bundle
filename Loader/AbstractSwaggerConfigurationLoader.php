@@ -23,11 +23,6 @@ use Linkin\Bundle\SwaggerResolverBundle\Exception\OperationNotFoundException;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Symfony\Component\Routing\RouterInterface;
 
-use function end;
-use function explode;
-use function is_string;
-use function strtolower;
-
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
@@ -54,14 +49,10 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
     private $parameterMerger;
 
     /**
-     * @var RouterInterface $router
+     * @var RouterInterface
      */
     private $router;
 
-    /**
-     * @param OperationParameterMerger $parameterMerger
-     * @param RouterInterface $router
-     */
     public function __construct(OperationParameterMerger $parameterMerger, RouterInterface $router)
     {
         $this->parameterMerger = $parameterMerger;
@@ -93,40 +84,25 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
     }
 
     /**
-     * Load full configuration and returns Swagger object
-     *
-     * @return Swagger
+     * Load full configuration and returns Swagger object.
      */
     abstract protected function loadConfiguration(): Swagger;
 
     /**
-     * Add file resources for swagger definitions
-     *
-     * @param SchemaDefinitionCollection $definitionCollection
+     * Add file resources for swagger definitions.
      */
     abstract protected function registerDefinitionResources(SchemaDefinitionCollection $definitionCollection): void;
 
     /**
-     * Add file resources for swagger operations
-     *
-     * @param SchemaOperationCollection $operationCollection
+     * Add file resources for swagger operations.
      */
     abstract protected function registerOperationResources(SchemaOperationCollection $operationCollection): void;
 
-    /**
-     * @return RouterInterface
-     */
     protected function getRouter(): RouterInterface
     {
         return $this->router;
     }
 
-    /**
-     * @param string $path
-     * @param string $method
-     *
-     * @return string
-     */
     protected function getRouteNameByPath(string $path, string $method): string
     {
         if (!$this->mapPathToRouteName) {
@@ -143,7 +119,7 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
     }
 
     /**
-     * Initialize map real path into appropriated route name
+     * Initialize map real path into appropriated route name.
      */
     private function initMapPathToRouteName(): void
     {
@@ -156,7 +132,7 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
     }
 
     /**
-     * Register collection according to loaded Swagger object
+     * Register collection according to loaded Swagger object.
      */
     private function registerCollections(): void
     {
@@ -184,7 +160,7 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
                 foreach ($operation->getParameters()->getIterator() as $parameter) {
                     $ref = $parameter->getSchema()->getRef();
 
-                    if (!is_string($ref)) {
+                    if (!\is_string($ref)) {
                         continue;
                     }
 
@@ -204,11 +180,6 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
         $this->operationCollection = $operationCollection;
     }
 
-    /**
-     * @param string $method
-     *
-     * @return string
-     */
     private function normalizeMethod(string $method): string
     {
         return strtolower($method);

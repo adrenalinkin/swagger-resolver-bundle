@@ -30,8 +30,6 @@ use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\Router;
 
-use function array_values;
-
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
@@ -67,7 +65,7 @@ class SwaggerResolverBuilderTest extends TestCase
     {
         $defaultQuestion = 'what?';
         $definition = FixturesProvider::createSchemaDefinition([
-            'question' => ['type' => 'string', 'default' => $defaultQuestion]
+            'question' => ['type' => 'string', 'default' => $defaultQuestion],
         ]);
 
         $resolver = $this->sut->build($definition, 'anyway');
@@ -86,7 +84,7 @@ class SwaggerResolverBuilderTest extends TestCase
         $sut = new SwaggerResolverBuilder([new StringMaxLengthValidator()], [], []);
 
         $definition = FixturesProvider::createSchemaDefinition([
-            'name' => ['type' => 'string', 'maxLength' => 5]
+            'name' => ['type' => 'string', 'maxLength' => 5],
         ]);
 
         $resolver = $sut->build($definition, 'anyway');
@@ -118,7 +116,7 @@ class SwaggerResolverBuilderTest extends TestCase
             'email' => 'homer@gmail.com',
         ];
 
-        if ($normalized === false) {
+        if (false === $normalized) {
             $this->expectException(InvalidOptionsException::class);
         }
 
@@ -133,15 +131,15 @@ class SwaggerResolverBuilderTest extends TestCase
         $forInteger = new IntegerNormalizer();
 
         yield 'normalizer not found' => [
-            [$forBoolean], ['path'], false
+            [$forBoolean], ['path'], false,
         ];
 
         yield 'location should not normalized' => [
-            [$forInteger], ['query'], false
+            [$forInteger], ['query'], false,
         ];
 
         yield 'normalized successfully' => [
-            [$forBoolean, $forInteger], ['path'], true
+            [$forBoolean, $forInteger], ['path'], true,
         ];
     }
 
@@ -155,7 +153,7 @@ class SwaggerResolverBuilderTest extends TestCase
         self::assertSame(array_values($definition->getRequired()), $resolver->getRequiredOptions());
         self::assertCount($definition->getProperties()->getIterator()->count(), $resolver->getDefinedOptions());
 
-        if ($isPassed === false) {
+        if (false === $isPassed) {
             $this->expectException(InvalidArgumentException::class);
         }
 
@@ -222,18 +220,18 @@ class SwaggerResolverBuilderTest extends TestCase
                 [
                     'vendorCode' => '100000000001',
                     'count' => 3,
-                    'price' => 100.5
+                    'price' => 100.5,
                 ],
                 [
                     'vendorCode' => '100000000002',
                     'count' => 1,
-                    'price' => 700.9
-                ]
+                    'price' => 700.9,
+                ],
             ],
             'lastAddedItem' => [
                 'vendorCode' => '100000000002',
                 'count' => 1,
-                'price' => 700.9
+                'price' => 700.9,
             ],
         ]];
     }
@@ -241,8 +239,8 @@ class SwaggerResolverBuilderTest extends TestCase
     private function createConfigurationLoader(): JsonConfigurationLoader
     {
         $parameterMerger = new OperationParameterMerger(new ReplaceLastWinMergeStrategy());
-        $router = new Router(new YamlFileLoader(new FileLocator(__DIR__ . '/../Fixtures')), 'routing.yaml');
+        $router = new Router(new YamlFileLoader(new FileLocator(__DIR__.'/../Fixtures')), 'routing.yaml');
 
-        return new JsonConfigurationLoader($parameterMerger, $router, __DIR__ . '/../Fixtures/Json/customer.json');
+        return new JsonConfigurationLoader($parameterMerger, $router, __DIR__.'/../Fixtures/Json/customer.json');
     }
 }

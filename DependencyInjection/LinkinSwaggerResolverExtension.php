@@ -33,14 +33,6 @@ use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Routing\RouterInterface;
-use function array_merge_recursive;
-use function class_exists;
-use function end;
-use function explode;
-use function md5;
-use function sprintf;
-use function time;
-use function uniqid;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -109,10 +101,6 @@ class LinkinSwaggerResolverExtension extends Extension implements PrependExtensi
         $container->prependExtensionConfig('nelmio_api_doc', ['areas' => [$this->globalAreaName => $globalArea]]);
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param array $config
-     */
     private function registerConfigurationLoader(ContainerBuilder $container, array $config): void
     {
         if (!empty($config['configuration_loader_service'])) {
@@ -127,12 +115,6 @@ class LinkinSwaggerResolverExtension extends Extension implements PrependExtensi
         $container->setAlias(SwaggerConfigurationLoaderInterface::class, $loaderDefinition->getClass());
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param array $config
-     *
-     * @return Definition
-     */
     private function getConfigurationLoaderDefinition(ContainerBuilder $container, array $config): Definition
     {
         $loaderDefinition = new Definition();

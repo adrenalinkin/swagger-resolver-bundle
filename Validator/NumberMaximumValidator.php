@@ -17,10 +17,6 @@ use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterTypeEnum;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
-use function in_array;
-use function is_numeric;
-use function sprintf;
-
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
@@ -32,7 +28,7 @@ class NumberMaximumValidator implements SwaggerValidatorInterface
             return false;
         }
 
-        return in_array($propertySchema->getType(), [ParameterTypeEnum::NUMBER, ParameterTypeEnum::INTEGER], true);
+        return \in_array($propertySchema->getType(), [ParameterTypeEnum::NUMBER, ParameterTypeEnum::INTEGER], true);
     }
 
     public function validate(Schema $propertySchema, string $propertyName, $value): void

@@ -19,11 +19,6 @@ use EXSyst\Component\Swagger\Parameter;
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterLocationEnum;
 
-use function array_flip;
-use function end;
-use function explode;
-use function is_string;
-
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
@@ -34,30 +29,21 @@ class OperationParameterMerger
      */
     private $mergeStrategy;
 
-    /**
-     * @param MergeStrategyInterface $defaultMergeStrategy
-     */
     public function __construct(MergeStrategyInterface $defaultMergeStrategy)
     {
         $this->mergeStrategy = $defaultMergeStrategy;
     }
 
-    /**
-     * @param Operation $swaggerOperation
-     * @param Definitions $definitions
-     *
-     * @return Schema
-     */
     public function merge(Operation $swaggerOperation, Definitions $definitions): Schema
     {
         /** @var Parameter $parameter */
         foreach ($swaggerOperation->getParameters() as $parameter) {
-            if ($parameter->getIn() !== ParameterLocationEnum::IN_BODY) {
+            if (ParameterLocationEnum::IN_BODY !== $parameter->getIn()) {
                 $this->mergeStrategy->addParameter(
                     $parameter->getIn(),
                     $parameter->getName(),
                     $parameter->toArray() + ['title' => $parameter->getIn()],
-                    $parameter->getRequired() === true
+                    true === $parameter->getRequired()
                 );
 
                 continue;
@@ -68,7 +54,7 @@ class OperationParameterMerger
             $ref = $parameterSchema->getRef();
 
             // body as reference
-            if (is_string($ref)) {
+            if (\is_string($ref)) {
                 $explodedName = explode('/', $ref);
                 $definitionName = end($explodedName);
 
@@ -89,7 +75,7 @@ class OperationParameterMerger
             }
 
             // body as object
-            if ($parameterSchema->getType() === 'object') {
+            if ('object' === $parameterSchema->getType()) {
                 $required = $parameterSchema->getRequired() ?? [];
                 $required = array_flip($required);
 
@@ -110,7 +96,7 @@ class OperationParameterMerger
                 $parameter->getIn(),
                 $parameter->getName(),
                 $parameterSchema->toArray() + ['title' => $parameter->getIn()],
-                $parameter->getRequired() === true
+                true === $parameter->getRequired()
             );
         }
 

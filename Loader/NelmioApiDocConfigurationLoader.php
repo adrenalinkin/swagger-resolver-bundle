@@ -19,27 +19,18 @@ use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Nelmio\ApiDocBundle\ApiDocGenerator;
 use Symfony\Component\Routing\RouterInterface;
 
-use function end;
-use function explode;
-use function get_declared_classes;
-
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
 class NelmioApiDocConfigurationLoader extends AbstractAnnotationConfigurationLoader
 {
     /**
-     * Instance of nelmio Api configuration generator
+     * Instance of nelmio Api configuration generator.
      *
      * @var ApiDocGenerator
      */
     private $apiDocGenerator;
 
-    /**
-     * @param OperationParameterMerger $merger
-     * @param RouterInterface $router
-     * @param ApiDocGenerator $generator
-     */
     public function __construct(OperationParameterMerger $merger, RouterInterface $router, ApiDocGenerator $generator)
     {
         parent::__construct($merger, $router);

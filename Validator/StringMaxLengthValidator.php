@@ -17,9 +17,6 @@ use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterTypeEnum;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
-use function mb_strlen;
-use function sprintf;
-
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */

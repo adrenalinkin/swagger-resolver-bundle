@@ -22,28 +22,15 @@ use EXSyst\Component\Swagger\Schema;
 interface SwaggerNormalizerInterface
 {
     /**
-     * Check is this normalizer supports received property
-     *
-     * @param Schema $propertySchema
-     * @param string $propertyName
-     * @param bool $isRequired
-     * @param array $context
-     *
-     * @return bool
+     * Check is this normalizer supports received property.
      */
     public function supports(Schema $propertySchema, string $propertyName, bool $isRequired, array $context = []): bool;
 
     /**
      * TODO: normalizer should not throw an error - better return value as is.
-     *       https://github.com/adrenalinkin/swagger-resolver-bundle/issues/57
+     *       https://github.com/adrenalinkin/swagger-resolver-bundle/issues/57.
      *
      * Returns closure for normalizing property
-     *
-     * @param Schema $propertySchema
-     * @param string $propertyName
-     * @param bool $isRequired
-     *
-     * @return Closure
      */
     public function getNormalizer(Schema $propertySchema, string $propertyName, bool $isRequired): Closure;
 }
