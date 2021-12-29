@@ -4,44 +4,24 @@ on: [push, pull_request]
 
 jobs:
     tests:
-        name: "PHP ${{ matrix.php }} + Symfony ${{ matrix.symfony }} + Composer ${{ matrix.dependency }}"
+        name: "PHP${{ matrix.php }} Symfony${{ matrix.symfony}} ${{ matrix.composer-flags }}"
         runs-on: ubuntu-latest
 
         strategy:
-            fail-fast: true
+            fail-fast: false
             matrix:
                 include:
-                    # Lowest PHP with the lowest dependencies for every supported lowest major version of the Symfony
                     -   php: '7.1'
-                        coverage: xdebug
-                        dependency: lowest
                         symfony: '^3.4'
-                    -   php: '7.1'
-                        coverage: xdebug
-                        dependency: lowest
+                        coverage: 'xdebug'
+                        composer-flags: '--prefer-lowest'
+                    -   php: '7.2'
                         symfony: '^4.0'
-                    -   php: '7.2'
-                        coverage: xdebug
-                        dependency: lowest
-                        symfony: '^5.0'
-
-                    # All supported php versions with the highest dependencies for any supported Symfony version
-                    -   php: '7.1'
-                        coverage: xdebug
-                        dependency: highest
-                        symfony: 'any'
-                    -   php: '7.2'
-                        coverage: pcov
-                        dependency: highest
-                        symfony: 'any'
                     -   php: '7.3'
-                        coverage: pcov
-                        dependency: highest
-                        symfony: 'any'
+                        symfony: '^5.0'
                     -   php: '7.4'
-                        coverage: pcov
-                        dependency: highest
-                        symfony: 'any'
+                        symfony: '^5.0'
+                        coverage: 'pcov'
 
         steps:
             -   name: Checkout source
@@ -51,35 +31,29 @@ jobs:
                 uses: shivammathur/setup-php@v2
                 with:
                     php-version: ${{ matrix.php }}
-                    coverage: ${{ matrix.coverage }}
+                    coverage: ${{ matrix.coverage || 'none' }}
+
+            -   name: Install Symfony Flex
+                run: composer global require -o --no-interaction --no-progress symfony/flex:^1.11
 
             -   name: Require Symfony version
-                if: matrix.symfony != 'any'
-                run: |
-                    composer global require --no-interaction --no-progress symfony/flex:^1.11
-                    composer config extra.symfony.require ${{ matrix.symfony }}
-
-            -   name: Validate composer.json
-                run: composer validate
+                run: composer config extra.symfony.require ${{ matrix.symfony }}
 
             -   name: Update composer dependencies
-                uses: ramsey/composer-install@v1
-                with:
-                    dependency-versions: ${{ matrix.dependency }}
+                run: composer update -o --no-interaction --no-progress ${{ matrix.composer-flags }}
 
             -   name: Run test suite
                 run: ./vendor/bin/simple-phpunit -v
 
             -   name: Install php-coveralls
-                run: composer global require --no-interaction --no-progress php-coveralls/php-coveralls
+                run: composer global require -o --no-interaction --no-progress php-coveralls/php-coveralls
 
             -   name: Upload coverage results to Coveralls
                 uses: nick-invision/retry@v2
                 env:
                     COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                     COVERALLS_PARALLEL: true
-                    COVERALLS_FLAG_NAME: |
-                        "PHP ${{ matrix.php }} + Symfony ${{ matrix.symfony }} + Composer ${{ matrix.dependency }}"
+                    COVERALLS_FLAG_NAME: "PHP${{ matrix.php }} Symfony${{ matrix.symfony}}"
                 with:
                     timeout_seconds: 60
                     max_attempts: 3
