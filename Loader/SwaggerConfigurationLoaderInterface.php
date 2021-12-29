@@ -22,17 +22,13 @@ use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaOperationCollection;
 interface SwaggerConfigurationLoaderInterface
 {
     /**
-     * Return swagger definition schema collection
-     *
-     * @return SchemaDefinitionCollection
+     * Return swagger definition schema collection.
      */
     public function getSchemaDefinitionCollection(): SchemaDefinitionCollection;
 
     /**
      * Returns collection of the merged swagger path operation by @see OperationParameterMerger
-     * according to specific @see MergeStrategyInterface
-     *
-     * @return SchemaOperationCollection
+     * according to specific @see MergeStrategyInterface.
      */
     public function getSchemaOperationCollection(): SchemaOperationCollection;
 }

@@ -76,12 +76,12 @@ class SwaggerResolverFactoryTest extends TestCase
     {
         $parameterMerger = new OperationParameterMerger(new ReplaceLastWinMergeStrategy());
         $router = new Router(
-            new YamlFileLoader(new FileLocator(__DIR__ . '/../Fixtures')),
+            new YamlFileLoader(new FileLocator(__DIR__.'/../Fixtures')),
             'routing.yaml',
             [],
             $context
         );
-        $loader = new JsonConfigurationLoader($parameterMerger, $router, __DIR__ . '/../Fixtures/Json/customer.json');
+        $loader = new JsonConfigurationLoader($parameterMerger, $router, __DIR__.'/../Fixtures/Json/customer.json');
         $configuration = new SwaggerConfiguration($loader);
         $builder = new SwaggerResolverBuilder([], [], []);
 

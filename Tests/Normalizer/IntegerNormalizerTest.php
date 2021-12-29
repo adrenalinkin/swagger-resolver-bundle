@@ -44,7 +44,7 @@ class IntegerNormalizerTest extends TestCase
     {
         $fieldName = 'clickCount';
         $schemaDefinition = $this->createSchemaDefinition($fieldName, $type);
-        $schemaProperty =  $schemaDefinition->getProperties()->get($fieldName);
+        $schemaProperty = $schemaDefinition->getProperties()->get($fieldName);
 
         $isSupported = $this->sut->supports($schemaProperty, $fieldName, true);
 
@@ -74,7 +74,7 @@ class IntegerNormalizerTest extends TestCase
         $isRequired = true;
 
         $schemaDefinition = $this->createSchemaDefinition($fieldName);
-        $schemaProperty =  $schemaDefinition->getProperties()->get($fieldName);
+        $schemaProperty = $schemaDefinition->getProperties()->get($fieldName);
 
         $closure = $this->sut->getNormalizer($schemaProperty, $fieldName, $isRequired);
 
@@ -105,7 +105,7 @@ class IntegerNormalizerTest extends TestCase
         $originValue = null;
 
         $schemaDefinition = $this->createSchemaDefinition($fieldName);
-        $schemaProperty =  $schemaDefinition->getProperties()->get($fieldName);
+        $schemaProperty = $schemaDefinition->getProperties()->get($fieldName);
 
         $closure = $this->sut->getNormalizer($schemaProperty, $fieldName, $isRequired);
 
@@ -126,7 +126,7 @@ class IntegerNormalizerTest extends TestCase
         $fieldName = 'clickCount';
         $isRequired = true;
         $schemaDefinition = $this->createSchemaDefinition($fieldName);
-        $schemaProperty =  $schemaDefinition->getProperties()->get($fieldName);
+        $schemaProperty = $schemaDefinition->getProperties()->get($fieldName);
 
         $closure = $this->sut->getNormalizer($schemaProperty, $fieldName, $isRequired);
 
@@ -165,8 +165,8 @@ class IntegerNormalizerTest extends TestCase
     {
         return FixturesProvider::createSchemaDefinition([
             $fieldName => [
-                'type' => $type
-            ]
+                'type' => $type,
+            ],
         ]);
     }
 }

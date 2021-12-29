@@ -26,9 +26,6 @@ class SwaggerConfiguration implements SwaggerConfigurationInterface
      */
     private $configurationLoader;
 
-    /**
-     * @param SwaggerConfigurationLoaderInterface $loader
-     */
     public function __construct(SwaggerConfigurationLoaderInterface $loader)
     {
         $this->configurationLoader = $loader;

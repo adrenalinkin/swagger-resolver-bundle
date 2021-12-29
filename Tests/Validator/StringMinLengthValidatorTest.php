@@ -18,8 +18,6 @@ use Linkin\Bundle\SwaggerResolverBundle\Validator\StringMinLengthValidator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
-use function str_repeat;
-
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */

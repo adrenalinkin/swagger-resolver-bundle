@@ -20,9 +20,6 @@ use Swagger\Annotations\Swagger as SwaggerZircote;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Routing\RouterInterface;
 
-use function json_decode;
-use function Swagger\scan;
-
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
@@ -43,12 +40,6 @@ class SwaggerPhpConfigurationLoader extends AbstractAnnotationConfigurationLoade
      */
     private $swaggerAnnotation;
 
-    /**
-     * @param OperationParameterMerger $merger
-     * @param RouterInterface $router
-     * @param array $scan
-     * @param array $exclude
-     */
     public function __construct(OperationParameterMerger $merger, RouterInterface $router, array $scan, array $exclude)
     {
         parent::__construct($merger, $router);
@@ -62,7 +53,7 @@ class SwaggerPhpConfigurationLoader extends AbstractAnnotationConfigurationLoade
      */
     protected function loadConfiguration(): Swagger
     {
-        $this->swaggerAnnotation = scan($this->scan, [
+        $this->swaggerAnnotation = \Swagger\scan($this->scan, [
             'exclude' => $this->exclude,
         ]);
 

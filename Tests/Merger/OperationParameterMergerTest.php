@@ -21,8 +21,6 @@ use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrat
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\FixturesProvider;
 use PHPUnit\Framework\TestCase;
 
-use function count;
-
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
@@ -46,7 +44,7 @@ class OperationParameterMergerTest extends TestCase
         $mergedSchema = $this->sut->merge($operation, $definitions);
         $mergedSchemaProperties = $mergedSchema->getProperties();
 
-        self::assertCount(count($expectedResult->getRequired()), $mergedSchema->getRequired());
+        self::assertCount(\count($expectedResult->getRequired()), $mergedSchema->getRequired());
 
         foreach ($expectedResult->getRequired() as $expectedRequired) {
             self::assertArrayHasKey($expectedRequired, $mergedSchema->getRequired());

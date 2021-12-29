@@ -106,7 +106,7 @@ class FormatDateTimeValidatorTest extends TestCase
 
     public function canPassValidationDataProvider(): array
     {
-        /** @see https://xml2rfc.tools.ietf.org/public/rfc/html/rfc3339.html#anchor14 */
+        /* @see https://xml2rfc.tools.ietf.org/public/rfc/html/rfc3339.html#anchor14 */
         return [
             'Pass when null value' => [null],
             'Pass when empty string value' => [''],

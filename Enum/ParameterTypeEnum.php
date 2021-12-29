@@ -25,9 +25,6 @@ class ParameterTypeEnum
     public const NUMBER = 'number';
     public const STRING = 'string';
 
-    /**
-     * @return array
-     */
     public static function getAll(): array
     {
         return [self::ARRAY, self::BOOLEAN, self::FILE, self::INTEGER, self::NUMBER, self::STRING];

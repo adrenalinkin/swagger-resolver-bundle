@@ -38,12 +38,12 @@ class SwaggerPhpConfigurationLoaderTest extends TestCase
     protected function setUp(): void
     {
         $parameterMerger = new OperationParameterMerger(new ReplaceLastWinMergeStrategy());
-        $router = new Router(new YamlFileLoader(new FileLocator(__DIR__ . '/../Fixtures')), 'routing.yaml');
+        $router = new Router(new YamlFileLoader(new FileLocator(__DIR__.'/../Fixtures')), 'routing.yaml');
 
         $this->sut = new SwaggerPhpConfigurationLoader(
             $parameterMerger,
             $router,
-            [__DIR__ . '/../Fixtures/SwaggerPhp'],
+            [__DIR__.'/../Fixtures/SwaggerPhp'],
             []
         );
     }
@@ -53,13 +53,13 @@ class SwaggerPhpConfigurationLoaderTest extends TestCase
         $this->expectException(OperationNotFoundException::class);
 
         $parameterMerger = new OperationParameterMerger(new ReplaceLastWinMergeStrategy());
-        $router = new Router(new YamlFileLoader(new FileLocator(__DIR__ . '/../Fixtures')), 'routing.yaml');
+        $router = new Router(new YamlFileLoader(new FileLocator(__DIR__.'/../Fixtures')), 'routing.yaml');
         $router->getRouteCollection()->remove('customers_get');
 
         $sut = new SwaggerPhpConfigurationLoader(
             $parameterMerger,
             $router,
-            [__DIR__ . '/../Fixtures/SwaggerPhp'],
+            [__DIR__.'/../Fixtures/SwaggerPhp'],
             []
         );
         $sut->getSchemaDefinitionCollection();
@@ -97,7 +97,7 @@ class SwaggerPhpConfigurationLoaderTest extends TestCase
 
         /**
          * @var string $path
-         * @var Path $pathObject
+         * @var Path   $pathObject
          */
         foreach ($swagger->getPaths()->getIterator() as $path => $pathObject) {
             foreach ($pathObject->getOperations() as $method => $operation) {
@@ -112,7 +112,7 @@ class SwaggerPhpConfigurationLoaderTest extends TestCase
                     self::assertContains($loadedResource->getResource(), $expectedResources);
                 }
 
-                $expectedOperationsCount++;
+                ++$expectedOperationsCount;
             }
         }
 

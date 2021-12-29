@@ -18,7 +18,6 @@ use SplPriorityQueue;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
-use function iterator_to_array;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>

@@ -19,31 +19,22 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Merger;
 interface MergeStrategyInterface
 {
     /**
-     * Add parameter into collection
-     *
-     * @param string $parameterSource
-     * @param string $name
-     * @param array $data
-     * @param bool $isRequired
+     * Add parameter into collection.
      */
     public function addParameter(string $parameterSource, string $name, array $data, bool $isRequired): void;
 
     /**
-     * Returns list of collected parameters
-     *
-     * @return array
+     * Returns list of collected parameters.
      */
     public function getParameters(): array;
 
     /**
-     * Returns list of names of the required parameters
-     *
-     * @return array
+     * Returns list of names of the required parameters.
      */
     public function getRequired(): array;
 
     /**
-     * Clean all collected data
+     * Clean all collected data.
      */
     public function clean(): void;
 }

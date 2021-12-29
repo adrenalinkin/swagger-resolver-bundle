@@ -16,9 +16,6 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Validator;
 use EXSyst\Component\Swagger\Schema;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
-use function is_numeric;
-use function sprintf;
-
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */

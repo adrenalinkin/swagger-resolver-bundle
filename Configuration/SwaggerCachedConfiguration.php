@@ -21,11 +21,6 @@ use Symfony\Component\Config\ConfigCacheFactoryInterface;
 use Symfony\Component\Config\ConfigCacheInterface;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
-use function json_decode;
-use function json_encode;
-use function md5;
-use function sprintf;
-use const PHP_SAPI;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -52,16 +47,11 @@ class SwaggerCachedConfiguration extends SwaggerConfiguration implements Warmabl
      */
     private $loader;
 
-    /**
-     * @param SwaggerConfigurationLoaderInterface $loader
-     * @param string $cacheDir
-     * @param bool $debug
-     */
     public function __construct(SwaggerConfigurationLoaderInterface $loader, string $cacheDir, bool $debug)
     {
         parent::__construct($loader);
 
-        $this->cacheDir = $cacheDir . '/linkin_swagger_resolver';
+        $this->cacheDir = $cacheDir.'/linkin_swagger_resolver';
         $this->debug = $debug;
         $this->loader = $loader;
     }
@@ -87,7 +77,7 @@ class SwaggerCachedConfiguration extends SwaggerConfiguration implements Warmabl
     public function getPathDefinition(string $routeName, string $method): Schema
     {
         $cache = $this->getConfigCacheFactory()->cache(
-            sprintf('%s/paths/%s/%s_%s.php', $this->cacheDir, $routeName, $method, md5($routeName . $method)),
+            sprintf('%s/paths/%s/%s_%s.php', $this->cacheDir, $routeName, $method, md5($routeName.$method)),
             function (ConfigCacheInterface $cache) use ($routeName, $method) {
                 $this->dumpOperation($routeName, $method, $cache);
             }
@@ -114,7 +104,7 @@ class SwaggerCachedConfiguration extends SwaggerConfiguration implements Warmabl
 
         $operationCollection = $this->loader->getSchemaOperationCollection();
 
-        /** @var Path $pathObject */
+        /* @var Path $pathObject */
         foreach ($operationCollection as $routeName => $methodList) {
             foreach ($methodList as $method => $operation) {
                 $this->getPathDefinition($routeName, $method);
@@ -125,7 +115,7 @@ class SwaggerCachedConfiguration extends SwaggerConfiguration implements Warmabl
             }
         }
 
-        if ($definitionWithoutResources && PHP_SAPI === 'cli') {
+        if ($definitionWithoutResources && \PHP_SAPI === 'cli') {
             $this->displayConsoleNote(
                 'LinkinSwaggerResolverBundle can\'t find source files for next definitions to auto-warm up cache:',
                 true
@@ -139,22 +129,14 @@ class SwaggerCachedConfiguration extends SwaggerConfiguration implements Warmabl
         }
     }
 
-    /**
-     * @param string $message
-     * @param bool $firstLine
-     */
     private function displayConsoleNote(string $message, bool $firstLine): void
     {
         $message = $firstLine ? sprintf('[NOTE] %s', $message) : sprintf('       %s', $message);
         $message = sprintf("\e[33m ! %s \e[39m\n", $message);
 
-        echo $firstLine ? "\n" . $message : $message;
+        echo $firstLine ? "\n".$message : $message;
     }
 
-    /**
-     * @param string $definitionName
-     * @param ConfigCacheInterface $cache
-     */
     private function dumpDefinition(string $definitionName, ConfigCacheInterface $cache): void
     {
         $definition = parent::getDefinition($definitionName);
@@ -164,11 +146,6 @@ class SwaggerCachedConfiguration extends SwaggerConfiguration implements Warmabl
         $this->dumpSchema($definition, $resources, $cache);
     }
 
-    /**
-     * @param string $routeName
-     * @param string $method
-     * @param ConfigCacheInterface $cache
-     */
     private function dumpOperation(string $routeName, string $method, ConfigCacheInterface $cache): void
     {
         $definition = parent::getPathDefinition($routeName, $method);
@@ -179,9 +156,7 @@ class SwaggerCachedConfiguration extends SwaggerConfiguration implements Warmabl
     }
 
     /**
-     * @param Schema $schema
      * @param FileResource[] $resources
-     * @param ConfigCacheInterface $cache
      */
     private function dumpSchema(Schema $schema, array $resources, ConfigCacheInterface $cache): void
     {
@@ -203,9 +178,6 @@ EOF;
         $cache->write(sprintf($template, $definitionExport), $resources);
     }
 
-    /**
-     * @return ConfigCacheFactoryInterface
-     */
     private function getConfigCacheFactory(): ConfigCacheFactoryInterface
     {
         if (!$this->configCacheFactory) {

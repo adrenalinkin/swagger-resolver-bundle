@@ -17,10 +17,6 @@ use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterTypeEnum;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
-use function in_array;
-use function is_numeric;
-use function sprintf;
-
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
@@ -31,7 +27,7 @@ class NumberMultipleOfValidator implements SwaggerValidatorInterface
      */
     public function supports(Schema $propertySchema, array $context = []): bool
     {
-        return in_array($propertySchema->getType(), [ParameterTypeEnum::NUMBER, ParameterTypeEnum::INTEGER], true)
+        return \in_array($propertySchema->getType(), [ParameterTypeEnum::NUMBER, ParameterTypeEnum::INTEGER], true)
             && null !== $propertySchema->getMultipleOf()
         ;
     }
@@ -47,7 +43,7 @@ class NumberMultipleOfValidator implements SwaggerValidatorInterface
 
         $divisionResult = $value % $propertySchema->getMultipleOf();
 
-        if ($divisionResult !== 0) {
+        if (0 !== $divisionResult) {
             $message = sprintf(
                 'Property "%s" should be a multiple of %s',
                 $propertyName,
