@@ -37,7 +37,7 @@ class CustomerNew
     public $secondName;
 
     /**
-     * @var array
+     * @var string[]
      *
      * @SWG\Property(
      *      uniqueItems=true,

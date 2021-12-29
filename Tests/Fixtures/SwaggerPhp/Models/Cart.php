@@ -30,7 +30,7 @@ class Cart
     public $totalPrice;
 
     /**
-     * @var array
+     * @var CartItem[]
      *
      * @SWG\Property(
      *      minItems=0,

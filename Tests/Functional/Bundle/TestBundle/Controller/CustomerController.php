@@ -13,11 +13,14 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Bundle\TestBundle\Controller;
 
+use Linkin\Bundle\SwaggerResolverBundle\Factory\SwaggerResolverFactory;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\SwaggerPhp\Models\CustomerFull;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\SwaggerPhp\Models\CustomerNew;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\SwaggerPhp\Models\ResponseCreated;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Swagger\Annotations as SWG;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -62,12 +65,18 @@ class CustomerController
      * @SWG\Response(
      *     response=200,
      *     description="A list of customers",
-     *     @SWG\Schema(type="array", @Model(type=CustomerFull::class)),
+     *     @SWG\Schema(
+     *         type="array",
+     *         @SWG\Items(ref=@Model(type=CustomerFull::class)),
+     *     ),
      * )
      */
-    public function getAll(): Response
+    public function getAll(Request $request, SwaggerResolverFactory $factory): Response
     {
-        return new Response();
+        $swaggerResolver = $factory->createForDefinition(CustomerFull::class);
+        $data = $swaggerResolver->resolve(\json_decode($request->getContent(), true));
+
+        return new JsonResponse([$data]);
     }
 
     /**

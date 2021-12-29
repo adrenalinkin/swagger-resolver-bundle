@@ -22,9 +22,22 @@ nelmio_api_doc:
     # TODO: project should work without areas definition
     areas:
         default:
-            host_patterns:
-                - '^api\.'
+            path_patterns:
+                - '^/api/'
+
+linkin_swagger_resolver:
+    path_merge_strategy: Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrategy
 
 services:
     logger:
         class: Psr\Log\NullLogger
+
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Bundle\TestBundle\Controller\:
+        resource: '../../Bundle/TestBundle/Controller'
+        public: true
+        tags: ['controller.service_arguments']
