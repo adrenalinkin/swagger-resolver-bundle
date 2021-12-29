@@ -29,7 +29,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CustomerController
 {
     /**
-     * Returns all customers
+     * Returns all customers.
      *
      * @Route(name="customers_get", path="/customers", methods={"GET"})
      *
@@ -71,7 +71,7 @@ class CustomerController
     }
 
     /**
-     * Create new customer
+     * Create new customer.
      *
      * @Route(name="customers_post", path="/customers", methods={"POST"})
      *
@@ -114,7 +114,7 @@ class CustomerController
     }
 
     /**
-     * Return customer by ID
+     * Return customer by ID.
      *
      * @Route(name="customers_get_one", path="/customers/{userId}", methods={"GET"}, requirements={"userId": "\d+"})
      *
@@ -148,7 +148,7 @@ class CustomerController
     }
 
     /**
-     * Update customer
+     * Update customer.
      *
      * @Route(name="customers_update", path="/customers/{userId}", methods={"PUT"}, requirements={"userId": "\d+"})
      *
@@ -197,7 +197,7 @@ class CustomerController
     }
 
     /**
-     * Partial customer update in formData style
+     * Partial customer update in formData style.
      *
      * @deprecated do not use this endpoint
      *
@@ -264,7 +264,7 @@ class CustomerController
     }
 
     /**
-     * Delete customer from the system
+     * Delete customer from the system.
      *
      * @Route(name="customers_delete", path="/customers/{userId}", methods={"DELETE"}, requirements={"userId": "\d+"})
      *

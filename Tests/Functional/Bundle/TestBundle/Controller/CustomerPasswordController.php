@@ -25,7 +25,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CustomerPasswordController
 {
     /**
-     * Create new password when not even set
+     * Create new password when not even set.
      *
      * @deprecated do not use this endpoint
      *
@@ -64,7 +64,7 @@ class CustomerPasswordController
     }
 
     /**
-     * Reset password
+     * Reset password.
      *
      * @deprecated do not use this endpoint
      *

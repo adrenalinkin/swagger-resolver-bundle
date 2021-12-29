@@ -20,8 +20,6 @@ use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
-use function sys_get_temp_dir;
-
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
@@ -44,12 +42,12 @@ class TestAppKernel extends Kernel
 
     public function getCacheDir(): string
     {
-        return sys_get_temp_dir() . '/cache/' . $this->environment;
+        return sys_get_temp_dir().'/cache/'.$this->environment;
     }
 
     public function getLogDir(): string
     {
-        return sys_get_temp_dir() . '/logs';
+        return sys_get_temp_dir().'/logs';
     }
 
     public function getProjectDir(): string
@@ -59,6 +57,6 @@ class TestAppKernel extends Kernel
 
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
-        $loader->load(__DIR__ . '/config/config.yaml');
+        $loader->load(__DIR__.'/config/config.yaml');
     }
 }

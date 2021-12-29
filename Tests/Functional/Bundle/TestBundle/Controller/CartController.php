@@ -29,7 +29,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CartController
 {
     /**
-     * Add new item into cart or increase count of existed
+     * Add new item into cart or increase count of existed.
      *
      * @Route(name="cart_add_item", path="/cart", methods={"PUT"})
      *
@@ -60,7 +60,7 @@ class CartController
     }
 
     /**
-     * Returns all items from the cart
+     * Returns all items from the cart.
      *
      * @Route(name="cart_get", path="/cart", methods={"GET"})
      *
