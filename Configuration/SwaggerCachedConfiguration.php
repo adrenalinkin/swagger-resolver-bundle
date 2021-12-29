@@ -16,7 +16,6 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Configuration;
 use EXSyst\Component\Swagger\Path;
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerConfigurationLoaderInterface;
-use const PHP_SAPI;
 use Symfony\Component\Config\ConfigCacheFactory;
 use Symfony\Component\Config\ConfigCacheFactoryInterface;
 use Symfony\Component\Config\ConfigCacheInterface;
@@ -116,7 +115,7 @@ class SwaggerCachedConfiguration extends SwaggerConfiguration implements Warmabl
             }
         }
 
-        if ($definitionWithoutResources && PHP_SAPI === 'cli') {
+        if ($definitionWithoutResources && \PHP_SAPI === 'cli') {
             $this->displayConsoleNote(
                 'LinkinSwaggerResolverBundle can\'t find source files for next definitions to auto-warm up cache:',
                 true
