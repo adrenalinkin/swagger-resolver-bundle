@@ -15,8 +15,6 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-use function json_encode;
-
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */

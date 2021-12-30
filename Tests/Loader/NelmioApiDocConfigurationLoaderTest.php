@@ -13,9 +13,10 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Loader;
 
-use DG\BypassFinals;
+use Closure;
 use EXSyst\Component\Swagger\Path;
 use EXSyst\Component\Swagger\Schema;
+use EXSyst\Component\Swagger\Swagger;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\NelmioApiDocConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrategy;
@@ -38,12 +39,15 @@ class NelmioApiDocConfigurationLoaderTest extends TestCase
 
     protected function setUp(): void
     {
-        BypassFinals::enable();
-
         $parameterMerger = new OperationParameterMerger(new ReplaceLastWinMergeStrategy());
         $router = new Router(new YamlFileLoader(new FileLocator(__DIR__.'/../Fixtures')), 'routing.yaml');
-        $apiDocGenerator = $this->createMock(ApiDocGenerator::class);
-        $apiDocGenerator->method('generate')->willReturn(FixturesProvider::loadFromJson());
+
+        $apiDocGenerator = new ApiDocGenerator([], []);
+        $setSwagger = Closure::bind(function (Swagger $swagger) {
+            $this->swagger = $swagger;
+        }, $apiDocGenerator, ApiDocGenerator::class);
+
+        $setSwagger(FixturesProvider::loadFromJson());
 
         $this->sut = new NelmioApiDocConfigurationLoader($parameterMerger, $router, $apiDocGenerator);
     }

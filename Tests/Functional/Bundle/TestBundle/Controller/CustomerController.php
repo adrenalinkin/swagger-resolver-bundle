@@ -74,7 +74,7 @@ class CustomerController
     public function getAll(Request $request, SwaggerResolverFactory $factory): Response
     {
         $swaggerResolver = $factory->createForDefinition(CustomerFull::class);
-        $data = $swaggerResolver->resolve(\json_decode($request->getContent(), true));
+        $data = $swaggerResolver->resolve(json_decode($request->getContent(), true));
 
         return new JsonResponse([$data]);
     }
