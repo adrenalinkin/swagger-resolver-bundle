@@ -37,7 +37,7 @@ class TestAppKernel extends Kernel
 
     public function getRootDir(): string
     {
-        return __DIR__;
+        return $this->getProjectDir();
     }
 
     public function getCacheDir(): string
@@ -52,7 +52,7 @@ class TestAppKernel extends Kernel
 
     public function getProjectDir(): string
     {
-        return __DIR__;
+        return parent::getProjectDir().'/Tests/';
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader): void

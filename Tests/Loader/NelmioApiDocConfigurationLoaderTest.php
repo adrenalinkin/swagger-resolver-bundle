@@ -17,6 +17,7 @@ use Closure;
 use EXSyst\Component\Swagger\Path;
 use EXSyst\Component\Swagger\Schema;
 use EXSyst\Component\Swagger\Swagger;
+use Linkin\Bundle\SwaggerResolverBundle\Exception\OperationNotFoundException;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\NelmioApiDocConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrategy;
@@ -39,17 +40,26 @@ class NelmioApiDocConfigurationLoaderTest extends TestCase
 
     protected function setUp(): void
     {
+        $testsDir = __DIR__.'/..';
         $parameterMerger = new OperationParameterMerger(new ReplaceLastWinMergeStrategy());
-        $router = new Router(new YamlFileLoader(new FileLocator(__DIR__.'/../Fixtures')), 'routing.yaml');
+        $router = new Router(new YamlFileLoader(new FileLocator($testsDir.'/Fixtures')), 'routing.yaml');
+        $apiDocGenerator = $this->createApiDocGenerator();
 
-        $apiDocGenerator = new ApiDocGenerator([], []);
-        $setSwagger = Closure::bind(function (Swagger $swagger) {
-            $this->swagger = $swagger;
-        }, $apiDocGenerator, ApiDocGenerator::class);
+        $this->sut = new NelmioApiDocConfigurationLoader($parameterMerger, $router, $apiDocGenerator, $testsDir);
+    }
 
-        $setSwagger(FixturesProvider::loadFromJson());
+    public function testFailWhenRouteNotFound(): void
+    {
+        $this->expectException(OperationNotFoundException::class);
 
-        $this->sut = new NelmioApiDocConfigurationLoader($parameterMerger, $router, $apiDocGenerator);
+        $testsDir = __DIR__.'/..';
+        $parameterMerger = new OperationParameterMerger(new ReplaceLastWinMergeStrategy());
+        $router = new Router(new YamlFileLoader(new FileLocator($testsDir.'/Fixtures')), 'routing.yaml');
+        $router->getRouteCollection()->remove('customers_get');
+        $apiDocGenerator = $this->createApiDocGenerator();
+
+        $sut = new NelmioApiDocConfigurationLoader($parameterMerger, $router, $apiDocGenerator, $testsDir);
+        $sut->getSchemaDefinitionCollection();
     }
 
     public function testCanLoadDefinitionCollection(): void
@@ -68,12 +78,11 @@ class NelmioApiDocConfigurationLoaderTest extends TestCase
             $loadedDefinitionSchema = $definitionCollection->getSchema($name);
             self::assertSame($expectedSchema->toArray(), $loadedDefinitionSchema->toArray());
 
-            // TODO: fix problem with loading resources in tests
-//            $loadedResources = $definitionCollection->getSchemaResources($name);
-//            self::assertCount(1, $loadedResources);
-//
-//            $loadedResource = $loadedResources[0];
-//            self::assertSame(FixturesProvider::getResourceByDefinition($name), $loadedResource->getResource());
+            $loadedResources = $definitionCollection->getSchemaResources($name);
+            self::assertCount(1, $loadedResources);
+
+            $loadedResource = $loadedResources[0];
+            self::assertSame(FixturesProvider::getResourceByDefinition($name), $loadedResource->getResource());
         }
     }
 
@@ -105,5 +114,17 @@ class NelmioApiDocConfigurationLoaderTest extends TestCase
         }
 
         self::assertCount($expectedOperationsCount, $operationCollection->getIterator());
+    }
+
+    private function createApiDocGenerator(): ApiDocGenerator
+    {
+        $apiDocGenerator = new ApiDocGenerator([], []);
+        $setSwagger = Closure::bind(function (Swagger $swagger) {
+            $this->swagger = $swagger;
+        }, $apiDocGenerator, ApiDocGenerator::class);
+
+        $setSwagger(FixturesProvider::loadFromJson());
+
+        return $apiDocGenerator;
     }
 }

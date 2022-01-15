@@ -23,12 +23,12 @@ abstract class AbstractMergeStrategy implements MergeStrategyInterface
     /**
      * @var array
      */
-    protected $parameters;
+    protected $parameters = [];
 
     /**
      * @var array
      */
-    protected $required;
+    protected $required = [];
 
     /**
      * {@inheritdoc}
