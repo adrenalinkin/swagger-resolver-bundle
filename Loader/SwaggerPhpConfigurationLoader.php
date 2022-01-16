@@ -23,7 +23,7 @@ use Symfony\Component\Routing\RouterInterface;
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-class SwaggerPhpConfigurationLoader extends AbstractAnnotationConfigurationLoader
+class SwaggerPhpConfigurationLoader extends AbstractSwaggerConfigurationLoader
 {
     /**
      * @var array

@@ -21,6 +21,8 @@ use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaDefinitionCollection;
 use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaOperationCollection;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\OperationNotFoundException;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
+use ReflectionClass;
+use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -96,11 +98,22 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
     /**
      * Add file resources for swagger operations.
      */
-    abstract protected function registerOperationResources(SchemaOperationCollection $operationCollection): void;
-
-    protected function getRouter(): RouterInterface
+    protected function registerOperationResources(SchemaOperationCollection $operationCollection): void
     {
-        return $this->router;
+        foreach ($operationCollection->getIterator() as $routeName => $methodList) {
+            $route = $this->router->getRouteCollection()->get($routeName);
+
+            if (null === $route) {
+                continue;
+            }
+
+            $defaults = $route->getDefaults();
+            $exploded = explode('::', $defaults['_controller']);
+            $controllerName = reset($exploded);
+            $fullClassName = (new ReflectionClass($controllerName))->getFileName();
+
+            $operationCollection->addSchemaResource($routeName, new FileResource($fullClassName));
+        }
     }
 
     protected function getRouteNameByPath(string $path, string $method): string

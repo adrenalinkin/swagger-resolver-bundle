@@ -24,7 +24,7 @@ use Symfony\Component\Routing\RouterInterface;
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-class NelmioApiDocConfigurationLoader extends AbstractAnnotationConfigurationLoader
+class NelmioApiDocConfigurationLoader extends AbstractSwaggerConfigurationLoader
 {
     /**
      * @var ApiDocGenerator
