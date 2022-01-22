@@ -17,25 +17,35 @@ use EXSyst\Component\Swagger\Swagger;
 use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaDefinitionCollection;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Nelmio\ApiDocBundle\ApiDocGenerator;
+use Symfony\Component\Config\Resource\FileResource;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-class NelmioApiDocConfigurationLoader extends AbstractAnnotationConfigurationLoader
+class NelmioApiDocConfigurationLoader extends AbstractSwaggerConfigurationLoader
 {
     /**
-     * Instance of nelmio Api configuration generator.
-     *
      * @var ApiDocGenerator
      */
     private $apiDocGenerator;
 
-    public function __construct(OperationParameterMerger $merger, RouterInterface $router, ApiDocGenerator $generator)
-    {
+    /**
+     * @var string
+     */
+    private $projectDir;
+
+    public function __construct(
+        OperationParameterMerger $merger,
+        RouterInterface $router,
+        ApiDocGenerator $generator,
+        string $projectDir
+    ) {
         parent::__construct($merger, $router);
 
         $this->apiDocGenerator = $generator;
+        $this->projectDir = $projectDir;
     }
 
     /**
@@ -51,24 +61,23 @@ class NelmioApiDocConfigurationLoader extends AbstractAnnotationConfigurationLoa
      */
     protected function registerDefinitionResources(SchemaDefinitionCollection $definitionCollection): void
     {
-        $definitionNames = [];
+        $classMap = $this->getClassMap();
 
         foreach ($definitionCollection->getIterator() as $definitionName => $definition) {
-            $definitionName = (string) $definitionName;
-            $definitionNames[$definitionName] = $definitionName;
+            $definitionCollection->addSchemaResource($definitionName, new FileResource($classMap[$definitionName]));
+        }
+    }
+
+    private function getClassMap(): array
+    {
+        $finder = (new Finder())->files()->in($this->projectDir)->exclude('vendor')->name('*.php');
+        $classMap = [];
+
+        foreach ($finder as $file) {
+            $name = (string) str_replace('.php', '', $file->getFilename());
+            $classMap[$name] = $file->getPathname();
         }
 
-        foreach (get_declared_classes() as $fullClassName) {
-            $explodedClassName = explode('\\', $fullClassName);
-            $className = (string) end($explodedClassName);
-
-            if (!isset($definitionNames[$className])) {
-                continue;
-            }
-
-            $definitionCollection->addSchemaResource($className, $this->getFileResource($fullClassName));
-        }
-
-        // TODO: Throw exception when class was never found
+        return $classMap;
     }
 }

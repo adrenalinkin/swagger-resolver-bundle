@@ -129,6 +129,7 @@ class LinkinSwaggerResolverExtension extends Extension implements PrependExtensi
             return $loaderDefinition
                 ->setClass(NelmioApiDocConfigurationLoader::class)
                 ->addArgument(new Reference(sprintf('nelmio_api_doc.generator.%s', $this->globalAreaName)))
+                ->addArgument($container->getParameter('kernel.project_dir'))
             ;
         }
 

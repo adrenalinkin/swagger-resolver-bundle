@@ -21,6 +21,8 @@ use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaDefinitionCollection;
 use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaOperationCollection;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\OperationNotFoundException;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
+use ReflectionClass;
+use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -39,11 +41,6 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
     private $operationCollection;
 
     /**
-     * @var array
-     */
-    private $mapPathToRouteName;
-
-    /**
      * @var OperationParameterMerger
      */
     private $parameterMerger;
@@ -52,6 +49,16 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
      * @var RouterInterface
      */
     private $router;
+
+    /**
+     * @var string[][]
+     */
+    private $mapPathToRouteName = [];
+
+    /**
+     * @var FileResource[]
+     */
+    private $mapRouteNameToSourceFile = [];
 
     public function __construct(OperationParameterMerger $parameterMerger, RouterInterface $router)
     {
@@ -96,39 +103,16 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
     /**
      * Add file resources for swagger operations.
      */
-    abstract protected function registerOperationResources(SchemaOperationCollection $operationCollection): void;
-
-    protected function getRouter(): RouterInterface
+    protected function registerOperationResources(SchemaOperationCollection $operationCollection): void
     {
-        return $this->router;
+        foreach ($operationCollection->getIterator() as $routeName => $methodList) {
+            $operationCollection->addSchemaResource($routeName, $this->mapRouteNameToSourceFile[$routeName]);
+        }
     }
 
-    protected function getRouteNameByPath(string $path, string $method): string
+    private function normalizeMethod(string $method): string
     {
-        if (!$this->mapPathToRouteName) {
-            $this->initMapPathToRouteName();
-        }
-
-        $route = $this->mapPathToRouteName[$path][$method] ?? null;
-
-        if (!$route) {
-            throw new OperationNotFoundException($path, $method);
-        }
-
-        return (string) $route;
-    }
-
-    /**
-     * Initialize map real path into appropriated route name.
-     */
-    private function initMapPathToRouteName(): void
-    {
-        foreach ($this->router->getRouteCollection() as $routeName => $route) {
-            foreach ($route->getMethods() as $method) {
-                $method = $this->normalizeMethod($method);
-                $this->mapPathToRouteName[$route->getPath()][$method] = $routeName;
-            }
-        }
+        return strtolower($method);
     }
 
     /**
@@ -136,25 +120,32 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
      */
     private function registerCollections(): void
     {
+        $this->initRouteMaps();
         $swaggerConfiguration = $this->loadConfiguration();
 
-        $definitionCollection = new SchemaDefinitionCollection();
-        $operationCollection = new SchemaOperationCollection();
+        $this->definitionCollection = new SchemaDefinitionCollection();
+        $this->operationCollection = new SchemaOperationCollection();
 
         foreach ($swaggerConfiguration->getDefinitions()->getIterator() as $definitionName => $definition) {
-            $definitionCollection->addSchema($definitionName, $definition);
+            $this->definitionCollection->addSchema($definitionName, $definition);
         }
 
-        $this->registerDefinitionResources($definitionCollection);
+        $this->registerDefinitionResources($this->definitionCollection);
 
         /** @var Path $pathObject */
         foreach ($swaggerConfiguration->getPaths()->getIterator() as $path => $pathObject) {
             /** @var Operation $operation */
             foreach ($pathObject->getOperations() as $method => $operation) {
                 $method = $this->normalizeMethod($method);
+                $routeName = $this->mapPathToRouteName[$path][$method] ?? null;
+
+                if (null === $routeName) {
+                    throw new OperationNotFoundException($path, $method);
+                }
+
                 $schema = $this->parameterMerger->merge($operation, $swaggerConfiguration->getDefinitions());
-                $routeName = $this->getRouteNameByPath($path, $method);
-                $operationCollection->addSchema($routeName, $method, $schema);
+
+                $this->operationCollection->addSchema($routeName, $method, $schema);
 
                 /** @var Parameter $parameter */
                 foreach ($operation->getParameters()->getIterator() as $parameter) {
@@ -167,21 +158,31 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
                     $explodedName = explode('/', $ref);
                     $definitionName = end($explodedName);
 
-                    foreach ($definitionCollection->getSchemaResources($definitionName) as $fileResource) {
-                        $operationCollection->addSchemaResource($routeName, $fileResource);
+                    foreach ($this->definitionCollection->getSchemaResources($definitionName) as $fileResource) {
+                        $this->operationCollection->addSchemaResource($routeName, $fileResource);
                     }
                 }
             }
         }
 
-        $this->registerOperationResources($operationCollection);
-
-        $this->definitionCollection = $definitionCollection;
-        $this->operationCollection = $operationCollection;
+        $this->registerOperationResources($this->operationCollection);
     }
 
-    private function normalizeMethod(string $method): string
+    private function initRouteMaps(): void
     {
-        return strtolower($method);
+        $this->mapPathToRouteName = [];
+        $this->mapRouteNameToSourceFile = [];
+
+        foreach ($this->router->getRouteCollection() as $routeName => $route) {
+            foreach ($route->getMethods() as $method) {
+                $defaults = $route->getDefaults();
+                $exploded = explode('::', $defaults['_controller']);
+                $controllerName = reset($exploded);
+                $fullClassName = (new ReflectionClass($controllerName))->getFileName();
+
+                $this->mapPathToRouteName[$route->getPath()][$this->normalizeMethod($method)] = $routeName;
+                $this->mapRouteNameToSourceFile[$routeName] = new FileResource($fullClassName);
+            }
+        }
     }
 }
