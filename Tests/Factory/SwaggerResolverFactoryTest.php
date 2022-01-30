@@ -19,7 +19,7 @@ use Linkin\Bundle\SwaggerResolverBundle\Factory\SwaggerResolverFactory;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\JsonConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrategy;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\SwaggerPhp\Models\CustomerFull;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Bundle\TestBundle\Models\CustomerFull;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpFoundation\Request;

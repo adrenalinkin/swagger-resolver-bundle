@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Bundle\TestBundle\Controller;
 
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\SwaggerPhp\Models\Cart;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\SwaggerPhp\Models\CartItem;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\SwaggerPhp\Models\ResponseCreated;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Bundle\TestBundle\Models\Cart;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Bundle\TestBundle\Models\CartItem;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Bundle\TestBundle\Models\ResponseCreated;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\Response;

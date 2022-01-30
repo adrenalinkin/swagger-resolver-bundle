@@ -22,16 +22,16 @@ use EXSyst\Component\Swagger\Swagger;
 class FixturesProvider
 {
     private const MAP_DEFINITION_RESOURCE = [
-        'Cart' => __DIR__.'/SwaggerPhp/Models/Cart.php',
-        'CartItem' => __DIR__.'/SwaggerPhp/Models/CartItem.php',
-        'CustomerFull' => __DIR__.'/SwaggerPhp/Models/CustomerFull.php',
-        'CustomerNew' => __DIR__.'/SwaggerPhp/Models/CustomerNew.php',
-        'ResponseCreated' => __DIR__.'/SwaggerPhp/Models/ResponseCreated.php',
+        'Cart' => __DIR__.'/../Functional/Bundle/TestBundle/Models/Cart.php',
+        'CartItem' => __DIR__.'/../Functional/Bundle/TestBundle/Models/CartItem.php',
+        'CustomerFull' => __DIR__.'/../Functional/Bundle/TestBundle/Models/CustomerFull.php',
+        'CustomerNew' => __DIR__.'/../Functional/Bundle/TestBundle/Models/CustomerNew.php',
+        'ResponseCreated' => __DIR__.'/../Functional/Bundle/TestBundle/Models/ResponseCreated.php',
     ];
 
     private const MAP_ROUTE_RESOURCE = [
         'cart_add_item' => [
-            __DIR__.'/SwaggerPhp/Models/CartItem.php',
+            __DIR__.'/../Functional/Bundle/TestBundle/Models/CartItem.php',
             __DIR__.'/SwaggerPhp/Controllers/CartController.php',
         ],
         'cart_get' => [
@@ -41,14 +41,14 @@ class FixturesProvider
             __DIR__.'/SwaggerPhp/Controllers/CustomerController.php',
         ],
         'customers_post' => [
-            __DIR__.'/SwaggerPhp/Models/CustomerNew.php',
+            __DIR__.'/../Functional/Bundle/TestBundle/Models/CustomerNew.php',
             __DIR__.'/SwaggerPhp/Controllers/CustomerController.php',
         ],
         'customers_get_one' => [
             __DIR__.'/SwaggerPhp/Controllers/CustomerController.php',
         ],
         'customers_update' => [
-            __DIR__.'/SwaggerPhp/Models/CustomerNew.php',
+            __DIR__.'/../Functional/Bundle/TestBundle/Models/CustomerNew.php',
             __DIR__.'/SwaggerPhp/Controllers/CustomerController.php',
         ],
         'customers_patch' => [
@@ -98,12 +98,17 @@ class FixturesProvider
 
     public static function getResourceByRouteName(string $routeName): array
     {
-        return self::MAP_ROUTE_RESOURCE[$routeName];
+        $result = [];
+        foreach (self::MAP_ROUTE_RESOURCE[$routeName] as $path) {
+            $result[] = realpath($path);
+        }
+
+        return $result;
     }
 
     public static function getResourceByDefinition(string $definitionName): string
     {
-        return self::MAP_DEFINITION_RESOURCE[$definitionName];
+        return realpath(self::MAP_DEFINITION_RESOURCE[$definitionName]);
     }
 
     public static function loadFromJson(): Swagger

@@ -43,7 +43,7 @@ class SwaggerPhpConfigurationLoaderTest extends TestCase
         $this->sut = new SwaggerPhpConfigurationLoader(
             $parameterMerger,
             $router,
-            [__DIR__.'/../Fixtures/SwaggerPhp'],
+            [__DIR__.'/../Fixtures/SwaggerPhp', __DIR__.'/../Functional/Bundle/TestBundle/Models'],
             []
         );
     }
@@ -59,7 +59,7 @@ class SwaggerPhpConfigurationLoaderTest extends TestCase
         $sut = new SwaggerPhpConfigurationLoader(
             $parameterMerger,
             $router,
-            [__DIR__.'/../Fixtures/SwaggerPhp'],
+            [__DIR__.'/../Fixtures/SwaggerPhp', __DIR__.'/../Functional/Bundle/TestBundle/Models'],
             []
         );
         $sut->getSchemaDefinitionCollection();

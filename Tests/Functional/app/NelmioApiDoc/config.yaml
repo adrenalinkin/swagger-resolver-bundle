@@ -2,7 +2,7 @@ framework:
     secret: test
     test: ~
     router:
-        resource: "%kernel.project_dir%/Functional/app/%kernel.test_case%/routing.yaml"
+        resource: "%kernel.project_dir%/app/%kernel.test_case%/routing.yaml"
 
 nelmio_api_doc:
     documentation:

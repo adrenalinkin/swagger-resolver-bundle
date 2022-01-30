@@ -56,7 +56,7 @@ class TestAppKernel extends Kernel
 
     public function getProjectDir(): string
     {
-        return parent::getProjectDir().'/Tests/';
+        return parent::getProjectDir().'/Tests/Functional/';
     }
 
     public function getRootDir(): string
