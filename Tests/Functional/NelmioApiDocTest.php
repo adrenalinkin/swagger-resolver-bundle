@@ -13,12 +13,10 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-class NelmioApiDocTest extends WebTestCase
+class NelmioApiDocTest extends SwaggerResolverWebTestCase
 {
     public function testCorrectlyLoaded(): void
     {
@@ -31,7 +29,7 @@ class NelmioApiDocTest extends WebTestCase
             'registeredAt' => '2000-10-11T19:57:31Z',
         ];
 
-        $client = self::createClient();
+        $client = self::createClient(['test_case' => 'NelmioApiDoc']);
         $client->request('GET', '/api/customers', [], [], [], json_encode($data));
 
         $response = $client->getResponse();

@@ -9,7 +9,6 @@
     <php>
         <ini name="error_reporting" value="-1" />
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak" />
-        <server name="KERNEL_CLASS" value="Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\app\TestAppKernel" />
     </php>
 
     <testsuites>
