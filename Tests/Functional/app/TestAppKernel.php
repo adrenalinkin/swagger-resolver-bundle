@@ -28,7 +28,12 @@ class TestAppKernel extends Kernel
      */
     private $testCase;
 
-    public function __construct($testCase, $environment, $debug)
+    /**
+     * @var string
+     */
+    private $varDir;
+
+    public function __construct(string $varDir, string $testCase, string $environment, bool $debug)
     {
         if (!is_dir(__DIR__.'/'.$testCase)) {
             throw new InvalidArgumentException(sprintf('The test case "%s" does not exist.', $testCase));
@@ -39,6 +44,7 @@ class TestAppKernel extends Kernel
         }
 
         $this->testCase = $testCase;
+        $this->varDir = $varDir;
 
         parent::__construct($environment, $debug);
     }
@@ -66,12 +72,12 @@ class TestAppKernel extends Kernel
 
     public function getCacheDir(): string
     {
-        return sys_get_temp_dir().'/cache/'.$this->testCase.'/'.$this->environment;
+        return $this->varDir.'/cache/'.$this->testCase.'/'.$this->environment;
     }
 
     public function getLogDir(): string
     {
-        return sys_get_temp_dir().'/logs/'.$this->testCase;
+        return $this->varDir.'/logs/'.$this->testCase;
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader): void

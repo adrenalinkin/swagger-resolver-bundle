@@ -16,12 +16,23 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional;
 use InvalidArgumentException;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\app\TestAppKernel;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
 class SwaggerResolverWebTestCase extends WebTestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        (new Filesystem())->remove(self::varDir());
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        (new Filesystem())->remove(self::varDir());
+    }
+
     protected static function getKernelClass(): string
     {
         require_once __DIR__.'/app/TestAppKernel.php';
@@ -38,9 +49,15 @@ class SwaggerResolverWebTestCase extends WebTestCase
         }
 
         return new $class(
+            self::varDir(),
             $options['test_case'],
             $options['environment'] ?? $options['test_case'],
             $options['debug'] ?? true
         );
+    }
+
+    private static function varDir(): string
+    {
+        return sys_get_temp_dir().'/'.str_replace('\\', '_', static::class);
     }
 }
