@@ -18,10 +18,30 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional;
  */
 class LinkinSwaggerResolverExtensionTest extends SwaggerResolverWebTestCase
 {
-    /**
-     * @dataProvider canApplyDifferentLoadersDataProvider
-     */
-    public function testCanApplyDifferentLoaders(string $testCase): void
+    public function testCanApplyNelmioApiDocByDefault(): void
+    {
+        $this->assertByCallRoute('NelmioApiDoc');
+    }
+
+    public function testCanApplyFallbackToSwaggerPhp(): void
+    {
+        $this->assertByCallRoute('SwaggerPhp');
+    }
+
+    public function testCanApplyFallbackToJsonFile(): void
+    {
+        $pathToVendor = __DIR__.'/../../vendor';
+
+        exec("mv $pathToVendor/zircote $pathToVendor/tmp-zircote");
+        exec('composer dump-autoload');
+
+        $this->assertByCallRoute('Json');
+
+        exec("mv $pathToVendor/tmp-zircote $pathToVendor/zircote");
+        exec('composer dump-autoload');
+    }
+
+    private function assertByCallRoute(string $testCase): void
     {
         $data = [
             'id' => 1,
@@ -37,11 +57,5 @@ class LinkinSwaggerResolverExtensionTest extends SwaggerResolverWebTestCase
 
         $response = $client->getResponse();
         self::assertEquals(200, $response->getStatusCode());
-    }
-
-    public function canApplyDifferentLoadersDataProvider(): iterable
-    {
-        yield ['NelmioApiDoc'];
-        yield ['SwaggerPhp'];
     }
 }
