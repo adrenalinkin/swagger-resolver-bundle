@@ -16,9 +16,12 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional;
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-class NelmioApiDocTest extends SwaggerResolverWebTestCase
+class LinkinSwaggerResolverExtensionTest extends SwaggerResolverWebTestCase
 {
-    public function testCorrectlyLoaded(): void
+    /**
+     * @dataProvider canApplyDifferentLoadersDataProvider
+     */
+    public function testCanApplyDifferentLoaders(string $testCase): void
     {
         $data = [
             'id' => 1,
@@ -29,10 +32,16 @@ class NelmioApiDocTest extends SwaggerResolverWebTestCase
             'registeredAt' => '2000-10-11T19:57:31Z',
         ];
 
-        $client = self::createClient(['test_case' => 'NelmioApiDoc']);
+        $client = self::createClient(['test_case' => $testCase]);
         $client->request('GET', '/api/customers', [], [], [], json_encode($data));
 
         $response = $client->getResponse();
         self::assertEquals(200, $response->getStatusCode());
+    }
+
+    public function canApplyDifferentLoadersDataProvider(): iterable
+    {
+        yield ['NelmioApiDoc'];
+        yield ['SwaggerPhp'];
     }
 }
