@@ -18,7 +18,7 @@ Swagger Resolver Bundle [![In English](https://img.shields.io/badge/Switch_To-En
 Единожды описав документацию api при помощи swagger вы получаете проверку данных на соответствие описанным требованиям.
 Обновляется документации - обновляются требования, все в одном месте!
 
-**Документация кэшируется** посредством стандартного механизма `Symfony Warmers`. 
+**Документация кэшируется** посредством стандартного механизма `Symfony Warmers`.
 В режиме отладки кэш автоматически прогревается если изменить файл, содержащий описание документации.
 
 *Примечание:* в качестве ответа приходит объект `SwaggerResolver` расширение для
@@ -81,7 +81,7 @@ class AppKernel extends Kernel
 Конфигурация
 ------------
 
-Чтобы начать использовать бандл не требуется предварительной конфигурации.
+Для использования бандла не требуется предварительной конфигурации.
 Все параметры имеют значения по умолчанию:
 
 ```yaml
@@ -108,15 +108,15 @@ linkin_swagger_resolver:
 
 Подготовка swagger документации отличается в зависимости от используемых инструментов в вашем проекте.
 
-**NelmioApiDocBundle** 
+**NelmioApiDocBundle**
 
 Если в вашем проекте подключен `NelmioApiDocBundle` то дополнительная конфигурация не требуется.
 
-**swagger-php** 
+**swagger-php**
 
 В случае отсутствия `NelmioApiDocBundle` бандл деградирует до загрузки конфигурации
 на основании аннотаций `swagger-php`. При этом для сканирования будет использована директория проекта `src/`.
-Чтобы оптимизировать сканирование вы можете указать директории явно:
+Чтобы оптимизировать сканирование, вы можете указать директории явно:
 
 ```yaml
 # app/config.yml
@@ -129,7 +129,7 @@ linkin_swagger_resolver:
             - '%kernel.project_dir%/src/Acme/ApiBundle/Repository'
 ```
 
-**JSON** 
+**JSON**
 
 В случае отсутствия `NelmioApiDocBundle` и `swagger-php` бандл деградирует до загрузки конфигурации
 из `json` файла. По умолчанию происходит поиск файла `web/swagger.json`.
@@ -138,25 +138,25 @@ linkin_swagger_resolver:
 ```yaml
 # app/config.yml
 linkin_swagger_resolver:
-    configuration_file: '%kernel.project_dir%/web/swagger.json' # обязательно расширений файла json
+    configuration_file: '%kernel.project_dir%/web/swagger.json' # обязательно расширение файла json
 ```
 
-**YAML** or *(yml)* 
+**YAML** or *(yml)*
 
 В случае отсутствия `NelmioApiDocBundle` и `swagger-php` и наличия конфигурации в формате `yaml` (`yml`)
-вам необходимо указать полный путь к файлу в конфигурации бандла: 
+вам необходимо указать полный путь к файлу в конфигурации бандла:
 
 ```yaml
 # app/config.yml
 linkin_swagger_resolver:
-    configuration_file: '%kernel.project_dir%/web/swagger.yaml' # обязательно расширений файла yaml или yml
+    configuration_file: '%kernel.project_dir%/web/swagger.yaml' # обязательно расширение файла yaml или yml
 ```
 
 **Custom**
 
 При необходимости использовать собственный загрузчик вам необходимо реализовать требуемое поведение в классе,
 реализующем интерфейс [SwaggerConfigurationLoaderInterface](./Loader/SwaggerConfigurationLoaderInterface.php).
-После чего необходимо указать название сервиса этого класса в конфигурации: 
+После чего необходимо указать название сервиса этого класса в конфигурации:
 
 ```yaml
 # app/config.yml
@@ -203,7 +203,7 @@ $data = $swaggerResolver->resolve(json_decode($request->getContent(), true));
 
 Бандл производит валидацию данных посредством системы валидаторов.
 Со списком всех валидаторов вы можете ознакомиться перейдя в папку [Validator](./Validator).
-Валидаторы являются тегированными сервисами. Чтобы создать свой собственный валидатор достаточно создать
+Валидаторы являются тегированными сервисами. Чтобы создать свой собственный валидатор, достаточно создать
 класс, реализующий интерфейс [SwaggerValidatorInterface](./Validator/SwaggerValidatorInterface.php) и
 зарегистрировать его с тегом `linkin_swagger_resolver.validator`.
 
@@ -211,7 +211,7 @@ $data = $swaggerResolver->resolve(json_decode($request->getContent(), true));
 
 Бандл производит нормализацию данных посредством системы нормализаторов.
 Со списком всех нормализаторов вы можете ознакомиться перейдя в папку [Normalizer](./Normalizer).
-Нормализаторы являются тегированными сервисами. Чтобы создать свой собственный нормализатор достаточно создать
+Нормализаторы являются тегированными сервисами. Чтобы создать свой собственный нормализатор, достаточно создать
 класс, реализующий интерфейс [SwaggerNormalizerInterface](./Normalizer/SwaggerNormalizerInterface.php) и
 зарегистрировать его с тегом `linkin_swagger_resolver.normalizer`.
 
