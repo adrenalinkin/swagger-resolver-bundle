@@ -1,8 +1,5 @@
-framework:
-    secret: test
-    test: ~
-    router:
-        resource: "%kernel.project_dir%/app/%kernel.test_case%/routing.yaml"
+imports:
+    - { resource: ../default/config.yaml }
 
 nelmio_api_doc:
     documentation:
@@ -25,19 +22,8 @@ nelmio_api_doc:
             path_patterns:
                 - '^/api/'
 
-linkin_swagger_resolver:
-    path_merge_strategy: Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrategy
-
 services:
-    logger:
-        class: Psr\Log\NullLogger
-
-    _defaults:
-        autowire: true
-        autoconfigure: true
-        public: false
-
-    Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Bundle\TestBundle\Controller\:
-        resource: '../../Bundle/TestBundle/Controller'
+    Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\NelmioApiDocController\:
+        resource: '../../src/NelmioApiDocController'
         public: true
         tags: ['controller.service_arguments']

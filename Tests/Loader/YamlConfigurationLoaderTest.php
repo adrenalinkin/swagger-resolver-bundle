@@ -18,20 +18,15 @@ use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\YamlConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrategy;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\FixturesProvider;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\FixturesProvider;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Resource\FileResource;
-use Symfony\Component\Routing\Loader\YamlFileLoader;
-use Symfony\Component\Routing\Router;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
 class YamlConfigurationLoaderTest extends TestCase
 {
-    private const PATH_TO_CONFIG = __DIR__.'/../Fixtures/Yaml/customer.yaml';
-
     /**
      * @var YamlConfigurationLoader
      */
@@ -40,16 +35,16 @@ class YamlConfigurationLoaderTest extends TestCase
     protected function setUp(): void
     {
         $parameterMerger = new OperationParameterMerger(new ReplaceLastWinMergeStrategy());
-        $router = new Router(new YamlFileLoader(new FileLocator(__DIR__.'/../Fixtures')), 'routing.yaml');
+        $router = FixturesProvider::createRouter();
 
-        $this->sut = new YamlConfigurationLoader($parameterMerger, $router, self::PATH_TO_CONFIG);
+        $this->sut = new YamlConfigurationLoader($parameterMerger, $router, FixturesProvider::PATH_TO_SWG_YAML);
     }
 
     public function testCanLoadDefinitionCollection(): void
     {
         $swagger = FixturesProvider::loadFromJson();
         $expectedDefinitions = $swagger->getDefinitions();
-        $expectedFileResource = new FileResource(self::PATH_TO_CONFIG);
+        $expectedFileResource = new FileResource(FixturesProvider::PATH_TO_SWG_YAML);
 
         $definitionCollection = $this->sut->getSchemaDefinitionCollection();
         self::assertSame($expectedDefinitions->getIterator()->count(), $definitionCollection->getIterator()->count());
@@ -70,7 +65,7 @@ class YamlConfigurationLoaderTest extends TestCase
     public function testCanLoadOperationCollection(): void
     {
         $swagger = FixturesProvider::loadFromJson();
-        $expectedFileResource = new FileResource(self::PATH_TO_CONFIG);
+        $expectedFileResource = new FileResource(FixturesProvider::PATH_TO_SWG_YAML);
         $operationCollection = $this->sut->getSchemaOperationCollection();
         $expectedOperationsCount = 0;
 

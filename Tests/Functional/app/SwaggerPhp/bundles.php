@@ -11,13 +11,4 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Bundle\TestBundle;
-
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-
-/**
- * @author Viktor Linkin <adrenalinkin@gmail.com>
- */
-class TestBundle extends Bundle
-{
-}
+return include __DIR__.'/../default/bundles.php';

@@ -11,12 +11,12 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Bundle\TestBundle\Controller;
+namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\NelmioApiDocController;
 
 use Linkin\Bundle\SwaggerResolverBundle\Factory\SwaggerResolverFactory;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Bundle\TestBundle\Models\CustomerFull;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Bundle\TestBundle\Models\CustomerNew;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Bundle\TestBundle\Models\ResponseCreated;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Models\CustomerFull;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Models\CustomerNew;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Models\ResponseCreated;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\JsonResponse;

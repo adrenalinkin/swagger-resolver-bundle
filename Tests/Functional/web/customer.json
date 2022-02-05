@@ -17,7 +17,7 @@
         "application/json"
     ],
     "paths": {
-        "/cart": {
+        "/api/cart": {
             "get": {
                 "description": "Returns all items from the cart",
                 "parameters": [
@@ -76,7 +76,7 @@
                 ]
             }
         },
-        "/customers": {
+        "/api/customers": {
             "get": {
                 "description": "Returns all customers",
                 "parameters": [
@@ -179,7 +179,7 @@
                 ]
             }
         },
-        "/customers/{userId}": {
+        "/api/customers/{userId}": {
             "get": {
                 "description": "Return customer by ID",
                 "parameters": [
@@ -382,7 +382,7 @@
                 ]
             }
         },
-        "/customers/{userId}/password": {
+        "/api/customers/{userId}/password": {
             "post": {
                 "description": "Create new password when not even set",
                 "deprecated": true,

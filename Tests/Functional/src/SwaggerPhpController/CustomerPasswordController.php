@@ -11,21 +11,22 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\SwaggerPhp\Controllers;
+namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController;
 
 use Swagger\Annotations as SWG;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
+ *
+ * @SWG\Tag(name="password")
  */
 class CustomerPasswordController
 {
     /**
      * @Route(name="customers_password_create", path="/customers/{userId}/password", methods={"POST"})
      * @SWG\Post(
-     *      path="/customers/{userId}/password",
-     *      tags={"password"},
+     *      path="/api/customers/{userId}/password",
      *      description="Create new password when not even set",
      *      deprecated=true,
      *      @SWG\Parameter(
@@ -63,8 +64,7 @@ class CustomerPasswordController
     /**
      * @Route(name="customers_password_reset", path="/customers/{userId}/password", methods={"PUT"})
      * @SWG\Put(
-     *      path="/customers/{userId}/password",
-     *      tags={"password"},
+     *      path="/api/customers/{userId}/password",
      *      description="Reset password",
      *      deprecated=true,
      *      @SWG\Parameter(

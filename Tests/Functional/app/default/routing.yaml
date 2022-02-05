@@ -1,0 +1,56 @@
+cart_get:
+    path: /api/cart
+    controller: Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController\CartController::getCartData
+    methods: GET
+cart_add_item:
+    path: /api/cart
+    controller: Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController\CartController::addItem
+    methods: PUT
+customers_get:
+    path: /api/customers
+    controller: Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController\CustomerController::getAll
+    methods: GET
+customers_post:
+    path: /api/customers
+    controller: Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController\CustomerController::create
+    methods: POST
+customers_get_one:
+    path: /api/customers/{userId}
+    controller: Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController\CustomerController::getOne
+    methods: GET
+    requirements:
+        userId: '\d+'
+customers_update:
+    path: /api/customers/{userId}
+    controller: Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController\CustomerController::update
+    methods: PUT
+    requirements:
+        userId: '\d+'
+customers_patch:
+    path: /api/customers/{userId}
+    controller:
+        Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController\CustomerController::updatePartial
+    methods: PATCH
+    requirements:
+        userId: '\d+'
+customers_delete:
+    path: /api/customers/{userId}
+    controller:
+        Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController\CustomerController::delete
+    methods: DELETE
+    requirements:
+        userId: '\d+'
+customers_password_create:
+    path: /api/customers/{userId}/password
+    controller:
+        Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController\CustomerPasswordController::create
+    methods: POST
+    requirements:
+        userId: '\d+'
+customers_password_reset:
+    path: /api/customers/{userId}/password
+    controller:
+        Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController\CustomerPasswordController::reset
+    methods: PUT
+    requirements:
+        userId: '\d+'

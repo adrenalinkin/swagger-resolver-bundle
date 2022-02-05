@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Validator;
 
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\FixturesProvider;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\FixturesProvider;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\StringPatternValidator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;

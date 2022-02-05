@@ -21,12 +21,9 @@ use Linkin\Bundle\SwaggerResolverBundle\Exception\OperationNotFoundException;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\NelmioApiDocConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrategy;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\FixturesProvider;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\FixturesProvider;
 use Nelmio\ApiDocBundle\ApiDocGenerator;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Routing\Loader\YamlFileLoader;
-use Symfony\Component\Routing\Router;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -40,25 +37,23 @@ class NelmioApiDocConfigurationLoaderTest extends TestCase
 
     protected function setUp(): void
     {
-        $testsDir = __DIR__.'/..';
         $parameterMerger = new OperationParameterMerger(new ReplaceLastWinMergeStrategy());
-        $router = new Router(new YamlFileLoader(new FileLocator($testsDir.'/Fixtures')), 'routing.yaml');
+        $router = FixturesProvider::createRouter();
         $apiDocGenerator = $this->createApiDocGenerator();
 
-        $this->sut = new NelmioApiDocConfigurationLoader($parameterMerger, $router, $apiDocGenerator, $testsDir);
+        $this->sut = new NelmioApiDocConfigurationLoader($parameterMerger, $router, $apiDocGenerator, __DIR__.'/..');
     }
 
     public function testFailWhenRouteNotFound(): void
     {
         $this->expectException(OperationNotFoundException::class);
 
-        $testsDir = __DIR__.'/..';
         $parameterMerger = new OperationParameterMerger(new ReplaceLastWinMergeStrategy());
-        $router = new Router(new YamlFileLoader(new FileLocator($testsDir.'/Fixtures')), 'routing.yaml');
+        $router = FixturesProvider::createRouter();
         $router->getRouteCollection()->remove('customers_get');
         $apiDocGenerator = $this->createApiDocGenerator();
 
-        $sut = new NelmioApiDocConfigurationLoader($parameterMerger, $router, $apiDocGenerator, $testsDir);
+        $sut = new NelmioApiDocConfigurationLoader($parameterMerger, $router, $apiDocGenerator, __DIR__.'/..');
         $sut->getSchemaDefinitionCollection();
     }
 

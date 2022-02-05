@@ -19,11 +19,8 @@ use Linkin\Bundle\SwaggerResolverBundle\Exception\OperationNotFoundException;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerPhpConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrategy;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\FixturesProvider;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\FixturesProvider;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Routing\Loader\YamlFileLoader;
-use Symfony\Component\Routing\Router;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -38,13 +35,13 @@ class SwaggerPhpConfigurationLoaderTest extends TestCase
     protected function setUp(): void
     {
         $parameterMerger = new OperationParameterMerger(new ReplaceLastWinMergeStrategy());
-        $router = new Router(new YamlFileLoader(new FileLocator(__DIR__.'/../Fixtures')), 'routing.yaml');
+        $router = FixturesProvider::createRouter();
 
         $this->sut = new SwaggerPhpConfigurationLoader(
             $parameterMerger,
             $router,
-            [__DIR__.'/../Fixtures/SwaggerPhp', __DIR__.'/../Functional/Bundle/TestBundle/Models'],
-            []
+            [__DIR__.'/../Functional/src'],
+            [__DIR__.'/../Functional/src/NelmioApiDocController']
         );
     }
 
@@ -53,14 +50,14 @@ class SwaggerPhpConfigurationLoaderTest extends TestCase
         $this->expectException(OperationNotFoundException::class);
 
         $parameterMerger = new OperationParameterMerger(new ReplaceLastWinMergeStrategy());
-        $router = new Router(new YamlFileLoader(new FileLocator(__DIR__.'/../Fixtures')), 'routing.yaml');
+        $router = FixturesProvider::createRouter();
         $router->getRouteCollection()->remove('customers_get');
 
         $sut = new SwaggerPhpConfigurationLoader(
             $parameterMerger,
             $router,
-            [__DIR__.'/../Fixtures/SwaggerPhp', __DIR__.'/../Functional/Bundle/TestBundle/Models'],
-            []
+            [__DIR__.'/../Functional/src'],
+            [__DIR__.'/../Functional/src/NelmioApiDocController']
         );
         $sut->getSchemaDefinitionCollection();
     }

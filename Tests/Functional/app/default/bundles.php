@@ -11,9 +11,10 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-use Nelmio\ApiDocBundle\NelmioApiDocBundle;
+use Linkin\Bundle\SwaggerResolverBundle\LinkinSwaggerResolverBundle;
+use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 
-$bundles = include __DIR__.'/../default/bundles.php';
-$bundles[] = new NelmioApiDocBundle();
-
-return $bundles;
+return [
+    new FrameworkBundle(),
+    new LinkinSwaggerResolverBundle(),
+];

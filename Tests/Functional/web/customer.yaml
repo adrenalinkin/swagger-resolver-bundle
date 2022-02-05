@@ -4,6 +4,7 @@ info:
     description: Example API for work with customer
     version: 1.0.0
 host: localhost
+# TODO: concatenate base path with all declared path
 basePath: /api
 schemes:
     - https
@@ -12,7 +13,7 @@ consumes:
 produces:
     - application/json
 paths:
-    /cart:
+    /api/cart:
         get:
             description: Returns all items from the cart
             parameters:
@@ -51,7 +52,7 @@ paths:
                         $ref: '#/definitions/ResponseCreated'
             tags:
                 - cart
-    /customers:
+    /api/customers:
         get:
             description: Returns all customers
             parameters:
@@ -124,7 +125,7 @@ paths:
                         $ref: '#/definitions/ResponseCreated'
             tags:
                 - customer
-    /customers/{userId}:
+    /api/customers/{userId}:
         get:
             description: Return customer by ID
             parameters:
@@ -273,7 +274,7 @@ paths:
                     description: Empty response when removed successfully
             tags:
                 - customer
-    /customers/{userId}/password:
+    /api/customers/{userId}/password:
         post:
             description: Create new password when not even set
             deprecated: true

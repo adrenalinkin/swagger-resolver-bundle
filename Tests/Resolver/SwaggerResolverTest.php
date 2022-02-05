@@ -16,7 +16,7 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Resolver;
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterTypeEnum;
 use Linkin\Bundle\SwaggerResolverBundle\Resolver\SwaggerResolver;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\FixturesProvider;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\FixturesProvider;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\SwaggerValidatorInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

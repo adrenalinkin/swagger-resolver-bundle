@@ -11,21 +11,22 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\SwaggerPhp\Controllers;
+namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController;
 
 use Swagger\Annotations as SWG;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
+ *
+ * @SWG\Tag(name="cart")
  */
 class CartController
 {
     /**
      * @Route(name="cart_add_item", path="/cart", methods={"PUT"})
      * @SWG\Put(
-     *      path="/cart",
-     *      tags={"cart"},
+     *      path="/api/cart",
      *      description="Add new item into cart or increase count of existed",
      *      @SWG\Parameter(
      *          name="x-auth-token",
@@ -56,8 +57,7 @@ class CartController
     /**
      * @Route(name="cart_get", path="/cart", methods={"GET"})
      * @SWG\Get(
-     *      path="/cart",
-     *      tags={"cart"},
+     *      path="/api/cart",
      *      description="Returns all items from the cart",
      *      @SWG\Parameter(
      *          name="x-auth-token",

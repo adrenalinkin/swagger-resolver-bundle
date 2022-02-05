@@ -11,21 +11,27 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\SwaggerPhp\Controllers;
+namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController;
 
+use Linkin\Bundle\SwaggerResolverBundle\Factory\SwaggerResolverFactory;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Models\CustomerFull;
 use Swagger\Annotations as SWG;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
+ *
+ * @SWG\Tag(name="customer")
  */
 class CustomerController
 {
     /**
      * @Route(name="customers_get", path="/customers", methods={"GET"})
      * @SWG\Get(
-     *      path="/customers",
-     *      tags={"customer"},
+     *      path="/api/customers",
      *      description="Returns all customers",
      *      @SWG\Parameter(
      *          name="x-auth-token",
@@ -63,16 +69,19 @@ class CustomerController
      *      ),
      * )
      */
-    public function getAll(): void
+    public function getAll(Request $request, SwaggerResolverFactory $factory): Response
     {
+        $swaggerResolver = $factory->createForDefinition(CustomerFull::class);
+        $data = $swaggerResolver->resolve(json_decode($request->getContent(), true));
+
+        return new JsonResponse([$data]);
     }
 
     /**
      * @Route(name="customers_post", path="/customers", methods={"POST"})
      * @SWG\Post(
-     *      path="/customers",
+     *      path="/api/customers",
      *      method="POST",
-     *      tags={"customer"},
      *      description="Create new customer",
      *      @SWG\Parameter(
      *          name="x-auth-token",
@@ -115,8 +124,7 @@ class CustomerController
     /**
      * @Route(name="customers_get_one", path="/customers/{userId}", methods={"GET"}, requirements={"userId": "\d+"})
      * @SWG\Get(
-     *      path="/customers/{userId}",
-     *      tags={"customer"},
+     *      path="/api/customers/{userId}",
      *      description="Return customer by ID",
      *      @SWG\Parameter(
      *          name="x-auth-token",
@@ -150,8 +158,7 @@ class CustomerController
     /**
      * @Route(name="customers_update", path="/customers/{userId}", methods={"PUT"}, requirements={"userId": "\d+"})
      * @SWG\Put(
-     *      path="/customers/{userId}",
-     *      tags={"customer"},
+     *      path="/api/customers/{userId}",
      *      description="Update customer",
      *      @SWG\Parameter(
      *          name="x-auth-token",
@@ -200,8 +207,7 @@ class CustomerController
     /**
      * @Route(name="customers_patch", path="/customers/{userId}", methods={"PATCH"}, requirements={"userId": "\d+"})
      * @SWG\Patch(
-     *      path="/customers/{userId}",
-     *      tags={"customer"},
+     *      path="/api/customers/{userId}",
      *      description="Partial customer update in formData style",
      *      deprecated=true,
      *      consumes={"application/x-www-form-urlencoded"},
@@ -268,8 +274,7 @@ class CustomerController
     /**
      * @Route(name="customers_delete", path="/customers/{userId}", methods={"DELETE"}, requirements={"userId": "\d+"})
      * @SWG\Delete(
-     *      path="/customers/{userId}",
-     *      tags={"customer"},
+     *      path="/api/customers/{userId}",
      *      description="Delete customer from the system",
      *      @SWG\Parameter(
      *          name="x-auth-token",

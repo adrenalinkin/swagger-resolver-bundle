@@ -11,7 +11,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Bundle\TestBundle\Controller;
+namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\NelmioApiDocController;
 
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\Response;

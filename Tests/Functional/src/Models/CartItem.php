@@ -11,7 +11,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Bundle\TestBundle\Models;
+namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Models;
 
 use Swagger\Annotations as SWG;
 

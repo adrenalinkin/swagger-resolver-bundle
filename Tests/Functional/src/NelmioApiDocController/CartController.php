@@ -11,11 +11,11 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Bundle\TestBundle\Controller;
+namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\NelmioApiDocController;
 
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Bundle\TestBundle\Models\Cart;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Bundle\TestBundle\Models\CartItem;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Bundle\TestBundle\Models\ResponseCreated;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Models\Cart;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Models\CartItem;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Models\ResponseCreated;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\Response;

@@ -11,24 +11,17 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Bundle\TestBundle\Models;
+namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Models;
 
 use Swagger\Annotations as SWG;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  *
- * @SWG\Definition(type="object", required={"id", "name", "roles", "email", "isEmailConfirmed", "registeredAt"})
+ * @SWG\Definition(type="object", required={"name", "roles", "email", "password"})
  */
-class CustomerFull
+class CustomerNew
 {
-    /**
-     * @var int
-     *
-     * @SWG\Property(format="int64", minimum=0, exclusiveMinimum=true)
-     */
-    public $id;
-
     /**
      * @var string
      *
@@ -61,16 +54,16 @@ class CustomerFull
     /**
      * @var string
      *
+     * @SWG\Property(maxLength=30)
+     */
+    public $password;
+
+    /**
+     * @var string
+     *
      * @SWG\Property(pattern="^[0-9a-z]+\@crud\.com$")
      */
     public $email;
-
-    /**
-     * @var bool
-     *
-     * @SWG\Property()
-     */
-    public $isEmailConfirmed;
 
     /**
      * @var string
@@ -82,7 +75,7 @@ class CustomerFull
     /**
      * @var string
      *
-     * @SWG\Property(format="time")
+     * @SWG\Property(format="time", default="09:00")
      */
     public $happyHour;
 
@@ -92,39 +85,12 @@ class CustomerFull
      * @SWG\Property(
      *      format="int32",
      *      default=0,
-     *      maximum=100,
-     *      exclusiveMaximum=true,
+     *      multipleOf=10,
      *      minimum=0,
      *      exclusiveMinimum=false,
-     *      multipleOf=10,
+     *      maximum=100,
+     *      exclusiveMaximum=true,
      * )
      */
     public $discount;
-
-    /**
-     * @var float
-     *
-     * @SWG\Property(
-     *      default=0.1,
-     *      maximum=5.1,
-     *      exclusiveMaximum=true,
-     *      minimum=0.1,
-     *      exclusiveMinimum=false,
-     * )
-     */
-    public $rating;
-
-    /**
-     * @var string
-     *
-     * @SWG\Property(format="date-time")
-     */
-    public $registeredAt;
-
-    /**
-     * @var string
-     *
-     * @SWG\Property(format="timestamp")
-     */
-    public $lastVisitedAt;
 }

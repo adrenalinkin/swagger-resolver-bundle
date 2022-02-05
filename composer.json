@@ -68,7 +68,8 @@
 
     "autoload-dev": {
         "psr-4": {
-            "Linkin\\Bundle\\SwaggerResolverBundle\\Tests\\": "Tests/"
+            "Linkin\\Bundle\\SwaggerResolverBundle\\Tests\\": "Tests/",
+            "Linkin\\Bundle\\SwaggerResolverBundle\\Tests\\Functional\\": "Tests/Functional/src/"
         }
     },
 

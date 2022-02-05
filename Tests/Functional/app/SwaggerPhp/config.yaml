@@ -1,0 +1,13 @@
+imports:
+    - { resource: ../default/config.yaml }
+
+linkin_swagger_resolver:
+    path_merge_strategy: Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrategy
+    swagger_php:
+        exclude:
+            - '%kernel.project_dir%/src/NelmioApiDocController'
+services:
+    Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController\:
+        resource: '../../src/SwaggerPhpController'
+        public: true
+        tags: ['controller.service_arguments']

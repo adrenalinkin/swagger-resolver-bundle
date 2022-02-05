@@ -15,7 +15,7 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Collection;
 
 use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaOperationCollection;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\OperationNotFoundException;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\FixturesProvider;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\FixturesProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Resource\FileResource;
 
