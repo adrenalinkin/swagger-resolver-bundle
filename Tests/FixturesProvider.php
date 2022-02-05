@@ -25,8 +25,8 @@ use Symfony\Component\Routing\Router;
  */
 class FixturesProvider
 {
-    public const PATH_TO_SWG_JSON = __DIR__.'/Functional/web/customer.json';
-    public const PATH_TO_SWG_YAML = __DIR__.'/Functional/web/customer.yaml';
+    public const PATH_TO_SWG_JSON = __DIR__ . '/Functional/web/swagger.json';
+    public const PATH_TO_SWG_YAML = __DIR__ . '/Functional/web/swagger.yaml';
 
     private const MAP_DEFINITION_RESOURCE = [
         'Cart' => __DIR__.'/Functional/src/Models/Cart.php',
