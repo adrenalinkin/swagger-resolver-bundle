@@ -22,24 +22,29 @@ use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerPhpConfigurationLoader;
  */
 class LinkinSwaggerResolverExtensionTest extends SwaggerResolverWebTestCase
 {
-    public function testCanApplyNelmioApiDocByDefault(): void
+    /**
+     * @dataProvider canApplyDefaultFallbackDataProvider
+     */
+    public function testCanApplyDefaultFallback(array $clientOptions, string $expectedLoader): void
     {
-        self::createClient(['test_case' => 'NelmioApiDoc']);
+        self::createClient($clientOptions);
 
-        self::assertTrue(self::getTestContainer()->has(NelmioApiDocConfigurationLoader::class));
+        self::assertTrue(self::getTestContainer()->has($expectedLoader));
     }
 
-    public function testCanApplyFallbackToSwaggerPhp(): void
+    public function canApplyDefaultFallbackDataProvider(): iterable
     {
-        self::createClient(['test_case' => 'SwaggerPhp']);
-
-        self::assertTrue(self::getTestContainer()->has(SwaggerPhpConfigurationLoader::class));
-    }
-
-    public function testCanApplyFallbackToJsonFile(): void
-    {
-        self::createClient(['test_case' => 'Json', 'disable_swagger_php' => true]);
-
-        self::assertTrue(self::getTestContainer()->has(JsonConfigurationLoader::class));
+        yield [
+            'options' => ['test_case' => 'NelmioApiDoc'],
+            'expected' => NelmioApiDocConfigurationLoader::class
+        ];
+        yield [
+            'options' => ['test_case' => 'SwaggerPhp'],
+            'expected' => SwaggerPhpConfigurationLoader::class
+        ];
+        yield [
+            'options' => ['test_case' => 'default', 'disable_swagger_php' => true],
+            'expected' => JsonConfigurationLoader::class
+        ];
     }
 }
