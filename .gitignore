@@ -1,8 +1,9 @@
+/bin/
 /var/
 /vendor/
-/.phpunit.result.cache
-/composer.lock
-/composer.phar
-/phpunit.xml
-/.php_cs
-/.php_cs.cache
+.phpunit.result.cache
+composer.lock
+composer.phar
+phpunit.xml
+.php_cs
+.php_cs.cache

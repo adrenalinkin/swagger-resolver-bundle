@@ -33,8 +33,13 @@ class TestAppKernel extends Kernel
      */
     private $varDir;
 
-    public function __construct(string $varDir, string $testCase, string $environment, bool $debug)
-    {
+    public function __construct(
+        string $varDir,
+        string $testCase,
+        bool $disableSwaggerPhp,
+        string $environment,
+        bool $debug
+    ) {
         if (!is_dir(__DIR__.'/'.$testCase)) {
             throw new InvalidArgumentException(sprintf('The test case "%s" does not exist.', $testCase));
         }
@@ -45,6 +50,8 @@ class TestAppKernel extends Kernel
 
         $this->testCase = $testCase;
         $this->varDir = $varDir;
+
+        $this->copyLockFile($disableSwaggerPhp);
 
         parent::__construct($environment, $debug);
     }
@@ -62,7 +69,7 @@ class TestAppKernel extends Kernel
 
     public function getProjectDir(): string
     {
-        return parent::getProjectDir().'/Tests/Functional/';
+        return parent::getProjectDir().'/Tests/Functional';
     }
 
     public function getRootDir(): string
@@ -91,5 +98,31 @@ class TestAppKernel extends Kernel
         $parameters['kernel.test_case'] = $this->testCase;
 
         return $parameters;
+    }
+
+    private function copyLockFile(bool $disableSwaggerPhp): void
+    {
+        $rawData = file_get_contents(parent::getProjectDir().'/composer.lock');
+        $fakeLockFile = $this->getProjectDir().'/composer.lock';
+
+        if (false === $disableSwaggerPhp) {
+            file_put_contents($fakeLockFile, $rawData);
+
+            return;
+        }
+
+        $originData = json_decode($rawData, true);
+        $newData = $originData;
+        $newData['packages-dev'] = [];
+
+        foreach ($originData['packages-dev'] as $package) {
+            if ('zircote/swagger-php' === $package['name']) {
+                continue;
+            }
+
+            $newData['packages-dev'][] = $package;
+        }
+
+        file_put_contents($fakeLockFile, json_encode($newData, \JSON_UNESCAPED_SLASHES));
     }
 }

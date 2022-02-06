@@ -13,6 +13,10 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional;
 
+use Linkin\Bundle\SwaggerResolverBundle\Loader\JsonConfigurationLoader;
+use Linkin\Bundle\SwaggerResolverBundle\Loader\NelmioApiDocConfigurationLoader;
+use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerPhpConfigurationLoader;
+
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
@@ -20,42 +24,22 @@ class LinkinSwaggerResolverExtensionTest extends SwaggerResolverWebTestCase
 {
     public function testCanApplyNelmioApiDocByDefault(): void
     {
-        $this->assertByCallRoute('NelmioApiDoc');
+        $client = self::createClient(['test_case' => 'NelmioApiDoc']);
+
+        self::assertTrue($client->getContainer()->has(NelmioApiDocConfigurationLoader::class));
     }
 
     public function testCanApplyFallbackToSwaggerPhp(): void
     {
-        $this->assertByCallRoute('SwaggerPhp');
+        $client = self::createClient(['test_case' => 'SwaggerPhp']);
+
+        self::assertTrue($client->getContainer()->has(SwaggerPhpConfigurationLoader::class));
     }
 
     public function testCanApplyFallbackToJsonFile(): void
     {
-        $pathToVendor = __DIR__.'/../../vendor';
+        $client = self::createClient(['test_case' => 'Json', 'disable_swagger_php' => true]);
 
-        exec("mv $pathToVendor/zircote $pathToVendor/tmp-zircote");
-        exec('composer dump-autoload');
-
-        $this->assertByCallRoute('Json');
-
-        exec("mv $pathToVendor/tmp-zircote $pathToVendor/zircote");
-        exec('composer dump-autoload');
-    }
-
-    private function assertByCallRoute(string $testCase): void
-    {
-        $data = [
-            'id' => 1,
-            'name' => 'Homer',
-            'roles' => ['guest'],
-            'email' => 'homer@crud.com',
-            'isEmailConfirmed' => true,
-            'registeredAt' => '2000-10-11T19:57:31Z',
-        ];
-
-        $client = self::createClient(['test_case' => $testCase]);
-        $client->request('GET', '/api/customers', [], [], [], json_encode($data));
-
-        $response = $client->getResponse();
-        self::assertEquals(200, $response->getStatusCode());
+        self::assertTrue($client->getContainer()->has(JsonConfigurationLoader::class));
     }
 }
