@@ -78,4 +78,13 @@ class LinkinSwaggerResolverExtensionTest extends SwaggerResolverWebTestCase
             'disable_swagger_php' => true,
         ]);
     }
+
+    public function canLoadFromExplicitlyDefinedLoader(): void
+    {
+        self::createClient([
+            'test_case' => 'LoadFromExplicitlyDefinedLoader',
+        ]);
+
+        self::assertTrue(self::getTestContainer()->has(JsonConfigurationLoader::class));
+    }
 }
