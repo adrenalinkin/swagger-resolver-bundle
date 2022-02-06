@@ -17,6 +17,7 @@ use Linkin\Bundle\SwaggerResolverBundle\Loader\JsonConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\NelmioApiDocConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerPhpConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\YamlConfigurationLoader;
+use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -66,5 +67,15 @@ class LinkinSwaggerResolverExtensionTest extends SwaggerResolverWebTestCase
     {
         yield ['LoadFromYaml'];
         yield ['LoadFromYml'];
+    }
+
+    public function testFailWhenReceivedUnsupportedConfigurationFile(): void
+    {
+        $this->expectException(InvalidTypeException::class);
+
+        self::createClient([
+            'test_case' => 'LoadIncorrectFile',
+            'disable_swagger_php' => true,
+        ]);
     }
 }
