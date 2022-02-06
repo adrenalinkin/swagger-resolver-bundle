@@ -38,15 +38,15 @@ class LinkinSwaggerResolverExtensionTest extends SwaggerResolverWebTestCase
     {
         yield [
             'options' => ['test_case' => 'NelmioApiDoc'],
-            'expected' => NelmioApiDocConfigurationLoader::class
+            'expected' => NelmioApiDocConfigurationLoader::class,
         ];
         yield [
             'options' => ['test_case' => 'SwaggerPhp'],
-            'expected' => SwaggerPhpConfigurationLoader::class
+            'expected' => SwaggerPhpConfigurationLoader::class,
         ];
         yield [
             'options' => ['test_case' => 'default', 'disable_swagger_php' => true],
-            'expected' => JsonConfigurationLoader::class
+            'expected' => JsonConfigurationLoader::class,
         ];
     }
 
