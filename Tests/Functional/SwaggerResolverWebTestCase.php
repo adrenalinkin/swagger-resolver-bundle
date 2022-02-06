@@ -16,7 +16,9 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional;
 use InvalidArgumentException;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\app\TestAppKernel;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -31,6 +33,15 @@ class SwaggerResolverWebTestCase extends WebTestCase
     public static function tearDownAfterClass(): void
     {
         (new Filesystem())->remove(self::varDir());
+    }
+
+    protected static function getTestContainer(): ContainerInterface
+    {
+        if (Kernel::VERSION_ID >= 40100) {
+            return self::$container;
+        }
+
+        return self::$kernel->getContainer();
     }
 
     protected static function getKernelClass(): string

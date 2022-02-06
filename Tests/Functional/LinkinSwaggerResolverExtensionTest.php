@@ -24,22 +24,22 @@ class LinkinSwaggerResolverExtensionTest extends SwaggerResolverWebTestCase
 {
     public function testCanApplyNelmioApiDocByDefault(): void
     {
-        $client = self::createClient(['test_case' => 'NelmioApiDoc']);
+        self::createClient(['test_case' => 'NelmioApiDoc']);
 
-        self::assertTrue($client->getContainer()->has(NelmioApiDocConfigurationLoader::class));
+        self::assertTrue(self::getTestContainer()->has(NelmioApiDocConfigurationLoader::class));
     }
 
     public function testCanApplyFallbackToSwaggerPhp(): void
     {
-        $client = self::createClient(['test_case' => 'SwaggerPhp']);
+        self::createClient(['test_case' => 'SwaggerPhp']);
 
-        self::assertTrue($client->getContainer()->has(SwaggerPhpConfigurationLoader::class));
+        self::assertTrue(self::getTestContainer()->has(SwaggerPhpConfigurationLoader::class));
     }
 
     public function testCanApplyFallbackToJsonFile(): void
     {
-        $client = self::createClient(['test_case' => 'Json', 'disable_swagger_php' => true]);
+        self::createClient(['test_case' => 'Json', 'disable_swagger_php' => true]);
 
-        self::assertTrue($client->getContainer()->has(JsonConfigurationLoader::class));
+        self::assertTrue(self::getTestContainer()->has(JsonConfigurationLoader::class));
     }
 }
