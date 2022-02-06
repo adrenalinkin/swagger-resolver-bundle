@@ -16,6 +16,7 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\JsonConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\NelmioApiDocConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerPhpConfigurationLoader;
+use Linkin\Bundle\SwaggerResolverBundle\Loader\YamlConfigurationLoader;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -46,5 +47,24 @@ class LinkinSwaggerResolverExtensionTest extends SwaggerResolverWebTestCase
             'options' => ['test_case' => 'default', 'disable_swagger_php' => true],
             'expected' => JsonConfigurationLoader::class
         ];
+    }
+
+    /**
+     * @dataProvider canApplyYamlLoaderDataProvider
+     */
+    public function testCanApplyYamlLoader(string $testCase): void
+    {
+        self::createClient([
+            'test_case' => $testCase,
+            'disable_swagger_php' => true,
+        ]);
+
+        self::assertTrue(self::getTestContainer()->has(YamlConfigurationLoader::class));
+    }
+
+    public function canApplyYamlLoaderDataProvider(): iterable
+    {
+        yield ['LoadFromYaml'];
+        yield ['LoadFromYml'];
     }
 }
