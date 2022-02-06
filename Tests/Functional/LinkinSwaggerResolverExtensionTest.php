@@ -79,7 +79,7 @@ class LinkinSwaggerResolverExtensionTest extends SwaggerResolverWebTestCase
         ]);
     }
 
-    public function canLoadFromExplicitlyDefinedLoader(): void
+    public function testCanLoadFromExplicitlyDefinedLoader(): void
     {
         self::createClient([
             'test_case' => 'LoadFromExplicitlyDefinedLoader',
