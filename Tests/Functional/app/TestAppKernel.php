@@ -13,10 +13,8 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\app;
 
-use Linkin\Bundle\SwaggerResolverBundle\LinkinSwaggerResolverBundle;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Bundle\TestBundle\TestBundle;
-use Nelmio\ApiDocBundle\NelmioApiDocBundle;
-use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use InvalidArgumentException;
+use RuntimeException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
@@ -25,14 +23,53 @@ use Symfony\Component\HttpKernel\Kernel;
  */
 class TestAppKernel extends Kernel
 {
+    /**
+     * @var string
+     */
+    private $testCase;
+
+    /**
+     * @var string
+     */
+    private $varDir;
+
+    public function __construct(
+        string $varDir,
+        string $testCase,
+        bool $disableSwaggerPhp,
+        string $environment,
+        bool $debug
+    ) {
+        if (!is_dir(__DIR__.'/'.$testCase)) {
+            throw new InvalidArgumentException(sprintf('The test case "%s" does not exist.', $testCase));
+        }
+
+        if (!file_exists(__DIR__.'/'.$testCase.'/config.yaml')) {
+            throw new InvalidArgumentException('The root config "%s" does not exist.');
+        }
+
+        $this->testCase = $testCase;
+        $this->varDir = $varDir;
+
+        $this->copyLockFile($disableSwaggerPhp);
+
+        parent::__construct($environment, $debug);
+    }
+
     public function registerBundles(): array
     {
-        return [
-            new FrameworkBundle(),
-            new NelmioApiDocBundle(),
-            new LinkinSwaggerResolverBundle(),
-            new TestBundle(),
-        ];
+        $filename = __DIR__.'/'.$this->testCase.'/bundles.php';
+
+        if (!file_exists($filename)) {
+            throw new RuntimeException(sprintf('The bundles file "%s" does not exist.', $filename));
+        }
+
+        return include $filename;
+    }
+
+    public function getProjectDir(): string
+    {
+        return parent::getProjectDir().'/Tests/Functional';
     }
 
     public function getRootDir(): string
@@ -42,21 +79,50 @@ class TestAppKernel extends Kernel
 
     public function getCacheDir(): string
     {
-        return sys_get_temp_dir().'/cache/'.$this->environment;
+        return $this->varDir.'/cache/'.$this->testCase.'/'.$this->environment;
     }
 
     public function getLogDir(): string
     {
-        return sys_get_temp_dir().'/logs';
-    }
-
-    public function getProjectDir(): string
-    {
-        return parent::getProjectDir().'/Tests/';
+        return $this->varDir.'/logs/'.$this->testCase;
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
-        $loader->load(__DIR__.'/config/config.yaml');
+        $loader->load(__DIR__.'/'.$this->testCase.'/config.yaml');
+    }
+
+    protected function getKernelParameters(): array
+    {
+        $parameters = parent::getKernelParameters();
+        $parameters['kernel.test_case'] = $this->testCase;
+
+        return $parameters;
+    }
+
+    private function copyLockFile(bool $disableSwaggerPhp): void
+    {
+        $rawData = file_get_contents(parent::getProjectDir().'/composer.lock');
+        $fakeLockFile = $this->getProjectDir().'/composer.lock';
+
+        if (false === $disableSwaggerPhp) {
+            file_put_contents($fakeLockFile, $rawData);
+
+            return;
+        }
+
+        $originData = json_decode($rawData, true);
+        $newData = $originData;
+        $newData['packages-dev'] = [];
+
+        foreach ($originData['packages-dev'] as $package) {
+            if ('zircote/swagger-php' === $package['name']) {
+                continue;
+            }
+
+            $newData['packages-dev'][] = $package;
+        }
+
+        file_put_contents($fakeLockFile, json_encode($newData, \JSON_UNESCAPED_SLASHES));
     }
 }

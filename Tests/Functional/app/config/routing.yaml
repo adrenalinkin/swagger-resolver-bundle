@@ -1,4 +1,0 @@
-app:
-    resource: '@TestBundle/Controller/'
-    prefix: api
-    type: annotation

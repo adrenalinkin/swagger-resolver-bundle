@@ -6,8 +6,8 @@ Swagger Resolver Bundle [![На Русском](https://img.shields.io/badge/П�
 [![Latest Stable Version](https://poser.pugx.org/adrenalinkin/swagger-resolver-bundle/v/stable)](https://packagist.org/packages/adrenalinkin/swagger-resolver-bundle)
 [![Total Downloads](https://poser.pugx.org/adrenalinkin/swagger-resolver-bundle/downloads)](https://packagist.org/packages/adrenalinkin/swagger-resolver-bundle)
 
-Feel free to connect with me by email [email](mailto:adrenalinkin@gmail.com)
-or in Telegram [Telegram](https://t.me/adrenaL1nkin).
+Feel free to connect with me by [email](mailto:adrenalinkin@gmail.com)
+or in [Telegram](https://t.me/adrenaL1nkin).
 
 Usage example on [GitHub Gist](https://gist.github.com/adrenalinkin/f5cddf1afea865a3b91ac078a1cb8337#file-instruction-md)
 
@@ -23,10 +23,10 @@ When documentation has been updated then verification will be updated too, all i
 In debug mode, the cache automatically warms up if you change the file containing the description of the documentation.
 
 *Note:* as result bundle returns `SwaggerResolver` object - extension for the
-[OptionsResolver](https://github.com/symfony/options-resolver). 
-In this way you get full control over created resolver. 
+[OptionsResolver](https://github.com/symfony/options-resolver).
+In this way you get full control over created resolver.
 
-*Attention:* remember, when you change generated `SwaggerResolver` object you risk to get 
+*Attention:* remember, when you change generated `SwaggerResolver` object you risk getting
 divergence with actual documentation.
 
 ### Integrations
@@ -35,7 +35,7 @@ Bundle provides integration with [NelmioApiDocBundle](https://github.com/nelmio/
 supports configuration loading by [swagger-php](https://github.com/zircote/swagger-php) and also supports
 loading directly from the `json` or `yaml`(`yml`) configuration file.
 When used default bundle configuration then swagger documentation will be load in most optimal available way.
-Loaders priority: 
+Loaders priority:
 1. `NelmioApiDocBundle` - do not require any additional configuration.
 2. `swagger-php` - scan `src/` directory by default. Uses `swagger_php.scan` and `swagger_php.exclude` parameters.
 3. `json` - looking for `web/swagger.json` by default. Uses `configuration_file` parameter.
@@ -83,7 +83,7 @@ Configuration
 ------------
 
 To start using bundle you don't need to define some additional configuration.
-All parameters has values by default:
+All parameters have values by default:
 
 ```yaml
 # app/config.yml
@@ -109,13 +109,13 @@ Usage
 
 Swagger documentation preparation differ according to used tools of your project.
 
-**NelmioApiDocBundle** 
+**NelmioApiDocBundle**
 
 If your project has `NelmioApiDocBundle` connected, then no additional configuration is required.
 
-**swagger-php** 
+**swagger-php**
 
-In the absence of `NelmioApiDocBundle`, the bundle will degrades to the configuration
+In the absence of `NelmioApiDocBundle`, the bundle will degrade to the configuration
 loading by `swagger-php` annotations. In this case, by default, will be used `src/` directory to scan.
 To optimize scanning process you can describe directories in the configuration:
 
@@ -130,11 +130,11 @@ linkin_swagger_resolver:
             - '%kernel.project_dir%/src/Acme/ApiBundle/Repository'
 ```
 
-**JSON** 
+**JSON**
 
-In the absence of `NelmioApiDocBundle` and `swagger-php`, the bundle will degrades to the configuration
+In the absence of `NelmioApiDocBundle` and `swagger-php`, the bundle will degrade to the configuration
 loading by `json` file. In this case, by default, will be used `web/swagger.json` file.
-Also you can set custom path to the `json` configuration:
+Also, you can set custom path to the `json` configuration:
 
 ```yaml
 # app/config.yml
@@ -142,10 +142,10 @@ linkin_swagger_resolver:
     configuration_file: '%kernel.project_dir%/web/swagger.json' # json extension is required
 ```
 
-**YAML** or *(yml)* 
+**YAML** or *(yml)*
 
 In the absence of `NelmioApiDocBundle` and `swagger-php`, but available
-configuration file in the `yaml` or `yml` format you need to define path to that file:  
+configuration file in the `yaml` or `yml` format you need to define path to that file:
 
 ```yaml
 # app/config.yml
@@ -157,7 +157,7 @@ linkin_swagger_resolver:
 
 If you need to use custom configuration loader you should implement custom loading process in the class, which
 implements [SwaggerConfigurationLoaderInterface](./Loader/SwaggerConfigurationLoaderInterface.php) interface.
-After that you need to define name of that service in the configuration: 
+After that you need to define name of that service in the configuration:
 
 ```yaml
 # app/config.yml

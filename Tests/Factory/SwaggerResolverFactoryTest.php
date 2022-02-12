@@ -19,13 +19,11 @@ use Linkin\Bundle\SwaggerResolverBundle\Factory\SwaggerResolverFactory;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\JsonConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrategy;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\SwaggerPhp\Models\CustomerFull;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\FixturesProvider;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Models\CustomerFull;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Routing\Router;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -34,19 +32,19 @@ class SwaggerResolverFactoryTest extends TestCase
 {
     public function testCanCreateForRequest(): void
     {
-        $request = Request::create('https://test.com/customers/12', 'PUT');
+        $request = Request::create('https://test.com/api/customers/12', 'PUT');
         $context = new RequestContext($request->getBasePath(), $request->getMethod());
         $sut = $this->createSut($context);
 
         $resolver = $sut->createForRequest($request);
-        self::assertSame($resolver->getRequiredOptions(), [
+        self::assertSame([
             'x-auth-token',
             'userId',
             'name',
             'roles',
             'password',
             'email',
-        ]);
+        ], $resolver->getRequiredOptions());
     }
 
     /**
@@ -56,14 +54,14 @@ class SwaggerResolverFactoryTest extends TestCase
     {
         $sut = $this->createSut(new RequestContext());
         $resolver = $sut->createForDefinition($definition);
-        self::assertSame($resolver->getRequiredOptions(), [
+        self::assertSame([
             'id',
             'name',
             'roles',
             'email',
             'isEmailConfirmed',
             'registeredAt',
-        ]);
+        ], $resolver->getRequiredOptions());
     }
 
     public function canCreateForDefinitionDataProvider(): iterable
@@ -75,13 +73,8 @@ class SwaggerResolverFactoryTest extends TestCase
     private function createSut(RequestContext $context): SwaggerResolverFactory
     {
         $parameterMerger = new OperationParameterMerger(new ReplaceLastWinMergeStrategy());
-        $router = new Router(
-            new YamlFileLoader(new FileLocator(__DIR__.'/../Fixtures')),
-            'routing.yaml',
-            [],
-            $context
-        );
-        $loader = new JsonConfigurationLoader($parameterMerger, $router, __DIR__.'/../Fixtures/Json/customer.json');
+        $router = FixturesProvider::createRouter($context);
+        $loader = new JsonConfigurationLoader($parameterMerger, $router, FixturesProvider::PATH_TO_SWG_JSON);
         $configuration = new SwaggerConfiguration($loader);
         $builder = new SwaggerResolverBuilder([], [], []);
 

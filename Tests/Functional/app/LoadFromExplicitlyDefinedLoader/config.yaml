@@ -1,0 +1,13 @@
+imports:
+    - { resource: ../default/config.yaml }
+
+linkin_swagger_resolver:
+    configuration_loader_service: 'Linkin\Bundle\SwaggerResolverBundle\Loader\JsonConfigurationLoader'
+
+services:
+    Linkin\Bundle\SwaggerResolverBundle\Loader\JsonConfigurationLoader:
+        class: Linkin\Bundle\SwaggerResolverBundle\Loader\JsonConfigurationLoader
+        arguments:
+            - '@Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger'
+            - '@router.default'
+            - '%kernel.project_dir%/web/swagger.json'

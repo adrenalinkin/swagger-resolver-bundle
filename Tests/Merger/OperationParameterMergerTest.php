@@ -18,7 +18,7 @@ use EXSyst\Component\Swagger\Operation;
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrategy;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\FixturesProvider;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\FixturesProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -59,7 +59,7 @@ class OperationParameterMergerTest extends TestCase
     {
         $swagger = FixturesProvider::loadFromJson();
 
-        $operation = $swagger->getPaths()->get('/customers')->getOperation('get');
+        $operation = $swagger->getPaths()->get('/api/customers')->getOperation('get');
         $requiredFields = ['x-auth-token'];
         $mergedProperties = [
             'x-auth-token' => $this->getOperationParameters($operation, 'x-auth-token', 'header'),
@@ -67,39 +67,39 @@ class OperationParameterMergerTest extends TestCase
             'perPage' => $this->getOperationParameters($operation, 'perPage', 'query'),
         ];
 
-        yield 'get /customer - header+query' => [
+        yield 'get /api/customer - header+query' => [
             'parameters' => $operation,
             'definitions' => $swagger->getDefinitions(),
             'expectedResult' => FixturesProvider::createSchemaDefinition($mergedProperties, $requiredFields),
         ];
 
-        $operation = $swagger->getPaths()->get('/customers')->getOperation('post');
+        $operation = $swagger->getPaths()->get('/api/customers')->getOperation('post');
         $definition = $swagger->getDefinitions()->get('CustomerNew');
         $requiredFields = (array) $definition->getRequired();
         $requiredFields[] = 'x-auth-token';
         $mergedProperties = $this->getDefinitionProperties($definition);
         $mergedProperties['x-auth-token'] = $this->getOperationParameters($operation, 'x-auth-token', 'header');
 
-        yield 'post /customer - header+query+body as reference' => [
+        yield 'post /api/customer - header+query+body as reference' => [
             'parameters' => $operation,
             'definitions' => $swagger->getDefinitions(),
             'expectedResult' => FixturesProvider::createSchemaDefinition($mergedProperties, $requiredFields),
         ];
 
-        $operation = $swagger->getPaths()->get('/customers/{userId}')->getOperation('get');
+        $operation = $swagger->getPaths()->get('/api/customers/{userId}')->getOperation('get');
         $requiredFields = ['x-auth-token', 'userId'];
         $mergedProperties = [
             'x-auth-token' => $this->getOperationParameters($operation, 'x-auth-token', 'header'),
             'userId' => $this->getOperationParameters($operation, 'userId', 'path'),
         ];
 
-        yield 'get /customers/{userId} - header+path' => [
+        yield 'get /api/customers/{userId} - header+path' => [
             'parameters' => $operation,
             'definitions' => $swagger->getDefinitions(),
             'expectedResult' => FixturesProvider::createSchemaDefinition($mergedProperties, $requiredFields),
         ];
 
-        $operation = $swagger->getPaths()->get('/customers/{userId}')->getOperation('put');
+        $operation = $swagger->getPaths()->get('/api/customers/{userId}')->getOperation('put');
         $definition = $swagger->getDefinitions()->get('CustomerNew');
         $requiredFields = (array) $definition->getRequired();
         $requiredFields[] = 'x-auth-token';
@@ -108,13 +108,13 @@ class OperationParameterMergerTest extends TestCase
         $mergedProperties['x-auth-token'] = $this->getOperationParameters($operation, 'x-auth-token', 'header');
         $mergedProperties['userId'] = $this->getOperationParameters($operation, 'userId', 'path');
 
-        yield 'put /customer/{userId} - header+query+path+body as reference' => [
+        yield 'put /api/customer/{userId} - header+query+path+body as reference' => [
             'parameters' => $operation,
             'definitions' => $swagger->getDefinitions(),
             'expectedResult' => FixturesProvider::createSchemaDefinition($mergedProperties, $requiredFields),
         ];
 
-        $operation = $swagger->getPaths()->get('/customers/{userId}')->getOperation('patch');
+        $operation = $swagger->getPaths()->get('/api/customers/{userId}')->getOperation('patch');
         $requiredFields = ['x-auth-token', 'userId', 'name'];
         $mergedProperties = [
             'x-auth-token' => $this->getOperationParameters($operation, 'x-auth-token', 'header'),
@@ -124,26 +124,26 @@ class OperationParameterMergerTest extends TestCase
             'discount' => $this->getOperationParameters($operation, 'discount', 'formData'),
         ];
 
-        yield 'patch /customer/{userId} - header+query+path+formData' => [
+        yield 'patch /api/customer/{userId} - header+query+path+formData' => [
             'parameters' => $operation,
             'definitions' => $swagger->getDefinitions(),
             'expectedResult' => FixturesProvider::createSchemaDefinition($mergedProperties, $requiredFields),
         ];
 
-        $operation = $swagger->getPaths()->get('/customers/{userId}')->getOperation('delete');
+        $operation = $swagger->getPaths()->get('/api/customers/{userId}')->getOperation('delete');
         $requiredFields = ['x-auth-token', 'userId'];
         $mergedProperties = [
             'x-auth-token' => $this->getOperationParameters($operation, 'x-auth-token', 'header'),
             'userId' => $this->getOperationParameters($operation, 'userId', 'path'),
         ];
 
-        yield 'delete /customer/{userId} - header+path' => [
+        yield 'delete /api/customer/{userId} - header+path' => [
             'parameters' => $operation,
             'definitions' => $swagger->getDefinitions(),
             'expectedResult' => FixturesProvider::createSchemaDefinition($mergedProperties, $requiredFields),
         ];
 
-        $operation = $swagger->getPaths()->get('/customers/{userId}/password')->getOperation('post');
+        $operation = $swagger->getPaths()->get('/api/customers/{userId}/password')->getOperation('post');
         $requiredFields = ['x-auth-token', 'userId', 'password'];
         $mergedProperties = [
             'x-auth-token' => $this->getOperationParameters($operation, 'x-auth-token', 'header'),
@@ -151,13 +151,13 @@ class OperationParameterMergerTest extends TestCase
             'password' => ['title' => 'body', 'type' => 'string', 'maxLength' => 30],
         ];
 
-        yield 'post /customers/{userId}/password - header+path+body as scalar' => [
+        yield 'post /api/customers/{userId}/password - header+path+body as scalar' => [
             'parameters' => $operation,
             'definitions' => $swagger->getDefinitions(),
             'expectedResult' => FixturesProvider::createSchemaDefinition($mergedProperties, $requiredFields),
         ];
 
-        $operation = $swagger->getPaths()->get('/customers/{userId}/password')->getOperation('put');
+        $operation = $swagger->getPaths()->get('/api/customers/{userId}/password')->getOperation('put');
         $requiredFields = ['x-auth-token', 'userId', 'oldPassword', 'newPassword'];
         $mergedProperties = [
             'x-auth-token' => $this->getOperationParameters($operation, 'x-auth-token', 'header'),
@@ -166,7 +166,7 @@ class OperationParameterMergerTest extends TestCase
             'newPassword' => ['title' => 'body', 'type' => 'string', 'maxLength' => 30],
         ];
 
-        yield 'put /customers/{userId}/password - header+path+body as scalar' => [
+        yield 'put /api/customers/{userId}/password - header+path+body as scalar' => [
             'parameters' => $operation,
             'definitions' => $swagger->getDefinitions(),
             'expectedResult' => FixturesProvider::createSchemaDefinition($mergedProperties, $requiredFields),

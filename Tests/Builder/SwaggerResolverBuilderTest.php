@@ -21,14 +21,11 @@ use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrategy;
 use Linkin\Bundle\SwaggerResolverBundle\Normalizer\BooleanNormalizer;
 use Linkin\Bundle\SwaggerResolverBundle\Normalizer\IntegerNormalizer;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\FixturesProvider;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\FixturesProvider;
 use Linkin\Bundle\SwaggerResolverBundle\Validator\StringMaxLengthValidator;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\OptionsResolver\Exception\InvalidArgumentException;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use Symfony\Component\Routing\Loader\YamlFileLoader;
-use Symfony\Component\Routing\Router;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -239,8 +236,8 @@ class SwaggerResolverBuilderTest extends TestCase
     private function createConfigurationLoader(): JsonConfigurationLoader
     {
         $parameterMerger = new OperationParameterMerger(new ReplaceLastWinMergeStrategy());
-        $router = new Router(new YamlFileLoader(new FileLocator(__DIR__.'/../Fixtures')), 'routing.yaml');
+        $router = FixturesProvider::createRouter();
 
-        return new JsonConfigurationLoader($parameterMerger, $router, __DIR__.'/../Fixtures/Json/customer.json');
+        return new JsonConfigurationLoader($parameterMerger, $router, FixturesProvider::PATH_TO_SWG_JSON);
     }
 }

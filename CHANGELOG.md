@@ -15,6 +15,7 @@
 - Fixed incorrect behaviour of the `ReplaceLastWinMergeStrategy` when first duplicate item was marked as required
   and second item marked as not required.
 - Fixed working with collection by avoid resource duplication.
+- Fixed incorrect behaviour for the `swagger_php` configuration.
 
 ## [0.4.6] - 2020-04-01
 ### Fixed

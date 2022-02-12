@@ -1,0 +1,29 @@
+imports:
+    - { resource: ../default/config.yaml }
+
+nelmio_api_doc:
+    documentation:
+        swagger: 2.0
+        host: localhost
+        schemes:
+            - https
+        info:
+            version: 1.0.0
+            title: Customer API
+            description: Example API for work with customer
+        consumes:
+            - application/json
+        produces:
+            - application/json
+
+    # TODO: project should work without areas definition
+    areas:
+        default:
+            path_patterns:
+                - '^/api/'
+
+services:
+    Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\NelmioApiDocController\:
+        resource: '../../src/NelmioApiDocController'
+        public: true
+        tags: ['controller.service_arguments']

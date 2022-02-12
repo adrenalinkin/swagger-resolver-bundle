@@ -124,21 +124,22 @@ class LinkinSwaggerResolverExtension extends Extension implements PrependExtensi
         ;
 
         $bundles = $container->getParameter('kernel.bundles');
+        $projectDir = $container->getParameter('kernel.project_dir');
 
         if (isset($bundles['NelmioApiDocBundle'])) {
             return $loaderDefinition
                 ->setClass(NelmioApiDocConfigurationLoader::class)
                 ->addArgument(new Reference(sprintf('nelmio_api_doc.generator.%s', $this->globalAreaName)))
-                ->addArgument($container->getParameter('kernel.project_dir'))
+                ->addArgument($projectDir)
             ;
         }
 
-        if (class_exists('\Swagger\Annotations\Swagger')) {
-            $scanDir = $config['swagger_php']['scan'];
+        if ($this->isSwaggerPhpPackageInstalled($projectDir)) {
+            $scanDir = $config['swagger_php']['scan'] ?? [];
             $excludeDir = $config['swagger_php']['exclude'] ?? [];
 
             if (empty($scanDir)) {
-                $scanDir = [sprintf('%s/src', $container->getParameter('kernel.project_dir'))];
+                $scanDir = [sprintf('%s/src', $projectDir)];
             }
 
             return $loaderDefinition
@@ -151,7 +152,7 @@ class LinkinSwaggerResolverExtension extends Extension implements PrependExtensi
         $pathToConfig = $config['configuration_file'];
 
         if (empty($pathToConfig)) {
-            $pathToConfig = sprintf('%s/web/swagger.json', $container->getParameter('kernel.project_dir'));
+            $pathToConfig = sprintf('%s/web/swagger.json', $projectDir);
         }
 
         $loaderDefinition->addArgument($pathToConfig);
@@ -168,5 +169,20 @@ class LinkinSwaggerResolverExtension extends Extension implements PrependExtensi
         }
 
         throw new InvalidTypeException('Received unsupported file');
+    }
+
+    private function isSwaggerPhpPackageInstalled(string $projectDir): bool
+    {
+        $rawData = file_get_contents($projectDir.'/composer.lock');
+        $parsedData = json_decode($rawData, true);
+        $allPackages = array_merge($parsedData['packages'], $parsedData['packages-dev']);
+
+        foreach ($allPackages as $package) {
+            if ('zircote/swagger-php' === $package['name']) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

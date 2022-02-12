@@ -19,20 +19,15 @@ use Linkin\Bundle\SwaggerResolverBundle\Exception\OperationNotFoundException;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\JsonConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrategy;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\FixturesProvider;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\FixturesProvider;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Resource\FileResource;
-use Symfony\Component\Routing\Loader\YamlFileLoader;
-use Symfony\Component\Routing\Router;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
 class JsonConfigurationLoaderTest extends TestCase
 {
-    private const PATH_TO_CONFIG = __DIR__.'/../Fixtures/Json/customer.json';
-
     /**
      * @var JsonConfigurationLoader
      */
@@ -41,9 +36,9 @@ class JsonConfigurationLoaderTest extends TestCase
     protected function setUp(): void
     {
         $parameterMerger = new OperationParameterMerger(new ReplaceLastWinMergeStrategy());
-        $router = new Router(new YamlFileLoader(new FileLocator(__DIR__.'/../Fixtures')), 'routing.yaml');
+        $router = FixturesProvider::createRouter();
 
-        $this->sut = new JsonConfigurationLoader($parameterMerger, $router, self::PATH_TO_CONFIG);
+        $this->sut = new JsonConfigurationLoader($parameterMerger, $router, FixturesProvider::PATH_TO_SWG_JSON);
     }
 
     public function testFailWhenRouteNotFound(): void
@@ -51,10 +46,10 @@ class JsonConfigurationLoaderTest extends TestCase
         $this->expectException(OperationNotFoundException::class);
 
         $parameterMerger = new OperationParameterMerger(new ReplaceLastWinMergeStrategy());
-        $router = new Router(new YamlFileLoader(new FileLocator(__DIR__.'/../Fixtures')), 'routing.yaml');
+        $router = FixturesProvider::createRouter();
         $router->getRouteCollection()->remove('customers_get');
 
-        $sut = new JsonConfigurationLoader($parameterMerger, $router, self::PATH_TO_CONFIG);
+        $sut = new JsonConfigurationLoader($parameterMerger, $router, FixturesProvider::PATH_TO_SWG_JSON);
         $sut->getSchemaDefinitionCollection();
     }
 
@@ -62,7 +57,7 @@ class JsonConfigurationLoaderTest extends TestCase
     {
         $swagger = FixturesProvider::loadFromJson();
         $expectedDefinitions = $swagger->getDefinitions();
-        $expectedFileResource = new FileResource(self::PATH_TO_CONFIG);
+        $expectedFileResource = new FileResource(FixturesProvider::PATH_TO_SWG_JSON);
 
         $definitionCollection = $this->sut->getSchemaDefinitionCollection();
         self::assertSame($expectedDefinitions->getIterator()->count(), $definitionCollection->getIterator()->count());
@@ -83,7 +78,7 @@ class JsonConfigurationLoaderTest extends TestCase
     public function testCanLoadOperationCollection(): void
     {
         $swagger = FixturesProvider::loadFromJson();
-        $expectedFileResource = new FileResource(self::PATH_TO_CONFIG);
+        $expectedFileResource = new FileResource(FixturesProvider::PATH_TO_SWG_JSON);
         $operationCollection = $this->sut->getSchemaOperationCollection();
         $expectedOperationsCount = 0;
 

@@ -17,7 +17,7 @@ use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\NormalizationFailedException;
 use Linkin\Bundle\SwaggerResolverBundle\Normalizer\IntegerNormalizer;
 use Linkin\Bundle\SwaggerResolverBundle\Resolver\SwaggerResolver;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Fixtures\FixturesProvider;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\FixturesProvider;
 use PHPUnit\Framework\TestCase;
 
 /**

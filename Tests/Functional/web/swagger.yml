@@ -1,0 +1,12 @@
+swagger: '2.0'
+info:
+    title: Minimal config
+    description: only for configuration loader test
+    version: 1.0.0
+paths:
+    /fake-path:
+        get:
+            description: Only for loader test
+            responses:
+                '204':
+                    description: Empty data

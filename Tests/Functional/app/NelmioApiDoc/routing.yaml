@@ -1,0 +1,4 @@
+app:
+    resource: '../../src/NelmioApiDocController'
+    prefix: api
+    type: annotation
