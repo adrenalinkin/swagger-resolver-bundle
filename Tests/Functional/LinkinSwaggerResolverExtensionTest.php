@@ -17,6 +17,7 @@ use Linkin\Bundle\SwaggerResolverBundle\Loader\JsonConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\NelmioApiDocConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerPhpConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\YamlConfigurationLoader;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\app\TestAppKernel;
 use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 
 /**
@@ -37,11 +38,11 @@ class LinkinSwaggerResolverExtensionTest extends SwaggerResolverWebTestCase
     public function canApplyDefaultFallbackDataProvider(): iterable
     {
         yield [
-            'options' => ['test_case' => 'NelmioApiDoc'],
+            'options' => ['test_case' => TestAppKernel::LOADER_NELMIO_API_DOC],
             'expected' => NelmioApiDocConfigurationLoader::class,
         ];
         yield [
-            'options' => ['test_case' => 'SwaggerPhp'],
+            'options' => ['test_case' => TestAppKernel::LOADER_SWAGGER_PHP],
             'expected' => SwaggerPhpConfigurationLoader::class,
         ];
         yield [

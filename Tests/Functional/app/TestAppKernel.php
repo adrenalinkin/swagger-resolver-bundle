@@ -14,7 +14,9 @@ declare(strict_types=1);
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\app;
 
 use InvalidArgumentException;
-use RuntimeException;
+use Linkin\Bundle\SwaggerResolverBundle\LinkinSwaggerResolverBundle;
+use Nelmio\ApiDocBundle\NelmioApiDocBundle;
+use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
@@ -23,6 +25,9 @@ use Symfony\Component\HttpKernel\Kernel;
  */
 class TestAppKernel extends Kernel
 {
+    public const LOADER_NELMIO_API_DOC = 'NelmioApiDoc';
+    public const LOADER_SWAGGER_PHP = 'SwaggerPhp';
+
     /**
      * @var string
      */
@@ -58,13 +63,16 @@ class TestAppKernel extends Kernel
 
     public function registerBundles(): array
     {
-        $filename = __DIR__.'/'.$this->testCase.'/bundles.php';
+        $bundles = [
+            new FrameworkBundle(),
+            new LinkinSwaggerResolverBundle(),
+        ];
 
-        if (!file_exists($filename)) {
-            throw new RuntimeException(sprintf('The bundles file "%s" does not exist.', $filename));
+        if (self::LOADER_NELMIO_API_DOC === $this->testCase) {
+            $bundles[] = new NelmioApiDocBundle();
         }
 
-        return include $filename;
+        return $bundles;
     }
 
     public function getProjectDir(): string
