@@ -25,12 +25,7 @@ use Symfony\Component\HttpKernel\Kernel;
  */
 class SwaggerResolverWebTestCase extends WebTestCase
 {
-    public static function setUpBeforeClass(): void
-    {
-        (new Filesystem())->remove(self::varDir());
-    }
-
-    public static function tearDownAfterClass(): void
+    public function tearDown(): void
     {
         (new Filesystem())->remove(self::varDir());
     }
@@ -63,6 +58,8 @@ class SwaggerResolverWebTestCase extends WebTestCase
             self::varDir(),
             $options['test_case'],
             $options['disable_swagger_php'] ?? false,
+            $options['config'] ?? [],
+            $options['serviceClosure'] ?? null,
             $options['environment'] ?? $options['test_case'],
             $options['debug'] ?? true
         );

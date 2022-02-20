@@ -1,5 +1,0 @@
-imports:
-    - { resource: ../default/config.yaml }
-
-linkin_swagger_resolver:
-    configuration_file: '%kernel.project_dir%/web/swagger.yaml'

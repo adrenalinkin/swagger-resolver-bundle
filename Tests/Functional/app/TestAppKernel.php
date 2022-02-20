@@ -13,18 +13,28 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\app;
 
-use InvalidArgumentException;
+use Closure;
 use Linkin\Bundle\SwaggerResolverBundle\LinkinSwaggerResolverBundle;
+use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrategy;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\NelmioApiDocController\CartController;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\NelmioApiDocController\CustomerController;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\NelmioApiDocController\CustomerPasswordController;
 use Nelmio\ApiDocBundle\NelmioApiDocBundle;
+use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Routing\RouteCollectionBuilder;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
 class TestAppKernel extends Kernel
 {
+    use MicroKernelTrait;
+
     public const LOADER_NELMIO_API_DOC = 'NelmioApiDoc';
     public const LOADER_SWAGGER_PHP = 'SwaggerPhp';
 
@@ -38,23 +48,29 @@ class TestAppKernel extends Kernel
      */
     private $varDir;
 
+    /**
+     * @var array
+     */
+    private $config;
+
+    /**
+     * @var Closure
+     */
+    private $closure;
+
     public function __construct(
         string $varDir,
         string $testCase,
         bool $disableSwaggerPhp,
-        string $environment,
-        bool $debug
+        array $config,
+        ?Closure $closure = null,
+        string $environment = 'test',
+        bool $debug = true
     ) {
-        if (!is_dir(__DIR__.'/'.$testCase)) {
-            throw new InvalidArgumentException(sprintf('The test case "%s" does not exist.', $testCase));
-        }
-
-        if (!file_exists(__DIR__.'/'.$testCase.'/config.yaml')) {
-            throw new InvalidArgumentException('The root config "%s" does not exist.');
-        }
-
         $this->testCase = $testCase;
         $this->varDir = $varDir;
+        $this->config = $config;
+        $this->closure = $closure;
 
         $this->copyLockFile($disableSwaggerPhp);
 
@@ -95,9 +111,73 @@ class TestAppKernel extends Kernel
         return $this->varDir.'/logs/'.$this->testCase;
     }
 
-    public function registerContainerConfiguration(LoaderInterface $loader): void
+    protected function configureRoutes(RouteCollectionBuilder $routes): void
     {
-        $loader->load(__DIR__.'/'.$this->testCase.'/config.yaml');
+        $routes->import($this->getProjectDir().'/app/'.$this->testCase.'/routing.yaml');
+    }
+
+    protected function configureContainer(ContainerBuilder $c, LoaderInterface $loader): void
+    {
+        $c->register('logger', NullLogger::class);
+
+        if ($this->closure instanceof Closure) {
+            \call_user_func($this->closure, $c);
+        }
+
+        $c->loadFromExtension('framework', [
+            'secret' => 'test',
+            'test' => null,
+        ]);
+
+        $c->loadFromExtension('linkin_swagger_resolver', array_merge([
+            'path_merge_strategy' => ReplaceLastWinMergeStrategy::class,
+            'swagger_php' => [
+                'exclude' => [
+                    '%kernel.project_dir%/src/NelmioApiDocController'
+                ]
+            ],
+        ], $this->config));
+
+        if (self::LOADER_NELMIO_API_DOC !== $this->testCase) {
+            $c
+                ->autowire('Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController\CartController')
+                ->addTag('controller.service_arguments')
+            ;
+            $c->autowire(
+                'Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController\CustomerController'
+            )->addTag('controller.service_arguments');
+            $c->autowire(
+                'Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController\CustomerPasswordController'
+            )->addTag('controller.service_arguments');
+
+            return;
+        }
+
+        $c->autowire(CartController::class)->addTag('controller.service_arguments');
+        $c->autowire(CustomerController::class)->addTag('controller.service_arguments');
+        $c->autowire(CustomerPasswordController::class)->addTag('controller.service_arguments');
+        $c->loadFromExtension('nelmio_api_doc', [
+            'documentation' => [
+                'swagger' => '2.0',
+                'host' => 'localhost',
+                'schemes' => ['https'],
+                'info' => [
+                    'version' => '1.0.0',
+                    'title' => 'Customer API',
+                    'description' => 'Example API for work with customer',
+                ],
+                'consumes' => ['application/json'],
+                'produces' => ['application/json'],
+            ],
+            // TODO: project should work without areas definition
+            'areas' => [
+                'default' => [
+                    'path_patterns' => [
+                        '^/api/'
+                    ],
+                ],
+            ],
+        ]);
     }
 
     protected function getKernelParameters(): array
