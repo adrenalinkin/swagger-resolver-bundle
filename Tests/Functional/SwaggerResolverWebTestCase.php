@@ -25,7 +25,7 @@ use Symfony\Component\HttpKernel\Kernel;
  */
 class SwaggerResolverWebTestCase extends WebTestCase
 {
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         (new Filesystem())->remove(self::varDir());
     }

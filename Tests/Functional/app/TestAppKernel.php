@@ -113,7 +113,13 @@ class TestAppKernel extends Kernel
 
     protected function configureRoutes(RouteCollectionBuilder $routes): void
     {
-        $routes->import($this->getProjectDir().'/app/'.$this->testCase.'/routing.yaml');
+        if (self::LOADER_NELMIO_API_DOC === $this->testCase) {
+            $routes->import($this->getProjectDir().'/src/NelmioApiDocController', '/api', 'annotation');
+
+            return;
+        }
+
+        $routes->import($this->getProjectDir().'/app/routing.yaml');
     }
 
     protected function configureContainer(ContainerBuilder $c, LoaderInterface $loader): void
@@ -133,8 +139,8 @@ class TestAppKernel extends Kernel
             'path_merge_strategy' => ReplaceLastWinMergeStrategy::class,
             'swagger_php' => [
                 'exclude' => [
-                    '%kernel.project_dir%/src/NelmioApiDocController'
-                ]
+                    '%kernel.project_dir%/src/NelmioApiDocController',
+                ],
             ],
         ], $this->config));
 
@@ -173,7 +179,7 @@ class TestAppKernel extends Kernel
             'areas' => [
                 'default' => [
                     'path_patterns' => [
-                        '^/api/'
+                        '^/api/',
                     ],
                 ],
             ],
