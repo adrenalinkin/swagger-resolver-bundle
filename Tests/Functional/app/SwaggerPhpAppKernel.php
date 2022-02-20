@@ -18,16 +18,17 @@ use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController\Ca
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController\CustomerController;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController\CustomerPasswordController;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Routing\RouteCollectionBuilder;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
 class SwaggerPhpAppKernel extends AbstractKernel
 {
-    protected function configureRoutes(RouteCollectionBuilder $routes): void
+    protected function getRouterConfig(): array
     {
-        $routes->import($this->getProjectDir().'/app/routing.yaml');
+        return [
+            'resource' => $this->getProjectDir().'/app/routing.yaml',
+        ];
     }
 
     protected function configureContainer(ContainerBuilder $container): void

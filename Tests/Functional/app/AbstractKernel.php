@@ -20,8 +20,6 @@ use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\RouteCollectionBuilder;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -68,7 +66,7 @@ abstract class AbstractKernel extends Kernel
 
     abstract protected function configureContainer(ContainerBuilder $container): void;
 
-    abstract protected function configureRoutes(RouteCollectionBuilder $routes);
+    abstract protected function getRouterConfig(): array;
 
     public function registerBundles(): array
     {
@@ -106,10 +104,7 @@ abstract class AbstractKernel extends Kernel
             $container->loadFromExtension('framework', [
                 'secret' => 'test',
                 'test' => null,
-                'router' => [
-                    'resource' => 'kernel:loadRoutes',
-                    'type' => 'service',
-                ],
+                'router' => $this->getRouterConfig(),
             ]);
 
             if ($this->closure instanceof Closure) {
@@ -120,14 +115,6 @@ abstract class AbstractKernel extends Kernel
 
             $container->addObjectResource($this);
         });
-    }
-
-    public function loadRoutes(LoaderInterface $loader): RouteCollection
-    {
-        $routes = new RouteCollectionBuilder($loader);
-        $this->configureRoutes($routes);
-
-        return $routes->build();
     }
 
     protected function getKernelParameters(): array

@@ -19,7 +19,6 @@ use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\NelmioApiDocController\
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\NelmioApiDocController\CustomerPasswordController;
 use Nelmio\ApiDocBundle\NelmioApiDocBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Routing\RouteCollectionBuilder;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -34,9 +33,12 @@ class NelmioAppKernel extends AbstractKernel
         return $bundles;
     }
 
-    protected function configureRoutes(RouteCollectionBuilder $routes): void
+    protected function getRouterConfig(): array
     {
-        $routes->import($this->getProjectDir().'/src/NelmioApiDocController', '/api', 'annotation');
+        return [
+            'resource' => $this->getProjectDir().'/src/NelmioApiDocController',
+            'type' => 'annotation',
+        ];
     }
 
     protected function configureContainer(ContainerBuilder $container): void

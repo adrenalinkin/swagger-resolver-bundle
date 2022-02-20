@@ -29,7 +29,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CustomerController
 {
     /**
-     * @Route(name="customers_get", path="/customers", methods={"GET"})
+     * @Route(name="customers_get", path="/api/customers", methods={"GET"})
      * @SWG\Get(
      *      path="/api/customers",
      *      description="Returns all customers",
@@ -78,7 +78,7 @@ class CustomerController
     }
 
     /**
-     * @Route(name="customers_post", path="/customers", methods={"POST"})
+     * @Route(name="customers_post", path="/api/customers", methods={"POST"})
      * @SWG\Post(
      *      path="/api/customers",
      *      method="POST",
@@ -122,7 +122,7 @@ class CustomerController
     }
 
     /**
-     * @Route(name="customers_get_one", path="/customers/{userId}", methods={"GET"}, requirements={"userId": "\d+"})
+     * @Route(name="customers_get_one", path="/api/customers/{userId}", methods={"GET"}, requirements={"userId": "\d+"})
      * @SWG\Get(
      *      path="/api/customers/{userId}",
      *      description="Return customer by ID",
@@ -156,7 +156,7 @@ class CustomerController
     }
 
     /**
-     * @Route(name="customers_update", path="/customers/{userId}", methods={"PUT"}, requirements={"userId": "\d+"})
+     * @Route(name="customers_update", path="/api/customers/{userId}", methods={"PUT"}, requirements={"userId": "\d+"})
      * @SWG\Put(
      *      path="/api/customers/{userId}",
      *      description="Update customer",
@@ -205,7 +205,7 @@ class CustomerController
     }
 
     /**
-     * @Route(name="customers_patch", path="/customers/{userId}", methods={"PATCH"}, requirements={"userId": "\d+"})
+     * @Route(name="customers_patch", path="/api/customers/{userId}", methods={"PATCH"}, requirements={"userId": "\d+"})
      * @SWG\Patch(
      *      path="/api/customers/{userId}",
      *      description="Partial customer update in formData style",
@@ -272,7 +272,13 @@ class CustomerController
     }
 
     /**
-     * @Route(name="customers_delete", path="/customers/{userId}", methods={"DELETE"}, requirements={"userId": "\d+"})
+     * @Route(
+     *      name="customers_delete",
+     *      path="/api/customers/{userId}",
+     *      methods={"DELETE"},
+     *      requirements={"userId": "\d+"}
+     * )
+     *
      * @SWG\Delete(
      *      path="/api/customers/{userId}",
      *      description="Delete customer from the system",

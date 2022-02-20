@@ -24,7 +24,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CartController
 {
     /**
-     * @Route(name="cart_add_item", path="/cart", methods={"PUT"})
+     * @Route(name="cart_add_item", path="/api/cart", methods={"PUT"})
      * @SWG\Put(
      *      path="/api/cart",
      *      description="Add new item into cart or increase count of existed",
@@ -55,7 +55,7 @@ class CartController
     }
 
     /**
-     * @Route(name="cart_get", path="/cart", methods={"GET"})
+     * @Route(name="cart_get", path="/api/cart", methods={"GET"})
      * @SWG\Get(
      *      path="/api/cart",
      *      description="Returns all items from the cart",

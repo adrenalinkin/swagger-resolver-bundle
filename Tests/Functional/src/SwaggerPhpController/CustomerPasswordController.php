@@ -24,7 +24,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CustomerPasswordController
 {
     /**
-     * @Route(name="customers_password_create", path="/customers/{userId}/password", methods={"POST"})
+     * @Route(name="customers_password_create", path="/api/customers/{userId}/password", methods={"POST"})
      * @SWG\Post(
      *      path="/api/customers/{userId}/password",
      *      description="Create new password when not even set",
@@ -62,7 +62,7 @@ class CustomerPasswordController
     }
 
     /**
-     * @Route(name="customers_password_reset", path="/customers/{userId}/password", methods={"PUT"})
+     * @Route(name="customers_password_reset", path="/api/customers/{userId}/password", methods={"PUT"})
      * @SWG\Put(
      *      path="/api/customers/{userId}/password",
      *      description="Reset password",

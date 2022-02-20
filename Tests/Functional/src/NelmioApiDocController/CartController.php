@@ -31,7 +31,7 @@ class CartController
     /**
      * Add new item into cart or increase count of existed.
      *
-     * @Route(name="cart_add_item", path="/cart", methods={"PUT"})
+     * @Route(name="cart_add_item", path="/api/cart", methods={"PUT"})
      *
      * @SWG\Parameter(
      *     name="x-auth-token",
@@ -56,13 +56,13 @@ class CartController
      */
     public function addItem(): Response
     {
-        return new Response(Response::HTTP_CREATED);
+        return new Response();
     }
 
     /**
      * Returns all items from the cart.
      *
-     * @Route(name="cart_get", path="/cart", methods={"GET"})
+     * @Route(name="cart_get", path="/api/cart", methods={"GET"})
      *
      * @SWG\Parameter(
      *     name="x-auth-token",
