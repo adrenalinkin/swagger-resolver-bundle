@@ -47,20 +47,14 @@ abstract class AbstractKernel extends Kernel
      */
     private $prefix;
 
-    public function __construct(
-        string $varDir,
-        bool $disableSwaggerPhp,
-        array $config,
-        ?Closure $closure = null,
-        string $environment = 'test',
-        bool $debug = true
-    ) {
+    public function __construct(string $varDir, array $config, ?Closure $closure, string $environment, bool $debug)
+    {
         $this->varDir = $varDir;
         $this->config = $config;
         $this->closure = $closure;
         $this->prefix = str_replace('\\', '_', static::class);
 
-        $this->copyLockFile($disableSwaggerPhp);
+        $this->copyLockFile();
 
         parent::__construct($environment, $debug);
     }
@@ -130,29 +124,11 @@ abstract class AbstractKernel extends Kernel
         return $parameters;
     }
 
-    private function copyLockFile(bool $disableSwaggerPhp): void
+    private function copyLockFile(): void
     {
         $rawData = file_get_contents(parent::getProjectDir().'/composer.lock');
         $fakeLockFile = $this->getProjectDir().'/composer.lock';
 
-        if (false === $disableSwaggerPhp) {
-            file_put_contents($fakeLockFile, $rawData);
-
-            return;
-        }
-
-        $originData = json_decode($rawData, true);
-        $newData = $originData;
-        $newData['packages-dev'] = [];
-
-        foreach ($originData['packages-dev'] as $package) {
-            if ('zircote/swagger-php' === $package['name']) {
-                continue;
-            }
-
-            $newData['packages-dev'][] = $package;
-        }
-
-        file_put_contents($fakeLockFile, json_encode($newData, \JSON_UNESCAPED_SLASHES));
+        file_put_contents($fakeLockFile, $rawData);
     }
 }

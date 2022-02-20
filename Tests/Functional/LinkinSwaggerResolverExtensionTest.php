@@ -18,7 +18,9 @@ use Linkin\Bundle\SwaggerResolverBundle\Loader\NelmioApiDocConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerPhpConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\YamlConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\app\FileAppKernel;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\app\NelmioAppKernel;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\app\SwaggerPhpAppKernel;
 use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -45,11 +47,11 @@ class LinkinSwaggerResolverExtensionTest extends SwaggerResolverWebTestCase
             'expected' => NelmioApiDocConfigurationLoader::class,
         ];
         yield [
-            'options' => [],
+            'options' => ['kernelClass' => SwaggerPhpAppKernel::class],
             'expected' => SwaggerPhpConfigurationLoader::class,
         ];
         yield [
-            'options' => ['disable_swagger_php' => true],
+            'options' => ['kernelClass' => FileAppKernel::class],
             'expected' => JsonConfigurationLoader::class,
         ];
     }
@@ -61,7 +63,7 @@ class LinkinSwaggerResolverExtensionTest extends SwaggerResolverWebTestCase
     {
         self::createClient([
             'config' => ['configuration_file' => $pathToFile],
-            'disable_swagger_php' => true,
+            'kernelClass' => FileAppKernel::class,
         ]);
 
         self::assertTrue(self::getTestContainer()->has(YamlConfigurationLoader::class));
@@ -79,7 +81,7 @@ class LinkinSwaggerResolverExtensionTest extends SwaggerResolverWebTestCase
 
         self::createClient([
             'config' => ['configuration_file' => '%kernel.project_dir%/src/swagger.php'],
-            'disable_swagger_php' => true,
+            'kernelClass' => FileAppKernel::class,
         ]);
     }
 

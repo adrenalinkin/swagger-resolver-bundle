@@ -51,7 +51,6 @@ class SwaggerResolverWebTestCase extends WebTestCase
 
         return new $class(
             self::varDir(),
-            $options['disable_swagger_php'] ?? false,
             $options['config'] ?? [],
             $options['serviceClosure'] ?? null,
             $options['environment'] ?? 'test',
