@@ -18,7 +18,6 @@ use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\NelmioApiDocController\
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\NelmioApiDocController\CustomerController;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\NelmioApiDocController\CustomerPasswordController;
 use Nelmio\ApiDocBundle\NelmioApiDocBundle;
-use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Routing\RouteCollectionBuilder;
 
@@ -40,18 +39,16 @@ class NelmioAppKernel extends AbstractKernel
         $routes->import($this->getProjectDir().'/src/NelmioApiDocController', '/api', 'annotation');
     }
 
-    protected function configureContainer(ContainerBuilder $c, LoaderInterface $loader): void
+    protected function configureContainer(ContainerBuilder $container): void
     {
-        parent::configureContainer($c, $loader);
-
-        $c->loadFromExtension('linkin_swagger_resolver', array_merge([
+        $container->loadFromExtension('linkin_swagger_resolver', array_merge([
             'path_merge_strategy' => ReplaceLastWinMergeStrategy::class,
         ], $this->config));
 
-        $c->autowire(CartController::class)->addTag('controller.service_arguments');
-        $c->autowire(CustomerController::class)->addTag('controller.service_arguments');
-        $c->autowire(CustomerPasswordController::class)->addTag('controller.service_arguments');
-        $c->loadFromExtension('nelmio_api_doc', [
+        $container->autowire(CartController::class)->addTag('controller.service_arguments');
+        $container->autowire(CustomerController::class)->addTag('controller.service_arguments');
+        $container->autowire(CustomerPasswordController::class)->addTag('controller.service_arguments');
+        $container->loadFromExtension('nelmio_api_doc', [
             'documentation' => [
                 'swagger' => '2.0',
                 'host' => 'localhost',

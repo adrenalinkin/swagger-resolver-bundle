@@ -17,18 +17,17 @@ use Closure;
 use Linkin\Bundle\SwaggerResolverBundle\LinkinSwaggerResolverBundle;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
-use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Routing\RouteCollectionBuilder;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
 abstract class AbstractKernel extends Kernel
 {
-    use MicroKernelTrait;
-
     /**
      * @var array
      */
@@ -67,6 +66,10 @@ abstract class AbstractKernel extends Kernel
         parent::__construct($environment, $debug);
     }
 
+    abstract protected function configureContainer(ContainerBuilder $container): void;
+
+    abstract protected function configureRoutes(RouteCollectionBuilder $routes);
+
     public function registerBundles(): array
     {
         return [
@@ -95,26 +98,44 @@ abstract class AbstractKernel extends Kernel
         return $this->varDir.'/logs/'.$this->prefix;
     }
 
+    public function registerContainerConfiguration(LoaderInterface $loader)
+    {
+        $loader->load(function (ContainerBuilder $container) {
+            $container->register('logger', NullLogger::class);
+
+            $container->loadFromExtension('framework', [
+                'secret' => 'test',
+                'test' => null,
+                'router' => [
+                    'resource' => 'kernel:loadRoutes',
+                    'type' => 'service',
+                ],
+            ]);
+
+            if ($this->closure instanceof Closure) {
+                \call_user_func($this->closure, $container);
+            }
+
+            $this->configureContainer($container);
+
+            $container->addObjectResource($this);
+        });
+    }
+
+    public function loadRoutes(LoaderInterface $loader): RouteCollection
+    {
+        $routes = new RouteCollectionBuilder($loader);
+        $this->configureRoutes($routes);
+
+        return $routes->build();
+    }
+
     protected function getKernelParameters(): array
     {
         $parameters = parent::getKernelParameters();
         $parameters['router.options.matcher.cache_class'] = $this->prefix.'UrlMatcher';
 
         return $parameters;
-    }
-
-    protected function configureContainer(ContainerBuilder $c, LoaderInterface $loader): void
-    {
-        $c->register('logger', NullLogger::class);
-
-        $c->loadFromExtension('framework', [
-            'secret' => 'test',
-            'test' => null,
-        ]);
-
-        if ($this->closure instanceof Closure) {
-            \call_user_func($this->closure, $c);
-        }
     }
 
     private function copyLockFile(bool $disableSwaggerPhp): void

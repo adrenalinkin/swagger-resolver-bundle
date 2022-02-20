@@ -17,7 +17,6 @@ use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrat
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController\CartController;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController\CustomerController;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController\CustomerPasswordController;
-use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Routing\RouteCollectionBuilder;
 
@@ -31,15 +30,13 @@ class SwaggerPhpAppKernel extends AbstractKernel
         $routes->import($this->getProjectDir().'/app/routing.yaml');
     }
 
-    protected function configureContainer(ContainerBuilder $c, LoaderInterface $loader): void
+    protected function configureContainer(ContainerBuilder $container): void
     {
-        parent::configureContainer($c, $loader);
+        $container->autowire(CartController::class)->addTag('controller.service_arguments');
+        $container->autowire(CustomerController::class)->addTag('controller.service_arguments');
+        $container->autowire(CustomerPasswordController::class)->addTag('controller.service_arguments');
 
-        $c->autowire(CartController::class)->addTag('controller.service_arguments');
-        $c->autowire(CustomerController::class)->addTag('controller.service_arguments');
-        $c->autowire(CustomerPasswordController::class)->addTag('controller.service_arguments');
-
-        $c->loadFromExtension('linkin_swagger_resolver', array_merge([
+        $container->loadFromExtension('linkin_swagger_resolver', array_merge([
             'path_merge_strategy' => ReplaceLastWinMergeStrategy::class,
             'swagger_php' => [
                 'exclude' => [
