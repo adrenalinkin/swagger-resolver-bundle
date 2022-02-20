@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\app;
 
-use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrategy;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController\CartController;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController\CustomerController;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController\CustomerPasswordController;
@@ -37,13 +36,12 @@ class SwaggerPhpAppKernel extends AbstractKernel
         $container->autowire(CustomerController::class)->addTag('controller.service_arguments');
         $container->autowire(CustomerPasswordController::class)->addTag('controller.service_arguments');
 
-        $container->loadFromExtension('linkin_swagger_resolver', array_merge([
-            'path_merge_strategy' => ReplaceLastWinMergeStrategy::class,
+        $container->loadFromExtension('linkin_swagger_resolver', [
             'swagger_php' => [
                 'exclude' => [
                     '%kernel.project_dir%/src/NelmioApiDocController',
                 ],
             ],
-        ], $this->config));
+        ]);
     }
 }

@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\app;
 
-use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrategy;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\NelmioApiDocController\CartController;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\NelmioApiDocController\CustomerController;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\NelmioApiDocController\CustomerPasswordController;
@@ -43,10 +42,6 @@ class NelmioAppKernel extends AbstractKernel
 
     protected function configureContainer(ContainerBuilder $container): void
     {
-        $container->loadFromExtension('linkin_swagger_resolver', array_merge([
-            'path_merge_strategy' => ReplaceLastWinMergeStrategy::class,
-        ], $this->config));
-
         $container->autowire(CartController::class)->addTag('controller.service_arguments');
         $container->autowire(CustomerController::class)->addTag('controller.service_arguments');
         $container->autowire(CustomerPasswordController::class)->addTag('controller.service_arguments');

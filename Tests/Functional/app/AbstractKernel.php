@@ -15,6 +15,7 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\app;
 
 use Closure;
 use Linkin\Bundle\SwaggerResolverBundle\LinkinSwaggerResolverBundle;
+use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrategy;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -27,11 +28,6 @@ use Symfony\Component\HttpKernel\Kernel;
 abstract class AbstractKernel extends Kernel
 {
     /**
-     * @var array
-     */
-    protected $config;
-
-    /**
      * @var string
      */
     private $varDir;
@@ -40,6 +36,11 @@ abstract class AbstractKernel extends Kernel
      * @var Closure
      */
     private $closure;
+
+    /**
+     * @var array
+     */
+    private $config;
 
     /**
      * @var string
@@ -96,7 +97,7 @@ abstract class AbstractKernel extends Kernel
         return $this->varDir.'/logs/'.$this->prefix;
     }
 
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(function (ContainerBuilder $container) {
             $container->register('logger', NullLogger::class);
@@ -106,6 +107,10 @@ abstract class AbstractKernel extends Kernel
                 'test' => null,
                 'router' => $this->getRouterConfig(),
             ]);
+
+            $container->loadFromExtension('linkin_swagger_resolver', array_merge([
+                'path_merge_strategy' => ReplaceLastWinMergeStrategy::class,
+            ], $this->config));
 
             if ($this->closure instanceof Closure) {
                 \call_user_func($this->closure, $container);
