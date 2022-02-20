@@ -27,6 +27,7 @@ class SwaggerResolverWebTestCase extends WebTestCase
 {
     protected function tearDown(): void
     {
+        parent::tearDown();
         (new Filesystem())->remove(self::varDir());
     }
 
