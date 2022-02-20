@@ -13,8 +13,7 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional;
 
-use InvalidArgumentException;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\app\TestAppKernel;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\app\SwaggerPhpAppKernel;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -28,6 +27,7 @@ class SwaggerResolverWebTestCase extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
+
         (new Filesystem())->remove(self::varDir());
     }
 
@@ -40,28 +40,21 @@ class SwaggerResolverWebTestCase extends WebTestCase
         return self::$kernel->getContainer();
     }
 
-    protected static function getKernelClass(): string
+    protected static function getKernelClass(string $kernelClass = SwaggerPhpAppKernel::class): string
     {
-        require_once __DIR__.'/app/TestAppKernel.php';
-
-        return TestAppKernel::class;
+        return $kernelClass;
     }
 
     protected static function createKernel(array $options = [])
     {
-        $class = self::getKernelClass();
-
-        if (empty($options['test_case'])) {
-            throw new InvalidArgumentException('The option "test_case" must be set.');
-        }
+        $class = static::getKernelClass($options['kernelClass'] ?? SwaggerPhpAppKernel::class);
 
         return new $class(
             self::varDir(),
-            $options['test_case'],
             $options['disable_swagger_php'] ?? false,
             $options['config'] ?? [],
             $options['serviceClosure'] ?? null,
-            $options['environment'] ?? $options['test_case'],
+            $options['environment'] ?? 'test',
             $options['debug'] ?? true
         );
     }

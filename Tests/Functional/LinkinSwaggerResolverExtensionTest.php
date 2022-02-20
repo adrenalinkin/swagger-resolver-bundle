@@ -18,7 +18,7 @@ use Linkin\Bundle\SwaggerResolverBundle\Loader\NelmioApiDocConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerPhpConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\YamlConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\app\TestAppKernel;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\app\NelmioAppKernel;
 use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -41,15 +41,15 @@ class LinkinSwaggerResolverExtensionTest extends SwaggerResolverWebTestCase
     public function canApplyDefaultFallbackDataProvider(): iterable
     {
         yield [
-            'options' => ['test_case' => TestAppKernel::LOADER_NELMIO_API_DOC],
+            'options' => ['kernelClass' => NelmioAppKernel::class],
             'expected' => NelmioApiDocConfigurationLoader::class,
         ];
         yield [
-            'options' => ['test_case' => TestAppKernel::LOADER_SWAGGER_PHP],
+            'options' => [],
             'expected' => SwaggerPhpConfigurationLoader::class,
         ];
         yield [
-            'options' => ['test_case' => 'default', 'disable_swagger_php' => true],
+            'options' => ['disable_swagger_php' => true],
             'expected' => JsonConfigurationLoader::class,
         ];
     }
@@ -57,11 +57,10 @@ class LinkinSwaggerResolverExtensionTest extends SwaggerResolverWebTestCase
     /**
      * @dataProvider canApplyYamlLoaderDataProvider
      */
-    public function testCanApplyYamlLoader(string $testCase, array $config): void
+    public function testCanApplyYamlLoader(string $pathToFile): void
     {
         self::createClient([
-            'test_case' => $testCase,
-            'config' => $config,
+            'config' => ['configuration_file' => $pathToFile],
             'disable_swagger_php' => true,
         ]);
 
@@ -70,8 +69,8 @@ class LinkinSwaggerResolverExtensionTest extends SwaggerResolverWebTestCase
 
     public function canApplyYamlLoaderDataProvider(): iterable
     {
-        yield ['LoadFromYaml', ['configuration_file' => '%kernel.project_dir%/web/swagger.yaml']];
-        yield ['LoadFromYml', ['configuration_file' => '%kernel.project_dir%/web/swagger.yaml']];
+        yield ['%kernel.project_dir%/web/swagger.yaml'];
+        yield ['%kernel.project_dir%/web/swagger.yaml'];
     }
 
     public function testFailWhenReceivedUnsupportedConfigurationFile(): void
@@ -79,7 +78,6 @@ class LinkinSwaggerResolverExtensionTest extends SwaggerResolverWebTestCase
         $this->expectException(InvalidTypeException::class);
 
         self::createClient([
-            'test_case' => 'default',
             'config' => ['configuration_file' => '%kernel.project_dir%/src/swagger.php'],
             'disable_swagger_php' => true,
         ]);
@@ -96,7 +94,6 @@ class LinkinSwaggerResolverExtensionTest extends SwaggerResolverWebTestCase
         };
 
         self::createClient([
-            'test_case' => 'LoadFromExplicitlyDefinedLoader',
             'config' => ['configuration_loader_service' => JsonConfigurationLoader::class],
             'serviceClosure' => $closure,
         ]);
