@@ -1,7 +1,0 @@
-imports:
-    - { resource: ../default/config.yaml }
-
-linkin_swagger_resolver:
-    swagger_php:
-        exclude:
-            - '%kernel.project_dir%/src/NelmioApiDocController'

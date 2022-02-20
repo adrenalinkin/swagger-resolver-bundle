@@ -29,7 +29,7 @@ class CustomerPasswordController
      *
      * @deprecated do not use this endpoint
      *
-     * @Route(name="customers_password_create", path="/customers/{userId}/password", methods={"POST"})
+     * @Route(name="customers_password_create", path="/api/customers/{userId}/password", methods={"POST"})
      *
      * @SWG\Parameter(
      *     name="x-auth-token",
@@ -68,7 +68,7 @@ class CustomerPasswordController
      *
      * @deprecated do not use this endpoint
      *
-     * @Route(name="customers_password_reset", path="/customers/{userId}/password", methods={"PUT"})
+     * @Route(name="customers_password_reset", path="/api/customers/{userId}/password", methods={"PUT"})
      *
      * @SWG\Parameter(
      *     name="x-auth-token",
@@ -112,6 +112,6 @@ class CustomerPasswordController
      */
     public function reset(): Response
     {
-        return new Response(Response::HTTP_NO_CONTENT);
+        return new Response();
     }
 }

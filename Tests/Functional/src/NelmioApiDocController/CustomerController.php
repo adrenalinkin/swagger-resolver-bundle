@@ -34,7 +34,7 @@ class CustomerController
     /**
      * Returns all customers.
      *
-     * @Route(name="customers_get", path="/customers", methods={"GET"})
+     * @Route(name="customers_get", path="/api/customers", methods={"GET"})
      *
      * @SWG\Parameter(
      *      name="x-auth-token",
@@ -82,7 +82,7 @@ class CustomerController
     /**
      * Create new customer.
      *
-     * @Route(name="customers_post", path="/customers", methods={"POST"})
+     * @Route(name="customers_post", path="/api/customers", methods={"POST"})
      *
      * @SWG\Parameter(
      *     name="x-auth-token",
@@ -119,13 +119,13 @@ class CustomerController
      */
     public function create(): Response
     {
-        return new Response(Response::HTTP_CREATED);
+        return new Response();
     }
 
     /**
      * Return customer by ID.
      *
-     * @Route(name="customers_get_one", path="/customers/{userId}", methods={"GET"}, requirements={"userId": "\d+"})
+     * @Route(name="customers_get_one", path="/api/customers/{userId}", methods={"GET"}, requirements={"userId": "\d+"})
      *
      * @SWG\Parameter(
      *     name="x-auth-token",
@@ -159,7 +159,7 @@ class CustomerController
     /**
      * Update customer.
      *
-     * @Route(name="customers_update", path="/customers/{userId}", methods={"PUT"}, requirements={"userId": "\d+"})
+     * @Route(name="customers_update", path="/api/customers/{userId}", methods={"PUT"}, requirements={"userId": "\d+"})
      *
      * @SWG\Parameter(
      *     name="x-auth-token",
@@ -202,7 +202,7 @@ class CustomerController
      */
     public function update(): Response
     {
-        return new Response(Response::HTTP_NO_CONTENT);
+        return new Response();
     }
 
     /**
@@ -210,7 +210,7 @@ class CustomerController
      *
      * @deprecated do not use this endpoint
      *
-     * @Route(name="customers_patch", path="/customers/{userId}", methods={"PATCH"}, requirements={"userId": "\d+"})
+     * @Route(name="customers_patch", path="/api/customers/{userId}", methods={"PATCH"}, requirements={"userId": "\d+"})
      *
      * @SWG\Parameter(
      *     name="x-auth-token",
@@ -269,13 +269,18 @@ class CustomerController
      */
     public function updatePartial(): Response
     {
-        return new Response(Response::HTTP_NO_CONTENT);
+        return new Response();
     }
 
     /**
      * Delete customer from the system.
      *
-     * @Route(name="customers_delete", path="/customers/{userId}", methods={"DELETE"}, requirements={"userId": "\d+"})
+     * @Route(
+     *      name="customers_delete",
+     *      path="/api/customers/{userId}",
+     *      methods={"DELETE"},
+     *      requirements={"userId": "\d+"}
+     * )
      *
      * @SWG\Parameter(
      *     name="x-auth-token",
@@ -299,6 +304,6 @@ class CustomerController
      */
     public function delete(): Response
     {
-        return new Response(Response::HTTP_NO_CONTENT);
+        return new Response();
     }
 }

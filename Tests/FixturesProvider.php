@@ -130,7 +130,7 @@ class FixturesProvider
     public static function createRouter(?RequestContext $context = null): Router
     {
         return new Router(
-            new YamlFileLoader(new FileLocator(__DIR__.'/Functional/app/default')),
+            new YamlFileLoader(new FileLocator(__DIR__.'/Functional/app')),
             'routing.yaml',
             [],
             $context
