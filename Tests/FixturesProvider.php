@@ -74,7 +74,7 @@ class FixturesProvider
 
     private const MAP_PATH_TO_ROUTE = [
         '/api/cart' => [
-            'get' => 'customers_get',
+            'get' => 'cart_get',
             'put' => 'cart_add_item',
         ],
         '/api/customers' => [
