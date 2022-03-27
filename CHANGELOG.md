@@ -16,6 +16,7 @@
   and second item marked as not required.
 - Fixed working with collection by avoid resource duplication.
 - Fixed incorrect behaviour for the `swagger_php` configuration.
+- Fixed bug with compiler pass priority for normalizers and validators.
 
 ## [0.4.6] - 2020-04-01
 ### Fixed
