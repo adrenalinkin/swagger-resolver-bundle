@@ -102,7 +102,7 @@ class SwaggerNormalizerCompilerPassTest extends TestCase
         $container->getCompilerPassConfig()->setRemovingPasses([]);
         $container->addCompilerPass($this->sut);
 
-        if ($withMainDefinition === false) {
+        if (false === $withMainDefinition) {
             return $container;
         }
 
