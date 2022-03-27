@@ -62,7 +62,7 @@ class SwaggerValidatorCompilerPassTest extends TestCase
         $container->compile();
 
         $mainDefinition = $container->getDefinition(SwaggerResolverBuilder::class);
-        $validators = $mainDefinition->getArgument(1);
+        $validators = $mainDefinition->getArgument(0);
 
         self::assertCount(1, $validators);
         self::assertSame(NumberMaximumValidator::class, (string) $validators[0]);
@@ -87,7 +87,7 @@ class SwaggerValidatorCompilerPassTest extends TestCase
         $container->compile();
 
         $mainDefinition = $container->getDefinition(SwaggerResolverBuilder::class);
-        $validators = $mainDefinition->getArgument(1);
+        $validators = $mainDefinition->getArgument(0);
 
         self::assertCount(3, $validators);
         self::assertSame(ArrayMaxItemsValidator::class, (string) $validators[0]);
