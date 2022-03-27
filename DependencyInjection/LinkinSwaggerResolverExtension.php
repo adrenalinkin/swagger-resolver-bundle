@@ -82,21 +82,22 @@ class LinkinSwaggerResolverExtension extends Extension implements PrependExtensi
         }
 
         $nelmioConfigs = $container->getExtensionConfig('nelmio_api_doc');
-        $globalArea = ['path_patterns' => [], 'host_patterns' => []];
+        $hasDefaultArea = false;
+        $allAreasList = [];
 
         foreach ($nelmioConfigs as $config) {
-            if (empty($config['areas'])) {
-                continue;
-            }
+            $areas = $config['areas'] ?? [];
 
-            foreach ($config['areas'] as $area => $areaConfig) {
-                $globalArea = array_merge_recursive($globalArea, $areaConfig);
+            foreach ($areas as $areaName => $areaConfig) {
+                $hasDefaultArea = $hasDefaultArea || 'default' === $areaName;
+                $allAreasList[] = $areaConfig;
             }
         }
 
+        $globalArea = array_merge_recursive(['path_patterns' => [], 'host_patterns' => []], ...$allAreasList);
         $globalArea['with_annotation'] = false;
 
-        $this->globalAreaName = md5(uniqid((string) time(), true));
+        $this->globalAreaName = $hasDefaultArea ? md5(uniqid((string) time(), true)) : 'default';
 
         $container->prependExtensionConfig('nelmio_api_doc', ['areas' => [$this->globalAreaName => $globalArea]]);
     }

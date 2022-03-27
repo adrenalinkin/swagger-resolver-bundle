@@ -62,7 +62,7 @@ class LinkinSwaggerResolverExtensionTest extends SwaggerResolverWebTestCase
     public function testCanApplyYamlLoader(string $pathToFile): void
     {
         self::createClient([
-            'config' => ['configuration_file' => $pathToFile],
+            'config' => ['linkin_swagger_resolver' => ['configuration_file' => $pathToFile]],
             'kernelClass' => FileAppKernel::class,
         ]);
 
@@ -80,7 +80,7 @@ class LinkinSwaggerResolverExtensionTest extends SwaggerResolverWebTestCase
         $this->expectException(InvalidTypeException::class);
 
         self::createClient([
-            'config' => ['configuration_file' => '%kernel.project_dir%/src/swagger.php'],
+            'config' => ['linkin_swagger_resolver' => ['configuration_file' => '%kernel.project_dir%/src/swagger.php']],
             'kernelClass' => FileAppKernel::class,
         ]);
     }
@@ -96,7 +96,11 @@ class LinkinSwaggerResolverExtensionTest extends SwaggerResolverWebTestCase
         };
 
         self::createClient([
-            'config' => ['configuration_loader_service' => JsonConfigurationLoader::class],
+            'config' => [
+                'linkin_swagger_resolver' => [
+                    'configuration_loader_service' => JsonConfigurationLoader::class,
+                ],
+            ],
             'serviceClosure' => $closure,
         ]);
 

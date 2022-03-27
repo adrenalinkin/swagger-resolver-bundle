@@ -102,9 +102,9 @@ abstract class AbstractKernel extends Kernel
                 'router' => $this->getRouterConfig(),
             ]);
 
-            $container->loadFromExtension('linkin_swagger_resolver', array_merge([
+            $this->loadFromExtension($container, 'linkin_swagger_resolver', [
                 'path_merge_strategy' => ReplaceLastWinMergeStrategy::class,
-            ], $this->config));
+            ]);
 
             if ($this->closure instanceof Closure) {
                 \call_user_func($this->closure, $container);
@@ -114,6 +114,11 @@ abstract class AbstractKernel extends Kernel
 
             $container->addObjectResource($this);
         });
+    }
+
+    protected function loadFromExtension(ContainerBuilder $container, string $configKey, array $defaultConfig): void
+    {
+        $container->loadFromExtension($configKey, array_merge($defaultConfig, $this->config[$configKey] ?? []));
     }
 
     protected function getKernelParameters(): array

@@ -45,7 +45,8 @@ class NelmioAppKernel extends AbstractKernel
         $container->autowire(CartController::class)->addTag('controller.service_arguments');
         $container->autowire(CustomerController::class)->addTag('controller.service_arguments');
         $container->autowire(CustomerPasswordController::class)->addTag('controller.service_arguments');
-        $container->loadFromExtension('nelmio_api_doc', [
+
+        $this->loadFromExtension($container, 'nelmio_api_doc', [
             'documentation' => [
                 'swagger' => '2.0',
                 'host' => 'localhost',
@@ -57,14 +58,6 @@ class NelmioAppKernel extends AbstractKernel
                 ],
                 'consumes' => ['application/json'],
                 'produces' => ['application/json'],
-            ],
-            // TODO: project should work without areas definition
-            'areas' => [
-                'default' => [
-                    'path_patterns' => [
-                        '^/api/',
-                    ],
-                ],
             ],
         ]);
     }

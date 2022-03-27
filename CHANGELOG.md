@@ -17,6 +17,7 @@
 - Fixed working with collection by avoid resource duplication.
 - Fixed incorrect behaviour for the `swagger_php` configuration.
 - Fixed bug with compiler pass priority for normalizers and validators.
+- Fixed bug when default area should be always define in `NelmioApiDocBundle`.
 
 ## [0.4.6] - 2020-04-01
 ### Fixed
