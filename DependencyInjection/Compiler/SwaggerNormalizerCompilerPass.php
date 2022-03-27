@@ -38,11 +38,7 @@ class SwaggerNormalizerCompilerPass implements CompilerPassInterface
         $normalizerQueue = new SplPriorityQueue();
 
         foreach ($container->findTaggedServiceIds(self::TAG) as $id => $attributes) {
-            $validatorReference = new Reference($id);
-
-            $priority = isset($attributes['priority']) ? $attributes['priority'] : 0;
-
-            $normalizerQueue->insert($validatorReference, $priority);
+            $normalizerQueue->insert(new Reference($id), $attributes[0]['priority'] ?? 0);
         }
 
         $normalizers = iterator_to_array($normalizerQueue);
