@@ -38,11 +38,7 @@ class SwaggerValidatorCompilerPass implements CompilerPassInterface
         $validatorQueue = new SplPriorityQueue();
 
         foreach ($container->findTaggedServiceIds(self::TAG) as $id => $attributes) {
-            $validatorReference = new Reference($id);
-
-            $priority = isset($attributes['priority']) ? $attributes['priority'] : 0;
-
-            $validatorQueue->insert($validatorReference, $priority);
+            $validatorQueue->insert(new Reference($id), $attributes[0]['priority'] ?? 0);
         }
 
         $validators = iterator_to_array($validatorQueue);

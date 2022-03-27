@@ -87,10 +87,6 @@ class Configuration implements ConfigurationInterface
     private function validationForConfigurationLoader(): Closure
     {
         return static function ($className) {
-            if (null === $className) {
-                return $className;
-            }
-
             if (!is_subclass_of($className, SwaggerConfigurationLoaderInterface::class)) {
                 throw new InvalidConfigurationException(sprintf('Parameter "configuration_loader_service" should contain class which implements "%s"', SwaggerConfigurationLoaderInterface::class));
             }
