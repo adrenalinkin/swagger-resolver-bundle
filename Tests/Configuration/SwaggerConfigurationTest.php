@@ -11,25 +11,25 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Loader;
+namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Configuration;
 
 use EXSyst\Component\Swagger\Operation;
 use EXSyst\Component\Swagger\Path;
 use EXSyst\Component\Swagger\Schema;
+use Linkin\Bundle\SwaggerResolverBundle\Configuration\SwaggerConfiguration;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\YamlConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrategy;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\FixturesProvider;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Config\Resource\FileResource;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-class YamlConfigurationLoaderTest extends TestCase
+class SwaggerConfigurationTest extends TestCase
 {
     /**
-     * @var YamlConfigurationLoader
+     * @var SwaggerConfiguration
      */
     private $sut;
 
@@ -38,37 +38,25 @@ class YamlConfigurationLoaderTest extends TestCase
         $parameterMerger = new OperationParameterMerger(new ReplaceLastWinMergeStrategy());
         $router = FixturesProvider::createRouter();
 
-        $this->sut = new YamlConfigurationLoader($parameterMerger, $router, FixturesProvider::PATH_TO_SWG_YAML);
+        $loader = new YamlConfigurationLoader($parameterMerger, $router, FixturesProvider::PATH_TO_SWG_YAML);
+        $this->sut = new SwaggerConfiguration($loader);
     }
 
-    public function testCanLoadDefinitionCollection(): void
+    public function testCanGetDefinition(): void
     {
         $swagger = FixturesProvider::loadFromJson();
         $expectedDefinitions = $swagger->getDefinitions();
-        $expectedFileResource = new FileResource(FixturesProvider::PATH_TO_SWG_YAML);
-
-        $definitionCollection = $this->sut->getSchemaDefinitionCollection();
-        self::assertSame($expectedDefinitions->getIterator()->count(), $definitionCollection->getIterator()->count());
 
         /** @var Schema $expectedSchema */
         foreach ($expectedDefinitions->getIterator() as $name => $expectedSchema) {
-            $loadedDefinitionSchema = $definitionCollection->getSchema($name);
+            $loadedDefinitionSchema = $this->sut->getDefinition($name);
             self::assertSame($expectedSchema->toArray(), $loadedDefinitionSchema->toArray());
-
-            $loadedResources = $definitionCollection->getSchemaResources($name);
-            self::assertCount(1, $loadedResources);
-
-            $loadedResource = $loadedResources[0];
-            self::assertSame($expectedFileResource->getResource(), $loadedResource->getResource());
         }
     }
 
-    public function testCanLoadOperationCollection(): void
+    public function testCanGetPathDefinition(): void
     {
         $swagger = FixturesProvider::loadFromJson();
-        $expectedFileResource = new FileResource(FixturesProvider::PATH_TO_SWG_YAML);
-        $operationCollection = $this->sut->getSchemaOperationCollection();
-        $expectedOperationsCount = 0;
 
         /** @var Path $pathObject */
         foreach ($swagger->getPaths()->getIterator() as $path => $pathObject) {
@@ -76,8 +64,7 @@ class YamlConfigurationLoaderTest extends TestCase
             foreach ($pathObject->getOperations() as $method => $operation) {
                 $routerName = FixturesProvider::getRouteName($path, $method);
 
-                $pathDefinitionSchema = $operationCollection->getSchema($routerName, $method);
-
+                $pathDefinitionSchema = $this->sut->getPathDefinition($routerName, $method);
                 /** @var Schema $definition */
                 foreach ($pathDefinitionSchema->getProperties()->getIterator() as $name => $definition) {
                     if ($definition->getTitle() === 'body') {
@@ -88,17 +75,7 @@ class YamlConfigurationLoaderTest extends TestCase
                     $expectedName = $name.'/'.$definition->getTitle();
                     self::assertTrue($operation->getParameters()->has($expectedName), "Should contains $expectedName");
                 }
-
-                $loadedResources = $operationCollection->getSchemaResources($routerName);
-                self::assertCount(1, $loadedResources);
-
-                $loadedResource = $loadedResources[0];
-                self::assertSame($expectedFileResource->getResource(), $loadedResource->getResource());
-
-                ++$expectedOperationsCount;
             }
         }
-
-        self::assertCount($expectedOperationsCount, $operationCollection->getIterator());
     }
 }

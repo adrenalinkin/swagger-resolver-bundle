@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Loader;
 
+use EXSyst\Component\Swagger\Operation;
 use EXSyst\Component\Swagger\Path;
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\OperationNotFoundException;
@@ -70,10 +71,7 @@ class SwaggerPhpConfigurationLoaderTest extends TestCase
         $definitionCollection = $this->sut->getSchemaDefinitionCollection();
         self::assertSame($expectedDefinitions->getIterator()->count(), $definitionCollection->getIterator()->count());
 
-        /**
-         * @var string $path
-         * @var Schema $expectedSchema
-         */
+        /** @var Schema $expectedSchema */
         foreach ($expectedDefinitions->getIterator() as $name => $expectedSchema) {
             $loadedDefinitionSchema = $definitionCollection->getSchema($name);
             self::assertSame($expectedSchema->toArray(), $loadedDefinitionSchema->toArray());
@@ -92,15 +90,24 @@ class SwaggerPhpConfigurationLoaderTest extends TestCase
         $operationCollection = $this->sut->getSchemaOperationCollection();
         $expectedOperationsCount = 0;
 
-        /**
-         * @var string $path
-         * @var Path   $pathObject
-         */
+        /** @var Path $pathObject */
         foreach ($swagger->getPaths()->getIterator() as $path => $pathObject) {
+            /** @var Operation $operation */
             foreach ($pathObject->getOperations() as $method => $operation) {
                 $routerName = FixturesProvider::getRouteName($path, $method);
 
-                $operationCollection->getSchema($routerName, $method);
+                $pathDefinitionSchema = $operationCollection->getSchema($routerName, $method);
+
+                /** @var Schema $definition */
+                foreach ($pathDefinitionSchema->getProperties()->getIterator() as $name => $definition) {
+                    if ($definition->getTitle() === 'body') {
+                        /** Skip complicated check @see OperationParameterMergerTest */
+                        continue;
+                    }
+
+                    $expectedName = $name.'/'.$definition->getTitle();
+                    self::assertTrue($operation->getParameters()->has($expectedName), "Should contains $expectedName");
+                }
 
                 $loadedResources = $operationCollection->getSchemaResources($routerName);
                 $expectedResources = FixturesProvider::getResourceByRouteName($routerName);

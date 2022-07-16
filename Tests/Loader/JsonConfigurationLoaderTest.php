@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Loader;
 
+use EXSyst\Component\Swagger\Operation;
 use EXSyst\Component\Swagger\Path;
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\OperationNotFoundException;
@@ -82,15 +83,24 @@ class JsonConfigurationLoaderTest extends TestCase
         $operationCollection = $this->sut->getSchemaOperationCollection();
         $expectedOperationsCount = 0;
 
-        /**
-         * @var string $path
-         * @var Path   $pathObject
-         */
+        /** @var Path $pathObject */
         foreach ($swagger->getPaths()->getIterator() as $path => $pathObject) {
+            /** @var Operation $operation */
             foreach ($pathObject->getOperations() as $method => $operation) {
                 $routerName = FixturesProvider::getRouteName($path, $method);
 
-                $operationCollection->getSchema($routerName, $method);
+                $pathDefinitionSchema = $operationCollection->getSchema($routerName, $method);
+
+                /** @var Schema $definition */
+                foreach ($pathDefinitionSchema->getProperties()->getIterator() as $name => $definition) {
+                    if ($definition->getTitle() === 'body') {
+                        /** Skip complicated check @see OperationParameterMergerTest */
+                        continue;
+                    }
+
+                    $expectedName = $name.'/'.$definition->getTitle();
+                    self::assertTrue($operation->getParameters()->has($expectedName), "Should contains $expectedName");
+                }
 
                 $loadedResources = $operationCollection->getSchemaResources($routerName);
                 self::assertCount(1, $loadedResources);
