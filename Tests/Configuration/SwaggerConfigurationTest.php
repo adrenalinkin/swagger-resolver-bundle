@@ -20,6 +20,7 @@ use Linkin\Bundle\SwaggerResolverBundle\Configuration\SwaggerConfiguration;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\YamlConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrategy;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\ConfigurationTestCase;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\FixturesProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -65,16 +66,7 @@ class SwaggerConfigurationTest extends TestCase
                 $routerName = FixturesProvider::getRouteName($path, $method);
 
                 $pathDefinitionSchema = $this->sut->getPathDefinition($routerName, $method);
-                /** @var Schema $definition */
-                foreach ($pathDefinitionSchema->getProperties()->getIterator() as $name => $definition) {
-                    if ($definition->getTitle() === 'body') {
-                        /** Skip complicated check @see OperationParameterMergerTest */
-                        continue;
-                    }
-
-                    $expectedName = $name.'/'.$definition->getTitle();
-                    self::assertTrue($operation->getParameters()->has($expectedName), "Should contains $expectedName");
-                }
+                ConfigurationTestCase::assertOperationSchema($pathDefinitionSchema, $operation);
             }
         }
     }

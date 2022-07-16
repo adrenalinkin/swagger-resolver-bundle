@@ -13,20 +13,17 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Loader;
 
-use EXSyst\Component\Swagger\Operation;
-use EXSyst\Component\Swagger\Path;
-use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\OperationNotFoundException;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerPhpConfigurationLoader;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrategy;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\ConfigurationTestCase;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\FixturesProvider;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-class SwaggerPhpConfigurationLoaderTest extends TestCase
+class SwaggerPhpConfigurationLoaderTest extends ConfigurationTestCase
 {
     /**
      * @var SwaggerPhpConfigurationLoader
@@ -44,6 +41,16 @@ class SwaggerPhpConfigurationLoaderTest extends TestCase
             [__DIR__.'/../Functional/src'],
             [__DIR__.'/../Functional/src/NelmioApiDocController']
         );
+    }
+
+    protected function getExpectedFileResourcesByRouteName(string $routerName = ''): array
+    {
+        return FixturesProvider::getResourceByRouteName($routerName);
+    }
+
+    protected function getExpectedFileResourceByDefinition(string $definitionName): string
+    {
+        return FixturesProvider::getResourceByDefinition($definitionName);
     }
 
     public function testFailWhenRouteNotFound(): void
@@ -65,61 +72,11 @@ class SwaggerPhpConfigurationLoaderTest extends TestCase
 
     public function testCanLoadDefinitionCollection(): void
     {
-        $swagger = FixturesProvider::loadFromJson();
-        $expectedDefinitions = $swagger->getDefinitions();
-
-        $definitionCollection = $this->sut->getSchemaDefinitionCollection();
-        self::assertSame($expectedDefinitions->getIterator()->count(), $definitionCollection->getIterator()->count());
-
-        /** @var Schema $expectedSchema */
-        foreach ($expectedDefinitions->getIterator() as $name => $expectedSchema) {
-            $loadedDefinitionSchema = $definitionCollection->getSchema($name);
-            self::assertSame($expectedSchema->toArray(), $loadedDefinitionSchema->toArray());
-
-            $loadedResources = $definitionCollection->getSchemaResources($name);
-            self::assertCount(1, $loadedResources);
-
-            $loadedResource = $loadedResources[0];
-            self::assertSame(FixturesProvider::getResourceByDefinition($name), $loadedResource->getResource());
-        }
+        $this->assertLoadSchemaDefinitionCollection($this->sut->getSchemaDefinitionCollection());
     }
 
     public function testCanLoadOperationCollection(): void
     {
-        $swagger = FixturesProvider::loadFromJson();
-        $operationCollection = $this->sut->getSchemaOperationCollection();
-        $expectedOperationsCount = 0;
-
-        /** @var Path $pathObject */
-        foreach ($swagger->getPaths()->getIterator() as $path => $pathObject) {
-            /** @var Operation $operation */
-            foreach ($pathObject->getOperations() as $method => $operation) {
-                $routerName = FixturesProvider::getRouteName($path, $method);
-
-                $pathDefinitionSchema = $operationCollection->getSchema($routerName, $method);
-
-                /** @var Schema $definition */
-                foreach ($pathDefinitionSchema->getProperties()->getIterator() as $name => $definition) {
-                    if ($definition->getTitle() === 'body') {
-                        /** Skip complicated check @see OperationParameterMergerTest */
-                        continue;
-                    }
-
-                    $expectedName = $name.'/'.$definition->getTitle();
-                    self::assertTrue($operation->getParameters()->has($expectedName), "Should contains $expectedName");
-                }
-
-                $loadedResources = $operationCollection->getSchemaResources($routerName);
-                $expectedResources = FixturesProvider::getResourceByRouteName($routerName);
-
-                foreach ($loadedResources as $loadedResource) {
-                    self::assertContains($loadedResource->getResource(), $expectedResources);
-                }
-
-                ++$expectedOperationsCount;
-            }
-        }
-
-        self::assertCount($expectedOperationsCount, $operationCollection->getIterator());
+        $this->assertLoadSchemaOperationCollection($this->sut->getSchemaOperationCollection());
     }
 }
