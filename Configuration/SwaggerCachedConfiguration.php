@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Configuration;
 
-use EXSyst\Component\Swagger\Path;
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerConfigurationLoaderInterface;
 use Symfony\Component\Config\ConfigCacheFactory;
@@ -56,9 +55,6 @@ class SwaggerCachedConfiguration extends SwaggerConfiguration implements Warmabl
         $this->loader = $loader;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefinition(string $definitionName): Schema
     {
         $cache = $this->getConfigCacheFactory()->cache(
@@ -71,9 +67,6 @@ class SwaggerCachedConfiguration extends SwaggerConfiguration implements Warmabl
         return include $cache->getPath();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPathDefinition(string $routeName, string $method): Schema
     {
         $cache = $this->getConfigCacheFactory()->cache(
@@ -86,10 +79,7 @@ class SwaggerCachedConfiguration extends SwaggerConfiguration implements Warmabl
         return include $cache->getPath();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function warmUp($cacheDir)
+    public function warmUp($cacheDir): void
     {
         $definitionWithoutResources = [];
         $definitionCollection = $this->loader->getSchemaDefinitionCollection();
@@ -104,7 +94,6 @@ class SwaggerCachedConfiguration extends SwaggerConfiguration implements Warmabl
 
         $operationCollection = $this->loader->getSchemaOperationCollection();
 
-        /* @var Path $pathObject */
         foreach ($operationCollection as $routeName => $methodList) {
             foreach ($methodList as $method => $operation) {
                 $this->getPathDefinition($routeName, $method);

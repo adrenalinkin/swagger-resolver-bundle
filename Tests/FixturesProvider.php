@@ -27,6 +27,7 @@ class FixturesProvider
 {
     public const PATH_TO_SWG_JSON = __DIR__.'/Functional/web/swagger.json';
     public const PATH_TO_SWG_YAML = __DIR__.'/Functional/web/swagger.yaml';
+    public const PATH_TO_VAR_DIR = __DIR__.'/../var';
 
     private const MAP_DEFINITION_RESOURCE = [
         'Cart' => __DIR__.'/Functional/src/Models/Cart.php',

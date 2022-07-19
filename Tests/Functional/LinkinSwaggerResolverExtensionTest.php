@@ -72,7 +72,7 @@ class LinkinSwaggerResolverExtensionTest extends SwaggerResolverWebTestCase
     public function canApplyYamlLoaderDataProvider(): iterable
     {
         yield ['%kernel.project_dir%/web/swagger.yaml'];
-        yield ['%kernel.project_dir%/web/swagger.yaml'];
+        yield ['%kernel.project_dir%/web/swagger.yml'];
     }
 
     public function testFailWhenReceivedUnsupportedConfigurationFile(): void
