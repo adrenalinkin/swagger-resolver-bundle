@@ -11,7 +11,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace DependencyInjection\Compiler;
+namespace Linkin\Bundle\SwaggerResolverBundle\Tests\DependencyInjection\Compiler;
 
 use Linkin\Bundle\SwaggerResolverBundle\Builder\SwaggerResolverBuilder;
 use Linkin\Bundle\SwaggerResolverBundle\DependencyInjection\Compiler\SwaggerNormalizerCompilerPass;
