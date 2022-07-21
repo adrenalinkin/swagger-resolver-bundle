@@ -54,8 +54,6 @@ class LinkinSwaggerResolverExtensionTest extends TestCase
 
         $this->sut->load([[]], $containerBuilder);
 
-        $containerBuilder->compile();
-
         self::assertSame(
             ['query', 'path', 'header'],
             $containerBuilder->getParameter('linkin_swagger_resolver.enable_normalization')
@@ -93,8 +91,6 @@ class LinkinSwaggerResolverExtensionTest extends TestCase
             'configuration_loader_service' => JsonConfigurationLoader::class,
         ]], $containerBuilder);
 
-        $containerBuilder->compile();
-
         self::assertSame(
             JsonConfigurationLoader::class,
             (string) $containerBuilder->getAlias(SwaggerConfigurationLoaderInterface::class)
@@ -108,8 +104,6 @@ class LinkinSwaggerResolverExtensionTest extends TestCase
         $containerBuilder->setDefinition('nelmio_api_doc.generator.', (new Definition())->setSynthetic(true));
 
         $this->sut->load([[]], $containerBuilder);
-
-        $containerBuilder->compile();
 
         self::assertSame(
             NelmioApiDocConfigurationLoader::class,
@@ -128,8 +122,6 @@ class LinkinSwaggerResolverExtensionTest extends TestCase
             'configuration_file' => FixturesProvider::PATH_TO_SWG_JSON,
         ]], $containerBuilder);
 
-        $containerBuilder->compile();
-
         self::assertSame(
             JsonConfigurationLoader::class,
             (string) $containerBuilder->getAlias(SwaggerConfigurationLoaderInterface::class)
@@ -146,8 +138,6 @@ class LinkinSwaggerResolverExtensionTest extends TestCase
         $this->sut->load([[
             'configuration_file' => FixturesProvider::PATH_TO_SWG_YAML,
         ]], $containerBuilder);
-
-        $containerBuilder->compile();
 
         self::assertSame(
             YamlConfigurationLoader::class,

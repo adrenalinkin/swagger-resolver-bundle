@@ -14,10 +14,10 @@ declare(strict_types=1);
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\CacheWarmer;
 
 use Linkin\Bundle\SwaggerResolverBundle\CacheWarmer\SwaggerConfigurationCacheWarmer;
+use Linkin\Bundle\SwaggerResolverBundle\Configuration\SwaggerCachedConfiguration;
 use Linkin\Bundle\SwaggerResolverBundle\Configuration\SwaggerConfigurationInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -36,8 +36,8 @@ class SwaggerConfigurationCacheWarmerTest extends TestCase
 
     public function testCanWarmupWhenImplementWarmableInterface(): void
     {
-        /** @var SwaggerConfigurationInterface|MockObject $mock */
-        $mock = $this->createMock([SwaggerConfigurationInterface::class, WarmableInterface::class]);
+        /** @var SwaggerCachedConfiguration|MockObject $mock */
+        $mock = $this->createMock(SwaggerCachedConfiguration::class);
         $sut = new SwaggerConfigurationCacheWarmer($mock);
 
         $expectedCacheDir = 'some-string';
