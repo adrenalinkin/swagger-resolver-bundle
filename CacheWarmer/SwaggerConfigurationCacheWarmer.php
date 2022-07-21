@@ -32,18 +32,12 @@ class SwaggerConfigurationCacheWarmer implements CacheWarmerInterface
         $this->configuration = $configurationLoader;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function isOptional()
+    public function isOptional(): bool
     {
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function warmUp($cacheDir)
+    public function warmUp($cacheDir): void
     {
         if ($this->configuration instanceof WarmableInterface) {
             $this->configuration->warmUp($cacheDir);

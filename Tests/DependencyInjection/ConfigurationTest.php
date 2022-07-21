@@ -11,7 +11,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace DependencyInjection;
+namespace Linkin\Bundle\SwaggerResolverBundle\Tests\DependencyInjection;
 
 use Linkin\Bundle\SwaggerResolverBundle\DependencyInjection\Configuration;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\JsonConfigurationLoader;
