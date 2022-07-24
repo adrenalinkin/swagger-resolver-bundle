@@ -117,9 +117,18 @@ class CustomerController
      *     @Model(type=ResponseCreated::class),
      * )
      */
-    public function create(): Response
+    public function create(Request $request, SwaggerResolverFactory $factory): JsonResponse
     {
-        return new Response();
+        $requestResolver = $factory->createForRequest($request);
+        $requestData = json_decode($request->getContent(), true);
+        $requestData['x-auth-token'] = $request->headers->get('x-auth-token');
+        $requestResolver->resolve($requestData);
+
+        $responseData = ['id' => 1];
+        $responseResolver = $factory->createForDefinition(ResponseCreated::class);
+        $responseResolved = $responseResolver->resolve($responseData);
+
+        return new JsonResponse($responseResolved);
     }
 
     /**
