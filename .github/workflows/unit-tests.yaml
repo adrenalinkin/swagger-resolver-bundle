@@ -21,8 +21,13 @@ jobs:
                         symfony: '^5.0'
                     -   php: '7.4'
                         symfony: '^5.0'
+                    -   php: '8.0'
+                        symfony: '^5.0'
+                    -   php: '8.1'
+                        symfony: '^5.0'
+                    -   php: '8.2'
+                        symfony: '^5.0'
                         coverage: 'pcov'
-
         steps:
             -   name: Checkout source
                 uses: actions/checkout@v2
