@@ -28,10 +28,6 @@
         </whitelist>
     </filter>
 
-    <logging>
-        <log type="coverage-clover" target="var/build/clover.xml"/>
-    </logging>
-
     <listeners>
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener"/>
     </listeners>

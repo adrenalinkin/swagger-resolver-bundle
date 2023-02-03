@@ -1,8 +1,8 @@
 {
     "name": "adrenalinkin/swagger-resolver-bundle",
     "description": "Provides possibility for validate data according to Swagger documentation",
+    "license": "MIT",
     "type": "symfony-bundle",
-    "license":"MIT",
     "keywords": [
         "symfony-bundle",
         "api",
@@ -15,48 +15,42 @@
         "validation",
         "api-validation"
     ],
-
     "authors": [
         {
-            "email": "adrenalinkin@gmail.com",
-            "name": "Viktor Linkin"
+            "name": "Viktor Linkin",
+            "email": "adrenalinkin@gmail.com"
         }
     ],
-
     "require": {
-        "php": "^7.1",
+        "php": "^7.1 || ^8.0",
         "ext-json": "*",
         "exsyst/swagger": "^0.4",
-        "symfony/config": "^3.4||^4.0||^5.0",
-        "symfony/dependency-injection": "^3.4||^4.0||^5.0",
-        "symfony/finder": "^3.4||^4.0||^5.0",
-        "symfony/http-foundation": "^3.4||^4.0||^5.0",
-        "symfony/http-kernel": "^3.4||^4.0||^5.0",
-        "symfony/options-resolver": "^3.4||^4.0||^5.0",
-        "symfony/routing": "^3.4||^4.0||^5.0",
-        "symfony/yaml": "^3.4||^4.0||^5.0"
+        "symfony/config": "^3.4 || ^4.0 || ^5.0",
+        "symfony/dependency-injection": "^3.4 || ^4.0 || ^5.0",
+        "symfony/finder": "^3.4 || ^4.0 || ^5.0",
+        "symfony/http-foundation": "^3.4 || ^4.0 || ^5.0",
+        "symfony/http-kernel": "^3.4 || ^4.0 || ^5.0",
+        "symfony/options-resolver": "^3.4 || ^4.0 || ^5.0",
+        "symfony/routing": "^3.4 || ^4.0 || ^5.0",
+        "symfony/yaml": "^3.4 || ^4.0 || ^5.0"
     },
-
     "require-dev": {
         "doctrine/annotations": "^1.2",
         "friendsofphp/php-cs-fixer": "^2.19",
         "nelmio/api-doc-bundle": "^3.4",
-        "symfony/browser-kit": "^3.4||^4.0||^5.0",
-        "symfony/framework-bundle": "^3.4||^4.0||^5.0",
-        "symfony/phpunit-bridge": "^3.4.38||^4.0||^5.0",
+        "symfony/browser-kit": "^3.4 || ^4.0 || ^5.0",
+        "symfony/framework-bundle": "^3.4 || ^4.0 || ^5.0",
+        "symfony/phpunit-bridge": "^3.4.38 || ^4.0 || ^5.0",
         "zircote/swagger-php": "^2.0.15"
     },
-
     "conflict": {
-        "nelmio/api-doc-bundle": "<3.4",
-        "doctrine/annotations": "<1.7"
+        "doctrine/annotations": "<1.7",
+        "nelmio/api-doc-bundle": "<3.4"
     },
-
     "suggest": {
         "nelmio/api-doc-bundle": "Generates documentation for your REST API from annotations",
         "zircote/swagger-php": "Allows to generate Swagger configuration by php annotations"
     },
-
     "autoload": {
         "psr-4": {
             "Linkin\\Bundle\\SwaggerResolverBundle\\": ""
@@ -65,14 +59,12 @@
             "Tests/"
         ]
     },
-
     "autoload-dev": {
         "psr-4": {
             "Linkin\\Bundle\\SwaggerResolverBundle\\Tests\\": "Tests/",
             "Linkin\\Bundle\\SwaggerResolverBundle\\Tests\\Functional\\": "Tests/Functional/src/"
         }
     },
-
     "config": {
         "sort-packages": true
     }

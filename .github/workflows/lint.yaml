@@ -18,3 +18,9 @@ jobs:
 
             -   name: Run PHP-CS-Fixer
                 run: php-cs-fixer fix --dry-run --diff
+
+            -   name: Run composer normalize
+                run: |
+                    composer global config allow-plugins.ergebnis/composer-normalize true
+                    composer global require ergebnis/composer-normalize
+                    composer normalize --dry-run
