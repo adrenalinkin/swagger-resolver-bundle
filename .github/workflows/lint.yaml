@@ -21,6 +21,6 @@ jobs:
 
             -   name: Run composer normalize
                 run: |
-                    composer config allow-plugins.ergebnis/composer-normalize true
-                    composer require --dev ergebnis/composer-normalize
+                    composer global config allow-plugins.ergebnis/composer-normalize true
+                    composer global require ergebnis/composer-normalize
                     composer normalize --dry-run
