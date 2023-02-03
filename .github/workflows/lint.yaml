@@ -14,7 +14,10 @@ jobs:
                 with:
                     php-version: 7.4
                     coverage: none
-                    tools: php-cs-fixer:2.19.3
+                    tools: php-cs-fixer:2.19.3, composer-normalize
 
             -   name: Run PHP-CS-Fixer
                 run: php-cs-fixer fix --dry-run --diff
+
+            -   name: Run composer normalize
+                run: composer normalize --dry-run
