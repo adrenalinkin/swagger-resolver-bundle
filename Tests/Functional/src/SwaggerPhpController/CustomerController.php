@@ -72,10 +72,31 @@ class CustomerController
      */
     public function getAll(Request $request, SwaggerResolverFactory $factory): Response
     {
-        $swaggerResolver = $factory->createForDefinition(CustomerFull::class);
-        $data = $swaggerResolver->resolve(json_decode($request->getContent(), true));
+        $requestResolver = $factory->createForRequest($request);
+        $requestResolver->resolve([
+            'page' => $request->query->getInt('page'),
+            'perPage' => $request->query->getInt('perPage'),
+            'x-auth-token' => $request->headers->get('x-auth-token'),
+        ]);
 
-        return new JsonResponse([$data]);
+        $responseDataItem = [
+            'id' => 1,
+            'name' => 'Homer',
+            'secondName' => 'Simpson',
+            'roles' => ['guest'],
+            'email' => 'homer@crud.com',
+            'isEmailConfirmed' => true,
+            'birthday' => '1965-05-12',
+            'happyHour' => '14:00:00',
+            'discount' => 30,
+            'rating' => 3.5,
+            'registeredAt' => '2000-10-11T19:57:31Z',
+            'lastVisitedAt' => '665701200',
+        ];
+        $responseResolver = $factory->createForDefinition(CustomerFull::class);
+        $responseResolved = $responseResolver->resolve($responseDataItem);
+
+        return new JsonResponse([$responseResolved]);
     }
 
     /**
