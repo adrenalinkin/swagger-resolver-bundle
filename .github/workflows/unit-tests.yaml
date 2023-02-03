@@ -45,7 +45,7 @@ jobs:
                 run: composer update -o --no-interaction --no-progress ${{ matrix.composer-flags }}
 
             -   name: Run test suite
-                run: ./vendor/bin/simple-phpunit -v
+                run: ./vendor/bin/simple-phpunit -v --coverage-clover var/build/clover.xml
 
             -   name: Install php-coveralls
                 run: composer global require -o --no-interaction --no-progress php-coveralls/php-coveralls
