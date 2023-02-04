@@ -36,7 +36,7 @@
     },
     "require-dev": {
         "doctrine/annotations": "^1.2",
-        "nelmio/api-doc-bundle": "^3.4",
+        "nelmio/api-doc-bundle": "^3.4 || ^4.0",
         "symfony/browser-kit": "^3.4 || ^4.0 || ^5.0 || ^6.0",
         "symfony/framework-bundle": "^3.4 || ^4.0 || ^5.0 || ^6.0",
         "symfony/phpunit-bridge": "^3.4.38 || ^4.0 || ^5.0 || ^6.0",
