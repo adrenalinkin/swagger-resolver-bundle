@@ -13,16 +13,14 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Collection;
 
-use ArrayIterator;
 use EXSyst\Component\Swagger\Schema;
-use IteratorAggregate;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\OperationNotFoundException;
 use Symfony\Component\Config\Resource\FileResource;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-class SchemaOperationCollection implements IteratorAggregate
+class SchemaOperationCollection implements \IteratorAggregate
 {
     /**
      * @var Schema[][]
@@ -37,9 +35,9 @@ class SchemaOperationCollection implements IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function getIterator(): ArrayIterator
+    public function getIterator(): \ArrayIterator
     {
-        return new ArrayIterator($this->schemaCollection);
+        return new \ArrayIterator($this->schemaCollection);
     }
 
     public function addSchema(string $routeName, string $method, Schema $schema): self

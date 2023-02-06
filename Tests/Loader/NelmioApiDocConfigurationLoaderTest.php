@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Loader;
 
-use Closure;
 use EXSyst\Component\Swagger\Swagger;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\OperationNotFoundException;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\NelmioApiDocConfigurationLoader;
@@ -78,7 +77,7 @@ class NelmioApiDocConfigurationLoaderTest extends ConfigurationTestCase
     private function createApiDocGenerator(): ApiDocGenerator
     {
         $apiDocGenerator = new ApiDocGenerator([], []);
-        $setSwagger = Closure::bind(function (Swagger $swagger) {
+        $setSwagger = \Closure::bind(function (Swagger $swagger) {
             $this->swagger = $swagger;
         }, $apiDocGenerator, ApiDocGenerator::class);
 

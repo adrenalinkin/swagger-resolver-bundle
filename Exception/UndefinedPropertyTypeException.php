@@ -13,12 +13,10 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Exception;
 
-use RuntimeException;
-
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-class UndefinedPropertyTypeException extends RuntimeException
+class UndefinedPropertyTypeException extends \RuntimeException
 {
     public function __construct(string $definitionName, string $propertyName, string $type)
     {

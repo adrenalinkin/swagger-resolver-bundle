@@ -21,7 +21,6 @@ use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaDefinitionCollection;
 use Linkin\Bundle\SwaggerResolverBundle\Collection\SchemaOperationCollection;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\OperationNotFoundException;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\OperationParameterMerger;
-use ReflectionClass;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -178,7 +177,7 @@ abstract class AbstractSwaggerConfigurationLoader implements SwaggerConfiguratio
                 $defaults = $route->getDefaults();
                 $exploded = explode('::', $defaults['_controller']);
                 $controllerName = reset($exploded);
-                $fullClassName = (new ReflectionClass($controllerName))->getFileName();
+                $fullClassName = (new \ReflectionClass($controllerName))->getFileName();
 
                 $this->mapPathToRouteName[$route->getPath()][$this->normalizeMethod($method)] = $routeName;
                 $this->mapRouteNameToSourceFile[$routeName] = new FileResource($fullClassName);

@@ -54,8 +54,10 @@ class CustomerPasswordController
      *     in="body",
      *     description="New password",
      *     required=true,
+     *
      *     @SWG\Schema(type="string", maxLength=30),
      * )
+     *
      * @SWG\Response(response=204, description="Empty response when created successfully")
      */
     public function create(): Response
@@ -93,9 +95,11 @@ class CustomerPasswordController
      *     in="body",
      *     description="Body to change password",
      *     required=true,
+     *
      *     @SWG\Schema(
      *         type="object",
      *         required={"oldPassword", "newPassword"},
+     *
      *         @SWG\Property(
      *             property="oldPassword",
      *             type="string",
@@ -108,6 +112,7 @@ class CustomerPasswordController
      *         ),
      *     ),
      * )
+     *
      * @SWG\Response(response=204, description="Empty response when reset successfully")
      */
     public function reset(): Response

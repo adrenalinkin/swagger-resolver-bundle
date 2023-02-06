@@ -1,4 +1,4 @@
-name: UnitTests
+name: Tests
 
 on: [push, pull_request]
 
@@ -21,8 +21,13 @@ jobs:
                         symfony: '^5.0'
                     -   php: '7.4'
                         symfony: '^5.0'
+                    -   php: '8.0'
+                        symfony: '^5.0'
+                    -   php: '8.1'
+                        symfony: '^5.0'
+                    -   php: '8.2'
+                        symfony: '^5.0'
                         coverage: 'pcov'
-
         steps:
             -   name: Checkout source
                 uses: actions/checkout@v2
@@ -36,7 +41,7 @@ jobs:
             -   name: Install Symfony Flex
                 run: |
                     composer global config allow-plugins.symfony/flex true
-                    composer global require -o --no-interaction --no-progress symfony/flex:^1.11
+                    composer global require -o --no-interaction --no-progress symfony/flex:"^1.11 || ^2.0"
 
             -   name: Require Symfony version
                 run: composer config extra.symfony.require ${{ matrix.symfony }}
@@ -45,7 +50,7 @@ jobs:
                 run: composer update -o --no-interaction --no-progress ${{ matrix.composer-flags }}
 
             -   name: Run test suite
-                run: ./vendor/bin/simple-phpunit -v
+                run: ./vendor/bin/simple-phpunit -v --coverage-clover var/build/clover.xml
 
             -   name: Install php-coveralls
                 run: composer global require -o --no-interaction --no-progress php-coveralls/php-coveralls

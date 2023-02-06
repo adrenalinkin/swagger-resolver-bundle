@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 $fileHeaderComment = <<<COMMENT
 This file is part of the SwaggerResolverBundle package.
 
@@ -13,7 +15,7 @@ $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__)
     ->exclude('Resources/config')
     ->exclude('var')
-    ->notPath('Tests/Functional/src/swagger.php'); // PHPCS-Fixer does not recognising the DocBlock inside swagger.php.
+    ->notPath('Tests/Functional/src/swagger.php'); // PHPCS-Fixer does not recognise the DocBlock inside swagger.php.
 
 return (new PhpCsFixer\Config())
     ->setRules([

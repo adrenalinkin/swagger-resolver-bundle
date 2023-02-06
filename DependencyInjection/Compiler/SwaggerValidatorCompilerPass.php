@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Linkin\Bundle\SwaggerResolverBundle\DependencyInjection\Compiler;
 
 use Linkin\Bundle\SwaggerResolverBundle\Builder\SwaggerResolverBuilder;
-use SplPriorityQueue;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -35,7 +34,7 @@ class SwaggerValidatorCompilerPass implements CompilerPassInterface
             return;
         }
 
-        $validatorQueue = new SplPriorityQueue();
+        $validatorQueue = new \SplPriorityQueue();
 
         foreach ($container->findTaggedServiceIds(self::TAG) as $id => $attributes) {
             $validatorQueue->insert(new Reference($id), $attributes[0]['priority'] ?? 0);

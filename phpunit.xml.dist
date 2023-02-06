@@ -21,16 +21,13 @@
         <whitelist>
             <directory>./</directory>
             <exclude>
+                <file>.php-cs-fixer.dist.php</file>
                 <directory>./Resources</directory>
                 <directory>./Tests</directory>
                 <directory>./vendor</directory>
             </exclude>
         </whitelist>
     </filter>
-
-    <logging>
-        <log type="coverage-clover" target="var/build/clover.xml"/>
-    </logging>
 
     <listeners>
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener"/>

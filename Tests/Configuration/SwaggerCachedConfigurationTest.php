@@ -133,9 +133,17 @@ class SwaggerCachedConfigurationTest extends TestCase
             FixturesProvider::createSchemaDefinition(['one' => ['type' => 'boolean']])
         );
 
+        $schemaName = 'NOT-FOUND-SCHEMA';
+        $schemaCollection = new SchemaOperationCollection();
+        $schemaCollection->addSchema(
+            $schemaName,
+            'PUT',
+            FixturesProvider::createSchemaDefinition(['one' => ['type' => 'boolean']])
+        );
+
         $loaderMock = $this->createMock(SwaggerConfigurationLoaderInterface::class);
         $loaderMock->method('getSchemaDefinitionCollection')->willReturn($definitionCollection);
-        $loaderMock->method('getSchemaOperationCollection')->willReturn(new SchemaOperationCollection());
+        $loaderMock->method('getSchemaOperationCollection')->willReturn($schemaCollection);
 
         $sut = new SwaggerCachedConfiguration($loaderMock, FixturesProvider::PATH_TO_VAR_DIR, false);
 
@@ -144,5 +152,6 @@ class SwaggerCachedConfigurationTest extends TestCase
         $output = ob_get_clean();
 
         self::assertRegExp("/.*{$definitionName}.*/", $output);
+        self::assertRegExp("/.*{$schemaName}.*/", $output);
     }
 }
