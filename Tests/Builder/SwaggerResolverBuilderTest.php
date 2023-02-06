@@ -196,6 +196,19 @@ class SwaggerResolverBuilderTest extends TestCase
         $dataWithIncorrectEnum['role'] = '__UNDEFINED__';
         yield [$schemaOperation, 'isPassed' => false, 'data' => $dataWithIncorrectEnum];
 
+        $schemaOperationGet = $configurationLoader->getSchemaOperationCollection()->getSchema('customers_get', 'get');
+        yield [$schemaOperationGet, 'isPassed' => true, 'data' => [
+            'x-auth-token' => 'token',
+            'page' => 3,
+            'perPage' => 500,
+        ]];
+
+        yield [$schemaOperationGet, 'isPassed' => false, 'data' => [
+            'x-auth-token' => 'token',
+            'page' => 3,
+            'perPage' => 555,
+        ]];
+
         $schemaCustomerDefinition = $configurationLoader->getSchemaDefinitionCollection()->getSchema('CustomerFull');
         yield [$schemaCustomerDefinition, 'isPassed' => true, 'data' => [
             'id' => 1,
