@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Normalizer;
 
-use Closure;
 use EXSyst\Component\Swagger\Schema;
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterTypeEnum;
 use Linkin\Bundle\SwaggerResolverBundle\Exception\NormalizationFailedException;
@@ -35,7 +34,7 @@ class BooleanNormalizer implements SwaggerNormalizerInterface
     /**
      * {@inheritdoc}
      */
-    public function getNormalizer(Schema $propertySchema, string $propertyName, bool $isRequired): Closure
+    public function getNormalizer(Schema $propertySchema, string $propertyName, bool $isRequired): \Closure
     {
         return static function (Options $options, $value) use ($isRequired, $propertyName) {
             if ('true' === $value || '1' === $value || 1 === $value || true === $value) {

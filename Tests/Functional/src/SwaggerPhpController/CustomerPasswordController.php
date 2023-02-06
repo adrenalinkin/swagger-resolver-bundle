@@ -25,10 +25,12 @@ class CustomerPasswordController
 {
     /**
      * @Route(name="customers_password_create", path="/api/customers/{userId}/password", methods={"POST"})
+     *
      * @SWG\Post(
      *      path="/api/customers/{userId}/password",
      *      description="Create new password when not even set",
      *      deprecated=true,
+     *
      *      @SWG\Parameter(
      *          name="x-auth-token",
      *          in="header",
@@ -52,8 +54,10 @@ class CustomerPasswordController
      *          in="body",
      *          description="New password",
      *          required=true,
+     *
      *          @SWG\Schema(type="string", maxLength=30),
      *      ),
+     *
      *      @SWG\Response(response=204, description="Empty response when created successfully")
      * )
      */
@@ -63,10 +67,12 @@ class CustomerPasswordController
 
     /**
      * @Route(name="customers_password_reset", path="/api/customers/{userId}/password", methods={"PUT"})
+     *
      * @SWG\Put(
      *      path="/api/customers/{userId}/password",
      *      description="Reset password",
      *      deprecated=true,
+     *
      *      @SWG\Parameter(
      *          name="x-auth-token",
      *          in="header",
@@ -90,9 +96,11 @@ class CustomerPasswordController
      *          in="body",
      *          description="Body to change password",
      *          required=true,
+     *
      *          @SWG\Schema(
      *              type="object",
      *              required={"oldPassword", "newPassword"},
+     *
      *              @SWG\Property(
      *                  property="oldPassword",
      *                  type="string",
@@ -105,6 +113,7 @@ class CustomerPasswordController
      *              ),
      *          ),
      *      ),
+     *
      *      @SWG\Response(response=204, description="Empty response when reset successfully")
      * )
      */

@@ -30,9 +30,11 @@ class CustomerController
 {
     /**
      * @Route(name="customers_get", path="/api/customers", methods={"GET"})
+     *
      * @SWG\Get(
      *      path="/api/customers",
      *      description="Returns all customers",
+     *
      *      @SWG\Parameter(
      *          name="x-auth-token",
      *          in="header",
@@ -59,11 +61,14 @@ class CustomerController
      *          enum={100, 500, 1000},
      *          default=100,
      *      ),
+     *
      *      @SWG\Response(
      *          response=200,
      *          description="A list of customers",
+     *
      *          @SWG\Schema(
      *              type="array",
+     *
      *              @SWG\Items(ref="#/definitions/CustomerFull")
      *          ),
      *      ),
@@ -79,10 +84,12 @@ class CustomerController
 
     /**
      * @Route(name="customers_post", path="/api/customers", methods={"POST"})
+     *
      * @SWG\Post(
      *      path="/api/customers",
      *      method="POST",
      *      description="Create new customer",
+     *
      *      @SWG\Parameter(
      *          name="x-auth-token",
      *          in="header",
@@ -101,18 +108,23 @@ class CustomerController
      *          uniqueItems=true,
      *          minItems=1,
      *          maxItems=3,
+     *
      *          @SWG\Items(type="string", enum={"guest", "user", "admin"}),
      *      ),
+     *
      *      @SWG\Parameter(
      *          name="customer",
      *          in="body",
      *          description="Customer to add to the system",
      *          required=true,
+     *
      *          @SWG\Schema(ref="#/definitions/CustomerNew"),
      *      ),
+     *
      *      @SWG\Response(
      *          response=201,
      *          description="New customer ID",
+     *
      *          @SWG\Schema(ref="#/definitions/ResponseCreated"),
      *      )
      * )
@@ -123,9 +135,11 @@ class CustomerController
 
     /**
      * @Route(name="customers_get_one", path="/api/customers/{userId}", methods={"GET"}, requirements={"userId": "\d+"})
+     *
      * @SWG\Get(
      *      path="/api/customers/{userId}",
      *      description="Return customer by ID",
+     *
      *      @SWG\Parameter(
      *          name="x-auth-token",
      *          in="header",
@@ -144,9 +158,11 @@ class CustomerController
      *          minimum=0,
      *          exclusiveMinimum=true,
      *      ),
+     *
      *      @SWG\Response(
      *          response=200,
      *          description="Customer data",
+     *
      *          @SWG\Schema(ref="#/definitions/CustomerFull"),
      *      )
      * )
@@ -157,9 +173,11 @@ class CustomerController
 
     /**
      * @Route(name="customers_update", path="/api/customers/{userId}", methods={"PUT"}, requirements={"userId": "\d+"})
+     *
      * @SWG\Put(
      *      path="/api/customers/{userId}",
      *      description="Update customer",
+     *
      *      @SWG\Parameter(
      *          name="x-auth-token",
      *          in="header",
@@ -188,15 +206,19 @@ class CustomerController
      *          uniqueItems=true,
      *          minItems=1,
      *          maxItems=3,
+     *
      *          @SWG\Items(type="string", enum={"guest", "user", "admin"}),
      *      ),
+     *
      *      @SWG\Parameter(
      *          name="customer",
      *          in="body",
      *          description="Customer update",
      *          required=true,
+     *
      *          @SWG\Schema(ref="#/definitions/CustomerNew"),
      *      ),
+     *
      *      @SWG\Response(response=204, description="Empty response when updated successfully")
      * )
      */
@@ -206,11 +228,13 @@ class CustomerController
 
     /**
      * @Route(name="customers_patch", path="/api/customers/{userId}", methods={"PATCH"}, requirements={"userId": "\d+"})
+     *
      * @SWG\Patch(
      *      path="/api/customers/{userId}",
      *      description="Partial customer update in formData style",
      *      deprecated=true,
      *      consumes={"application/x-www-form-urlencoded"},
+     *
      *      @SWG\Parameter(
      *          name="x-auth-token",
      *          in="header",
@@ -239,8 +263,10 @@ class CustomerController
      *          uniqueItems=true,
      *          minItems=1,
      *          maxItems=3,
+     *
      *          @SWG\Items(type="string", enum={"guest", "user", "admin"}),
      *      ),
+     *
      *      @SWG\Parameter(
      *          name="name",
      *          in="formData",
@@ -264,6 +290,7 @@ class CustomerController
      *          maximum=100,
      *          exclusiveMaximum=true,
      *      ),
+     *
      *      @SWG\Response(response=204, description="Empty response when updated successfully")
      * )
      */
@@ -282,6 +309,7 @@ class CustomerController
      * @SWG\Delete(
      *      path="/api/customers/{userId}",
      *      description="Delete customer from the system",
+     *
      *      @SWG\Parameter(
      *          name="x-auth-token",
      *          in="header",
@@ -300,6 +328,7 @@ class CustomerController
      *          minimum=0,
      *          exclusiveMinimum=true,
      *      ),
+     *
      *      @SWG\Response(response=204, description="Empty response when removed successfully"),
      * )
      */

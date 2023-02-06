@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\DependencyInjection;
 
-use Closure;
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterLocationEnum;
 use Linkin\Bundle\SwaggerResolverBundle\Loader\SwaggerConfigurationLoaderInterface;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\MergeStrategyInterface;
@@ -84,7 +83,7 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    private function validationForConfigurationLoader(): Closure
+    private function validationForConfigurationLoader(): \Closure
     {
         return static function ($className) {
             if (!is_subclass_of($className, SwaggerConfigurationLoaderInterface::class)) {
@@ -95,7 +94,7 @@ class Configuration implements ConfigurationInterface
         };
     }
 
-    private function validationForPathMergeStrategy(): Closure
+    private function validationForPathMergeStrategy(): \Closure
     {
         return static function ($className) {
             if (!is_subclass_of($className, MergeStrategyInterface::class)) {

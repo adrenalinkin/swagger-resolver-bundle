@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Validator;
 
-use DateTime;
 use EXSyst\Component\Swagger\Schema;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
@@ -39,9 +38,9 @@ class FormatDateTimeValidator implements SwaggerValidatorInterface
 
         $value = (string) $value;
 
-        DateTime::createFromFormat(\DATE_ATOM, $value);
+        \DateTime::createFromFormat(\DATE_ATOM, $value);
 
-        $errors = DateTime::getLastErrors();
+        $errors = \DateTime::getLastErrors();
 
         if (false !== $errors && 0 < $errors['error_count']) {
             $message = sprintf('Property "%s" contains invalid date-time format', $propertyName);

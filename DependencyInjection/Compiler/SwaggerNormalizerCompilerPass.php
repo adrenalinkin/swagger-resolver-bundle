@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Linkin\Bundle\SwaggerResolverBundle\DependencyInjection\Compiler;
 
 use Linkin\Bundle\SwaggerResolverBundle\Builder\SwaggerResolverBuilder;
-use SplPriorityQueue;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -35,7 +34,7 @@ class SwaggerNormalizerCompilerPass implements CompilerPassInterface
             return;
         }
 
-        $normalizerQueue = new SplPriorityQueue();
+        $normalizerQueue = new \SplPriorityQueue();
 
         foreach ($container->findTaggedServiceIds(self::TAG) as $id => $attributes) {
             $normalizerQueue->insert(new Reference($id), $attributes[0]['priority'] ?? 0);

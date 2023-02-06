@@ -215,6 +215,36 @@ $data = $swaggerResolver->resolve(json_decode($request->getContent(), true));
 класс, реализующий интерфейс [SwaggerNormalizerInterface](./Normalizer/SwaggerNormalizerInterface.php) и
 зарегистрировать его с тегом `linkin_swagger_resolver.normalizer`.
 
+### Запуск тестов и инструментов статического анализа
+Скачать проект:
+```bash
+git clone git@github.com:adrenalinkin/swagger-resolver-bundle.git
+cd swagger-resolver-bundle
+```
+
+Пройти [по инструкции](https://gist.github.com/adrenalinkin/35176a7b52b996666c4a36384fd536ad#file-an-instruction-md)
+для настройки простого docker контейнера.
+
+Установить Composer зависимости:
+```bash
+composer update
+```
+
+Для запуска тестов выполнить:
+```bash
+bin/simple-phpunit
+```
+
+Для запуска [PHP-CS-Fixer](https://github.com/PHP-CS-Fixer/PHP-CS-Fixer) выполнить:
+```bash
+php-cs-fixer fix --diff
+```
+
+Для запуска [composer-normalize](https://github.com/ergebnis/composer-normalize) выполнить:
+```bash
+composer-normalize --dry-run
+```
+
 Лицензия
 --------
 

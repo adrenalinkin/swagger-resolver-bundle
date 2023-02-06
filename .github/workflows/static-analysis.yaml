@@ -1,9 +1,9 @@
-name: Lint
+name: Static analysis
 
 on: [push, pull_request]
 
 jobs:
-    php-cs-fixer:
+    static-analysis:
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout
@@ -14,10 +14,10 @@ jobs:
                 with:
                     php-version: 7.4
                     coverage: none
-                    tools: php-cs-fixer:2.19.3
+                    tools: php-cs-fixer:^3.14
 
             -   name: Run PHP-CS-Fixer
-                run: php-cs-fixer fix --dry-run --diff
+                run: php-cs-fixer fix --dry-run
 
             -   name: Run composer normalize
                 run: |

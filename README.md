@@ -216,6 +216,36 @@ All normalizers registered as tagging services. To create your own normalizer it
 which implements [SwaggerNormalizerInterface](./Normalizer/SwaggerNormalizerInterface.php) and then
 register it under the tag `linkin_swagger_resolver.normalizer`.
 
+### Running the tests and static analysis tools
+Download the project:
+```bash
+git clone git@github.com:adrenalinkin/swagger-resolver-bundle.git
+cd swagger-resolver-bundle
+```
+
+Follow this [instruction](https://gist.github.com/adrenalinkin/35176a7b52b996666c4a36384fd536ad#file-an-instruction-md)
+for set up simple docker container.
+
+Install composer dependencies:
+```bash
+composer update
+```
+
+For run the test suite:
+```bash
+bin/simple-phpunit
+```
+
+For run the [PHP-CS-Fixer](https://github.com/PHP-CS-Fixer/PHP-CS-Fixer):
+```bash
+php-cs-fixer fix --diff
+```
+
+For run the [composer-normalize](https://github.com/ergebnis/composer-normalize):
+```bash
+composer-normalize --dry-run
+```
+
 License
 -------
 
