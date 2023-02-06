@@ -14,13 +14,10 @@ jobs:
                 with:
                     php-version: 7.4
                     coverage: none
-                    tools: php-cs-fixer:^3.14
+                    tools: php-cs-fixer:3.x, composer-normalize:2.x
 
             -   name: Run PHP-CS-Fixer
                 run: php-cs-fixer fix --dry-run
 
             -   name: Run composer normalize
-                run: |
-                    composer global config allow-plugins.ergebnis/composer-normalize true
-                    composer global require ergebnis/composer-normalize
-                    composer normalize --dry-run
+                run: composer normalize --dry-run
