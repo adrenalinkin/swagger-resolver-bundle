@@ -62,11 +62,14 @@ class CustomerController
      *     enum={100, 500, 1000},
      *     default=100,
      * )
+     *
      * @SWG\Response(
      *     response=200,
      *     description="A list of customers",
+     *
      *     @SWG\Schema(
      *         type="array",
+     *
      *         @SWG\Items(ref=@Model(type=CustomerFull::class)),
      *     ),
      * )
@@ -102,18 +105,23 @@ class CustomerController
      *     uniqueItems=true,
      *     minItems=1,
      *     maxItems=3,
+     *
      *     @SWG\Items(type="string", enum={"guest", "user", "admin"}),
      * )
+     *
      * @SWG\Parameter(
      *     name="customer",
      *     in="body",
      *     description="Customer to add to the system",
      *     required=true,
+     *
      *     @Model(type=CustomerNew::class),
      * )
+     *
      * @SWG\Response(
      *     response=201,
      *     description="New customer ID",
+     *
      *     @Model(type=ResponseCreated::class),
      * )
      */
@@ -145,9 +153,11 @@ class CustomerController
      *     minimum=0,
      *     exclusiveMinimum=true,
      * )
+     *
      * @SWG\Response(
      *     response=200,
      *     description="Customer data",
+     *
      *     @Model(type=CustomerFull::class),
      * )
      */
@@ -189,15 +199,19 @@ class CustomerController
      *     uniqueItems=true,
      *     minItems=1,
      *     maxItems=3,
+     *
      *     @SWG\Items(type="string", enum={"guest", "user", "admin"}),
      * )
+     *
      * @SWG\Parameter(
      *     name="customer",
      *     in="body",
      *     description="Customer update",
      *     required=true,
+     *
      *     @Model(type=CustomerNew::class),
      * )
+     *
      * @SWG\Response(response=204, description="Empty response when updated successfully")
      */
     public function update(): Response
@@ -240,8 +254,10 @@ class CustomerController
      *     uniqueItems=true,
      *     minItems=1,
      *     maxItems=3,
+     *
      *     @SWG\Items(type="string", enum={"guest", "user", "admin"}),
      * )
+     *
      * @SWG\Parameter(
      *     name="name",
      *     in="formData",
@@ -265,6 +281,7 @@ class CustomerController
      *     maximum=100,
      *     exclusiveMaximum=true,
      * )
+     *
      * @SWG\Response(response=204, description="Empty response when updated successfully")
      */
     public function updatePartial(): Response
@@ -300,6 +317,7 @@ class CustomerController
      *     minimum=0,
      *     exclusiveMinimum=true,
      * )
+     *
      * @SWG\Response(response=204, description="Empty response when removed successfully")
      */
     public function delete(): Response

@@ -35,6 +35,7 @@ class Cart
      * @SWG\Property(
      *      minItems=0,
      *      maxItems=5,
+     *
      *      @SWG\Items(ref="#/definitions/CartItem")
      * )
      */

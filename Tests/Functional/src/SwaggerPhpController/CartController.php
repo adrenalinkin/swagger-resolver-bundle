@@ -25,9 +25,11 @@ class CartController
 {
     /**
      * @Route(name="cart_add_item", path="/api/cart", methods={"PUT"})
+     *
      * @SWG\Put(
      *      path="/api/cart",
      *      description="Add new item into cart or increase count of existed",
+     *
      *      @SWG\Parameter(
      *          name="x-auth-token",
      *          in="header",
@@ -41,11 +43,14 @@ class CartController
      *          in="body",
      *          description="Item data to add to the cart",
      *          required=true,
+     *
      *          @SWG\Schema(ref="#/definitions/CartItem"),
      *      ),
+     *
      *      @SWG\Response(
      *          response=201,
      *          description="New item into cart ID",
+     *
      *          @SWG\Schema(ref="#/definitions/ResponseCreated"),
      *      )
      * )
@@ -56,9 +61,11 @@ class CartController
 
     /**
      * @Route(name="cart_get", path="/api/cart", methods={"GET"})
+     *
      * @SWG\Get(
      *      path="/api/cart",
      *      description="Returns all items from the cart",
+     *
      *      @SWG\Parameter(
      *          name="x-auth-token",
      *          in="header",
@@ -67,9 +74,11 @@ class CartController
      *          type="string",
      *          pattern="^\w{36}$",
      *      ),
+     *
      *      @SWG\Response(
      *          response=200,
      *          description="Cart data",
+     *
      *          @SWG\Schema(ref="#/definitions/Cart"),
      *      )
      * )

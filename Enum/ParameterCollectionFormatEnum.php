@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Enum;
 
-use RuntimeException;
-
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
@@ -45,7 +43,7 @@ class ParameterCollectionFormatEnum
             case self::MULTI:
                 return '&';
             default:
-                throw new RuntimeException(sprintf('Unexpected collection format: %s', $collectionFormat));
+                throw new \RuntimeException(sprintf('Unexpected collection format: %s', $collectionFormat));
         }
     }
 }

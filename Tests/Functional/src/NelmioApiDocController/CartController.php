@@ -46,11 +46,14 @@ class CartController
      *     in="body",
      *     description="Item data to add to the cart",
      *     required=true,
+     *
      *     @Model(type=CartItem::class),
      * )
+     *
      * @SWG\Response(
      *     response=201,
      *     description="New item into cart ID",
+     *
      *     @Model(type=ResponseCreated::class),
      * )
      */
@@ -72,9 +75,11 @@ class CartController
      *     type="string",
      *     pattern="^\w{36}$",
      * )
+     *
      * @SWG\Response(
      *     response=200,
      *     description="Cart data",
+     *
      *     @Model(type=Cart::class),
      * )
      */

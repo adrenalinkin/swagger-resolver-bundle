@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Normalizer;
 
-use Closure;
 use EXSyst\Component\Swagger\Schema;
 
 /**
@@ -32,5 +31,5 @@ interface SwaggerNormalizerInterface
      *
      * Returns closure for normalizing property
      */
-    public function getNormalizer(Schema $propertySchema, string $propertyName, bool $isRequired): Closure;
+    public function getNormalizer(Schema $propertySchema, string $propertyName, bool $isRequired): \Closure;
 }

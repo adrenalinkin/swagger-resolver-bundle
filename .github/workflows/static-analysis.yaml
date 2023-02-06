@@ -1,0 +1,23 @@
+name: Static analysis
+
+on: [push, pull_request]
+
+jobs:
+    static-analysis:
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v2
+
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: 8.1
+                    coverage: none
+                    tools: php-cs-fixer:3.x, composer-normalize:2.x
+
+            -   name: Run PHP-CS-Fixer
+                run: php-cs-fixer fix --dry-run
+
+            -   name: Run composer normalize
+                run: composer-normalize --dry-run

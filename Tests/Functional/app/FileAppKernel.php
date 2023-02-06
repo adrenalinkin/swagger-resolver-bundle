@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\app;
 
-use Closure;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController\CartController;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController\CustomerController;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController\CustomerPasswordController;
@@ -24,7 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class FileAppKernel extends AbstractKernel
 {
-    public function __construct(string $varDir, array $config, ?Closure $closure, string $environment, bool $debug)
+    public function __construct(string $varDir, array $config, ?\Closure $closure, string $environment, bool $debug)
     {
         parent::__construct($varDir, $config, $closure, $environment, $debug);
 

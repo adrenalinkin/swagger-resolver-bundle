@@ -15,7 +15,6 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Enum;
 
 use Linkin\Bundle\SwaggerResolverBundle\Enum\ParameterCollectionFormatEnum;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -44,7 +43,7 @@ class ParameterCollectionFormatEnumTest extends TestCase
 
     public function testFailGetDelimiterByUnexpectedFormat(): void
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         ParameterCollectionFormatEnum::getDelimiter('_undefined_');
     }
 }

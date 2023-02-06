@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\app;
 
-use Closure;
 use Linkin\Bundle\SwaggerResolverBundle\LinkinSwaggerResolverBundle;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrategy;
 use Psr\Log\NullLogger;
@@ -33,7 +32,7 @@ abstract class AbstractKernel extends Kernel
     private $varDir;
 
     /**
-     * @var Closure
+     * @var \Closure
      */
     private $closure;
 
@@ -47,7 +46,7 @@ abstract class AbstractKernel extends Kernel
      */
     private $prefix;
 
-    public function __construct(string $varDir, array $config, ?Closure $closure, string $environment, bool $debug)
+    public function __construct(string $varDir, array $config, ?\Closure $closure, string $environment, bool $debug)
     {
         $this->varDir = $varDir;
         $this->config = $config;
@@ -106,7 +105,7 @@ abstract class AbstractKernel extends Kernel
                 'path_merge_strategy' => ReplaceLastWinMergeStrategy::class,
             ]);
 
-            if ($this->closure instanceof Closure) {
+            if ($this->closure instanceof \Closure) {
                 \call_user_func($this->closure, $container);
             }
 

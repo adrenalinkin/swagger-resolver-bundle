@@ -43,6 +43,7 @@ class CustomerNew
      *      uniqueItems=true,
      *      minItems=1,
      *      maxItems=2,
+     *
      *      @SWG\Items(
      *          type="string",
      *          enum={"guest", "user", "admin"},

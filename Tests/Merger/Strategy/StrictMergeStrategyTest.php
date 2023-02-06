@@ -15,7 +15,6 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Merger\Strategy;
 
 use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\StrictMergeStrategy;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -60,7 +59,7 @@ class StrictMergeStrategyTest extends TestCase
 
     public function testFailToMergerParametersWithSameName(): void
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
 
         $this->sut->addParameter('path', 'name', ['type' => 'string'], true);
         $this->sut->addParameter('query', 'name', ['type' => 'string'], false);

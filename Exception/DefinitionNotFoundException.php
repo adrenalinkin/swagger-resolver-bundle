@@ -13,12 +13,10 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Exception;
 
-use RuntimeException;
-
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
-class DefinitionNotFoundException extends RuntimeException
+class DefinitionNotFoundException extends \RuntimeException
 {
     public function __construct(string $className)
     {
