@@ -41,7 +41,7 @@ jobs:
             -   name: Install Symfony Flex
                 run: |
                     composer global config allow-plugins.symfony/flex true
-                    composer global require -o --no-interaction --no-progress symfony/flex:"^1.11 || ^2.0"
+                    composer global require -o --no-interaction --no-progress symfony/flex:^1.11
 
             -   name: Require Symfony version
                 run: composer config extra.symfony.require ${{ matrix.symfony }}
