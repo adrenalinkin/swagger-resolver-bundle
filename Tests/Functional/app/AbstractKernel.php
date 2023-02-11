@@ -15,6 +15,7 @@ namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\app;
 
 use Linkin\Bundle\SwaggerResolverBundle\LinkinSwaggerResolverBundle;
 use Linkin\Bundle\SwaggerResolverBundle\Merger\Strategy\ReplaceLastWinMergeStrategy;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\ExceptionListener;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -46,12 +47,17 @@ abstract class AbstractKernel extends Kernel
      */
     private $prefix;
 
+    /**
+     * @var int
+     */
+    private static $cacheIncrement = 0;
+
     public function __construct(string $varDir, array $config, ?\Closure $closure, string $environment, bool $debug)
     {
         $this->varDir = $varDir;
         $this->config = $config;
         $this->closure = $closure;
-        $this->prefix = str_replace('\\', '_', static::class);
+        $this->prefix = str_replace('\\', '_', static::class).(++self::$cacheIncrement);
 
         $this->copyLockFile();
 
@@ -94,6 +100,7 @@ abstract class AbstractKernel extends Kernel
     {
         $loader->load(function (ContainerBuilder $container) {
             $container->register('logger', NullLogger::class);
+            $container->register('exception_listener', ExceptionListener::class)->addTag('kernel.event_subscriber');
 
             $container->loadFromExtension('framework', [
                 'secret' => 'test',
