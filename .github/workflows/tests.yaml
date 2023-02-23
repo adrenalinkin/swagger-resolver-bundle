@@ -49,23 +49,31 @@ jobs:
             -   name: Update composer dependencies
                 run: composer update -o --no-interaction --no-progress ${{ matrix.composer-flags }}
 
-            -   name: Run test suite
-                run: ./vendor/bin/simple-phpunit -v --coverage-clover var/build/clover.xml
+            -   name: Run unit test suite
+                run: vendor/bin/simple-phpunit --coverage-clover var/build/clover-unit.xml --testsuite=unit
+
+            -   name: Run functional test suite
+                run: vendor/bin/simple-phpunit --coverage-clover var/build/clover-functional.xml --testsuite=functional
 
             -   name: Install php-coveralls
                 run: composer global require -o --no-interaction --no-progress php-coveralls/php-coveralls
 
-            -   name: Upload coverage results to Coveralls
+            -   name: Upload Unit coverage results to Coveralls
                 if: matrix.coverage
-                uses: nick-invision/retry@v2
                 env:
                     COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                     COVERALLS_PARALLEL: true
-                    COVERALLS_FLAG_NAME: "PHP${{ matrix.php }} Symfony${{ matrix.symfony}}"
-                with:
-                    timeout_seconds: 60
-                    max_attempts: 3
-                    command: php-coveralls -x var/build/clover.xml -o var/build/upload.json -v
+                    COVERALLS_FLAG_NAME: "Unit PHP${{ matrix.php }} Symfony${{ matrix.symfony}}"
+                run: php-coveralls -x var/build/clover-unit.xml -o var/build/upload.json -v
+
+            -   name: Upload Functional coverage results to Coveralls
+                if: matrix.coverage
+                env:
+                    COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                    COVERALLS_PARALLEL: true
+                    COVERALLS_FLAG_NAME: "Functional PHP${{ matrix.php }} Symfony${{ matrix.symfony}}"
+                run: php-coveralls -x var/build/clover-functional.xml -o var/build/upload.json -v
+
 
     coveralls-finish:
         needs: tests
