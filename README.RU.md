@@ -232,7 +232,16 @@ composer update
 
 Для запуска тестов выполнить:
 ```bash
+# все тесты
 bin/simple-phpunit
+# только Unit
+bin/simple-phpunit --testsuite=unit
+# только Functional используется loader SwaggerPhp
+bin/simple-phpunit --testsuite=functional
+# только Functional используется loader NelmioApiDoc
+FORCE_LOADER=NelmioApiDoc bin/simple-phpunit --testsuite=functional
+# только Functional используется loader FileAppKernel
+FORCE_LOADER=FileAppKernel bin/simple-phpunit --testsuite=functional
 ```
 
 Для запуска [PHP-CS-Fixer](https://github.com/PHP-CS-Fixer/PHP-CS-Fixer) выполнить:

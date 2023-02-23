@@ -52,8 +52,14 @@ jobs:
             -   name: Run unit test suite
                 run: vendor/bin/simple-phpunit --coverage-clover var/build/clover-unit.xml --testsuite=unit
 
-            -   name: Run functional test suite
+            -   name: Run functional test suite for SwaggerPhpAppKernel
                 run: vendor/bin/simple-phpunit --coverage-clover var/build/clover-functional.xml --testsuite=functional
+
+            -   name: Run functional test suite for NelmioApiDoc
+                run: FORCE_LOADER=NelmioApiDoc vendor/bin/simple-phpunit --testsuite=functional
+
+            -   name: Run functional test suite for FileAppKernel
+                run: FORCE_LOADER=FileAppKernel vendor/bin/simple-phpunit --testsuite=functional
 
             -   name: Install php-coveralls
                 run: composer global require -o --no-interaction --no-progress php-coveralls/php-coveralls

@@ -13,21 +13,14 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional;
 
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\app\FileAppKernel;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\app\NelmioAppKernel;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\app\SwaggerPhpAppKernel;
-
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
  */
 class CustomerGetAllTest extends SwaggerResolverWebTestCase
 {
-    /**
-     * @dataProvider canSendRequestWithDifferentApplicationsDataProvider
-     */
-    public function testCanSendRequestWithDifferentApplications(array $configuration): void
+    public function testCanSendRequest(): void
     {
-        $client = self::createClient($configuration);
+        $client = self::createClient();
         $expected = [
             'discount' => 30,
             'rating' => 3.5,
@@ -49,12 +42,5 @@ class CustomerGetAllTest extends SwaggerResolverWebTestCase
 
         self::assertSame(200, $client->getResponse()->getStatusCode());
         self::assertSame([$expected], json_decode($client->getResponse()->getContent(), true));
-    }
-
-    public function canSendRequestWithDifferentApplicationsDataProvider(): iterable
-    {
-        yield [['kernelClass' => NelmioAppKernel::class]];
-        yield [['kernelClass' => SwaggerPhpAppKernel::class]];
-        yield [['kernelClass' => FileAppKernel::class]];
     }
 }
