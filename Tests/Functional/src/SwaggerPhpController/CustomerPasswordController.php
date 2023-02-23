@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController;
 
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\AbstractCustomerPasswordController;
 use Swagger\Annotations as SWG;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -21,7 +23,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @SWG\Tag(name="password")
  */
-class CustomerPasswordController
+class CustomerPasswordController extends AbstractCustomerPasswordController
 {
     /**
      * @Route(name="customers_password_create", path="/api/customers/{userId}/password", methods={"POST"})
@@ -61,8 +63,9 @@ class CustomerPasswordController
      *      @SWG\Response(response=204, description="Empty response when created successfully")
      * )
      */
-    public function create(): void
+    public function create(): Response
     {
+        return parent::create();
     }
 
     /**
@@ -117,7 +120,8 @@ class CustomerPasswordController
      *      @SWG\Response(response=204, description="Empty response when reset successfully")
      * )
      */
-    public function reset(): void
+    public function reset(): Response
     {
+        return parent::reset();
     }
 }

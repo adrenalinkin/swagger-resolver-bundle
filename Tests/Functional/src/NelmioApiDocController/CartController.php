@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\NelmioApiDocController;
 
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\AbstractCartController;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Models\Cart;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Models\CartItem;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Models\ResponseCreated;
@@ -26,7 +27,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @SWG\Tag(name="cart")
  */
-class CartController
+class CartController extends AbstractCartController
 {
     /**
      * Add new item into cart or increase count of existed.
@@ -59,7 +60,7 @@ class CartController
      */
     public function addItem(): Response
     {
-        return new Response();
+        return parent::addItem();
     }
 
     /**
@@ -85,6 +86,6 @@ class CartController
      */
     public function getCartData(): Response
     {
-        return new Response();
+        return parent::getCartData();
     }
 }

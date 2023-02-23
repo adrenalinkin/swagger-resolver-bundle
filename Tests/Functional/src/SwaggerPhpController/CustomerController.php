@@ -14,8 +14,7 @@ declare(strict_types=1);
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController;
 
 use Linkin\Bundle\SwaggerResolverBundle\Factory\SwaggerResolverFactory;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Models\CustomerFull;
-use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Models\ResponseCreated;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\AbstractCustomerController;
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +26,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @SWG\Tag(name="customer")
  */
-class CustomerController
+class CustomerController extends AbstractCustomerController
 {
     /**
      * @Route(name="customers_get", path="/api/customers", methods={"GET"})
@@ -75,33 +74,9 @@ class CustomerController
      *      ),
      * )
      */
-    public function getAll(Request $request, SwaggerResolverFactory $factory): Response
+    public function getAll(Request $request, SwaggerResolverFactory $factory): JsonResponse
     {
-        $requestResolver = $factory->createForRequest($request);
-        $requestResolver->resolve([
-            'page' => $request->query->getInt('page'),
-            'perPage' => $request->query->getInt('perPage'),
-            'x-auth-token' => $request->headers->get('x-auth-token'),
-        ]);
-
-        $responseDataItem = [
-            'id' => 1,
-            'name' => 'Homer',
-            'secondName' => 'Simpson',
-            'roles' => ['guest'],
-            'email' => 'homer@crud.com',
-            'isEmailConfirmed' => true,
-            'birthday' => '1965-05-12',
-            'happyHour' => '14:00:00',
-            'discount' => 30,
-            'rating' => 3.5,
-            'registeredAt' => '2000-10-11T19:57:31Z',
-            'lastVisitedAt' => '665701200',
-        ];
-        $responseResolver = $factory->createForDefinition(CustomerFull::class);
-        $responseResolved = $responseResolver->resolve($responseDataItem);
-
-        return new JsonResponse([$responseResolved]);
+        return parent::getAll($request, $factory);
     }
 
     /**
@@ -153,16 +128,7 @@ class CustomerController
      */
     public function create(Request $request, SwaggerResolverFactory $factory): JsonResponse
     {
-        $requestResolver = $factory->createForRequest($request);
-        $requestData = json_decode($request->getContent(), true);
-        $requestData['x-auth-token'] = $request->headers->get('x-auth-token');
-        $requestResolver->resolve($requestData);
-
-        $responseData = ['id' => 1];
-        $responseResolver = $factory->createForDefinition(ResponseCreated::class);
-        $responseResolved = $responseResolver->resolve($responseData);
-
-        return new JsonResponse($responseResolved);
+        return parent::create($request, $factory);
     }
 
     /**
@@ -199,8 +165,9 @@ class CustomerController
      *      )
      * )
      */
-    public function getOne(): void
+    public function getOne(): Response
     {
+        return parent::getOne();
     }
 
     /**
@@ -254,8 +221,9 @@ class CustomerController
      *      @SWG\Response(response=204, description="Empty response when updated successfully")
      * )
      */
-    public function update(): void
+    public function update(): Response
     {
+        return parent::update();
     }
 
     /**
@@ -326,8 +294,9 @@ class CustomerController
      *      @SWG\Response(response=204, description="Empty response when updated successfully")
      * )
      */
-    public function updatePartial(): void
+    public function updatePartial(): Response
     {
+        return parent::updatePartial();
     }
 
     /**
@@ -364,7 +333,8 @@ class CustomerController
      *      @SWG\Response(response=204, description="Empty response when removed successfully"),
      * )
      */
-    public function delete(): void
+    public function delete(): Response
     {
+        return parent::delete();
     }
 }
