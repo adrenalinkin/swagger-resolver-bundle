@@ -171,7 +171,7 @@ class SwaggerResolverBuilderTest extends TestCase
             'password' => 'paSSword',
             'email' => 'homer@gmail.com',
             'birthday' => '1965-05-12',
-            'happyHour' => '14:00',
+            'happyHour' => '14:00:00',
             'discount' => 30,
         ];
 

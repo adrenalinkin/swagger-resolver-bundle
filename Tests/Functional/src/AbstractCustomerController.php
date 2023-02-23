@@ -29,8 +29,10 @@ class AbstractCustomerController
     {
         $requestResolver = $factory->createForRequest($request);
         $requestResolver->resolve([
-            'page' => $request->query->getInt('page'),
+            'page' => $request->query->get('page'),
             'perPage' => $request->query->getInt('perPage'),
+            // TODO: fix problem with normalization and enum in query
+            // 'perPage' => $request->query->get('perPage'),
             'x-auth-token' => $request->headers->get('x-auth-token'),
         ]);
 
