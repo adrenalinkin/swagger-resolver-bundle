@@ -165,9 +165,9 @@ class CustomerController extends AbstractCustomerController
      *      )
      * )
      */
-    public function getOne(): Response
+    public function getOne(Request $request, SwaggerResolverFactory $factory): JsonResponse
     {
-        return parent::getOne();
+        return parent::getOne($request, $factory);
     }
 
     /**

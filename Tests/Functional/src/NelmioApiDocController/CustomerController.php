@@ -159,9 +159,9 @@ class CustomerController extends AbstractCustomerController
      *     @Model(type=CustomerFull::class),
      * )
      */
-    public function getOne(): Response
+    public function getOne(Request $request, SwaggerResolverFactory $factory): JsonResponse
     {
-        return parent::getOne();
+        return parent::getOne($request, $factory);
     }
 
     /**

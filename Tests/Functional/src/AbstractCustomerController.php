@@ -70,9 +70,32 @@ class AbstractCustomerController
         return new JsonResponse($responseResolved);
     }
 
-    public function getOne(): Response
+    public function getOne(Request $request, SwaggerResolverFactory $factory): JsonResponse
     {
-        return new Response();
+        $requestResolver = $factory->createForRequest($request);
+        $requestResolver->resolve([
+            'userId' => $request->attributes->get('userId'),
+            'x-auth-token' => $request->headers->get('x-auth-token'),
+        ]);
+
+        $responseDataItem = [
+            'id' => 1,
+            'name' => 'Homer',
+            'secondName' => 'Simpson',
+            'roles' => ['guest'],
+            'email' => 'homer@crud.com',
+            'isEmailConfirmed' => true,
+            'birthday' => '1965-05-12',
+            'happyHour' => '14:00:00',
+            'discount' => 30,
+            'rating' => 3.5,
+            'registeredAt' => '2000-10-11T19:57:31Z',
+            'lastVisitedAt' => '665701200',
+        ];
+        $responseResolver = $factory->createForDefinition(CustomerFull::class);
+        $responseResolved = $responseResolver->resolve($responseDataItem);
+
+        return new JsonResponse($responseResolved);
     }
 
     public function update(): Response
