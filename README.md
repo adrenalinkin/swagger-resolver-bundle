@@ -233,7 +233,16 @@ composer update
 
 For run the test suite:
 ```bash
+# all tests
 bin/simple-phpunit
+# Unit tests only
+bin/simple-phpunit --testsuite=unit
+# Functional tests only with SwaggerPhp loader
+bin/simple-phpunit --testsuite=functional
+# Functional tests only with NelmioApiDoc loader
+FORCE_LOADER=NelmioApiDoc bin/simple-phpunit --testsuite=functional
+# Functional tests only with FileAppKernel loader
+FORCE_LOADER=FileAppKernel bin/simple-phpunit --testsuite=functional
 ```
 
 For run the [PHP-CS-Fixer](https://github.com/PHP-CS-Fixer/PHP-CS-Fixer):

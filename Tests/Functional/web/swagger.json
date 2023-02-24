@@ -691,7 +691,7 @@
                 "happyHour": {
                     "type": "string",
                     "format": "time",
-                    "default": "09:00"
+                    "default": "09:00:00"
                 },
                 "discount": {
                     "type": "integer",

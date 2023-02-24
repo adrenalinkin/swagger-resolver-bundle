@@ -42,7 +42,11 @@ class SwaggerResolverWebTestCase extends WebTestCase
 
     protected static function getKernelClass(string $kernelClass = SwaggerPhpAppKernel::class): string
     {
-        return $kernelClass;
+        if (empty($_ENV['FORCE_LOADER'])) {
+            return $kernelClass;
+        }
+
+        return 'Linkin\\Bundle\\SwaggerResolverBundle\\Tests\\Functional\app\\'.$_ENV['FORCE_LOADER'];
     }
 
     protected static function createKernel(array $options = [])

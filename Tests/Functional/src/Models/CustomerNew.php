@@ -76,7 +76,7 @@ class CustomerNew
     /**
      * @var string
      *
-     * @SWG\Property(format="time", default="09:00")
+     * @SWG\Property(format="time", default="09:00:00")
      */
     public $happyHour;
 

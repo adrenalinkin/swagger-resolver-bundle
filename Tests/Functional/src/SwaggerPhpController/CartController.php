@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\SwaggerPhpController;
 
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\AbstractCartController;
 use Swagger\Annotations as SWG;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -21,7 +23,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @SWG\Tag(name="cart")
  */
-class CartController
+class CartController extends AbstractCartController
 {
     /**
      * @Route(name="cart_add_item", path="/api/cart", methods={"PUT"})
@@ -55,8 +57,9 @@ class CartController
      *      )
      * )
      */
-    public function addItem(): void
+    public function addItem(): Response
     {
+        return parent::addItem();
     }
 
     /**
@@ -83,7 +86,8 @@ class CartController
      *      )
      * )
      */
-    public function getCartData(): void
+    public function getCartData(): Response
     {
+        return parent::getCartData();
     }
 }

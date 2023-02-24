@@ -64,7 +64,12 @@ class SwaggerCachedConfigurationTest extends TestCase
         foreach ($expectedDefinitions->getIterator() as $name => $expectedSchema) {
             $cacheFile = self::PATH_TO_CACHE.'/definitions/'.$name.'_'.md5($name).'.php';
 
-            self::assertFileNotExists($cacheFile);
+            if (method_exists($this, 'assertFileDoesNotExist')) {
+                self::assertFileDoesNotExist($cacheFile);
+            } else {
+                self::assertFileNotExists($cacheFile);
+            }
+
             $loadedDefinitionSchema = $this->sut->getDefinition($name);
             self::assertFileExists($cacheFile);
 
@@ -83,7 +88,12 @@ class SwaggerCachedConfigurationTest extends TestCase
                 $routeName = FixturesProvider::getRouteName($path, $method);
                 $cacheFile = self::PATH_TO_CACHE.'/paths/'.$routeName.'/'.$method.'_'.md5($routeName.$method).'.php';
 
-                self::assertFileNotExists($cacheFile);
+                if (method_exists($this, 'assertFileDoesNotExist')) {
+                    self::assertFileDoesNotExist($cacheFile);
+                } else {
+                    self::assertFileNotExists($cacheFile);
+                }
+
                 $pathDefinitionSchema = $this->sut->getPathDefinition($routeName, $method);
                 self::assertFileExists($cacheFile);
 
@@ -94,7 +104,11 @@ class SwaggerCachedConfigurationTest extends TestCase
 
     public function testCanWarmUp(): void
     {
-        self::assertDirectoryNotExists(self::PATH_TO_CACHE);
+        if (method_exists($this, 'assertDirectoryDoesNotExist')) {
+            self::assertDirectoryDoesNotExist(self::PATH_TO_CACHE);
+        } else {
+            self::assertDirectoryNotExists(self::PATH_TO_CACHE);
+        }
 
         ob_start();
         $this->sut->warmUp('any');
@@ -151,7 +165,12 @@ class SwaggerCachedConfigurationTest extends TestCase
         $sut->warmUp('any');
         $output = ob_get_clean();
 
-        self::assertRegExp("/.*{$definitionName}.*/", $output);
-        self::assertRegExp("/.*{$schemaName}.*/", $output);
+        if (method_exists($this, 'assertMatchesRegularExpression')) {
+            self::assertMatchesRegularExpression("/.*{$definitionName}.*/", $output);
+            self::assertMatchesRegularExpression("/.*{$schemaName}.*/", $output);
+        } else {
+            self::assertRegExp("/.*{$definitionName}.*/", $output);
+            self::assertRegExp("/.*{$schemaName}.*/", $output);
+        }
     }
 }

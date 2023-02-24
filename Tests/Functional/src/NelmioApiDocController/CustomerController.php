@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\NelmioApiDocController;
 
 use Linkin\Bundle\SwaggerResolverBundle\Factory\SwaggerResolverFactory;
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\AbstractCustomerController;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Models\CustomerFull;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Models\CustomerNew;
 use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\Models\ResponseCreated;
@@ -29,7 +30,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @SWG\Tag(name="customer")
  */
-class CustomerController
+class CustomerController extends AbstractCustomerController
 {
     /**
      * Returns all customers.
@@ -74,12 +75,9 @@ class CustomerController
      *     ),
      * )
      */
-    public function getAll(Request $request, SwaggerResolverFactory $factory): Response
+    public function getAll(Request $request, SwaggerResolverFactory $factory): JsonResponse
     {
-        $swaggerResolver = $factory->createForDefinition(CustomerFull::class);
-        $data = $swaggerResolver->resolve(json_decode($request->getContent(), true));
-
-        return new JsonResponse([$data]);
+        return parent::getAll($request, $factory);
     }
 
     /**
@@ -125,9 +123,9 @@ class CustomerController
      *     @Model(type=ResponseCreated::class),
      * )
      */
-    public function create(): Response
+    public function create(Request $request, SwaggerResolverFactory $factory): JsonResponse
     {
-        return new Response();
+        return parent::create($request, $factory);
     }
 
     /**
@@ -161,9 +159,9 @@ class CustomerController
      *     @Model(type=CustomerFull::class),
      * )
      */
-    public function getOne(): Response
+    public function getOne(Request $request, SwaggerResolverFactory $factory): JsonResponse
     {
-        return new Response();
+        return parent::getOne($request, $factory);
     }
 
     /**
@@ -216,7 +214,7 @@ class CustomerController
      */
     public function update(): Response
     {
-        return new Response();
+        return parent::update();
     }
 
     /**
@@ -286,7 +284,7 @@ class CustomerController
      */
     public function updatePartial(): Response
     {
-        return new Response();
+        return parent::updatePartial();
     }
 
     /**
@@ -322,6 +320,6 @@ class CustomerController
      */
     public function delete(): Response
     {
-        return new Response();
+        return parent::delete();
     }
 }

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\NelmioApiDocController;
 
+use Linkin\Bundle\SwaggerResolverBundle\Tests\Functional\AbstractCustomerPasswordController;
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,7 +23,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @SWG\Tag(name="password")
  */
-class CustomerPasswordController
+class CustomerPasswordController extends AbstractCustomerPasswordController
 {
     /**
      * Create new password when not even set.
@@ -62,7 +63,7 @@ class CustomerPasswordController
      */
     public function create(): Response
     {
-        return new Response(Response::HTTP_NO_CONTENT);
+        return parent::create();
     }
 
     /**
@@ -117,6 +118,6 @@ class CustomerPasswordController
      */
     public function reset(): Response
     {
-        return new Response();
+        return parent::reset();
     }
 }
